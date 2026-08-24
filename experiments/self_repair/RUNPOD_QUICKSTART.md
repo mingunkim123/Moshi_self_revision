@@ -20,6 +20,10 @@ cd /workspace/moshi
 chmod +x experiments/self_repair/runpod/*.sh
 ```
 
+RunPod 스크립트는 호출된 스크립트의 위치에서 저장소 루트를 자동으로 찾는다.
+따라서 저장소 폴더 이름이 `moshi`가 아니어도 이전 `/workspace/moshi`를 잘못
+사용하지 않는다. 필요할 때만 `MOSHI_REPO` 환경변수로 경로를 명시적으로 덮어쓴다.
+
 ## 3. 설치 및 GPU 확인
 
 ```bash

@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-MOSHI_REPO="${MOSHI_REPO:-/workspace/moshi}"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+DEFAULT_MOSHI_REPO="$(cd -- "${SCRIPT_DIR}/../../.." && pwd)"
+MOSHI_REPO="${MOSHI_REPO:-${DEFAULT_MOSHI_REPO}}"
 MOSHI_VENV="${MOSHI_VENV:-${MOSHI_REPO}/.venv}"
 MOSHI_HF_CACHE="${MOSHI_HF_CACHE:-/workspace/hf-cache}"
 EXPERIMENT_DIR="${MOSHI_REPO}/experiments/self_repair"
