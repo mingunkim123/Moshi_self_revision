@@ -1,0 +1,17 @@
+﻿trial_id,speaker_id,condition_id,raw_audio_path,repair_marker_onset_ms,repair_onset_ms,repair_end_ms,user_end_ms,insert_silence_at_ms,insert_silence_ms,accepted,notes
+S01__K1,S01,K1,data/raw/S01/K1.wav,,,,1353.542,,,1,macOS say TTS; voice=Yuna; rate=180
+S01__K2,S01,K2,data/raw/S01/K2.wav,,,,1371.667,,,1,macOS say TTS; voice=Yuna; rate=180
+S01__K3,S01,K3,data/raw/S01/K3.wav,1026.167,1480.667,2834.208,2834.208,,,1,macOS say TTS; voice=Yuna; rate=180
+S01__K4,S01,K4,data/raw/S01/K4.wav,1008.000,1462.500,2834.167,2834.167,,,1,macOS say TTS; voice=Yuna; rate=180
+S01__K5,S01,K5,data/raw/S01/K5.wav,1626.167,2080.667,3434.208,3434.208,,,1,macOS say TTS; voice=Yuna; rate=180
+S01__K6,S01,K6,data/raw/S01/K6.wav,1608.000,2062.500,3434.167,3434.167,,,1,macOS say TTS; voice=Yuna; rate=180
+S01__K7,S01,K7,data/raw/S01/K7.wav,,,,2299.708,,,1,macOS say TTS; voice=Yuna; rate=180
+S01__K8,S01,K8,data/raw/S01/K8.wav,,,,2769.292,,,1,macOS say TTS; voice=Yuna; rate=180
+S02__K1,S02,K1,data/raw/S02/K1.wav,,,,1535.750,,,1,macOS say TTS; voice=Eddy (한국어(한국)); rate=175
+S02__K2,S02,K2,data/raw/S02/K2.wav,,,,1547.583,,,1,macOS say TTS; voice=Eddy (한국어(한국)); rate=175
+S02__K3,S02,K3,data/raw/S02/K3.wav,1098.875,1545.333,3081.083,3081.083,,,1,macOS say TTS; voice=Eddy (한국어(한국)); rate=175
+S02__K4,S02,K4,data/raw/S02/K4.wav,1090.333,1536.792,3084.375,3084.375,,,1,macOS say TTS; voice=Eddy (한국어(한국)); rate=175
+S02__K5,S02,K5,data/raw/S02/K5.wav,1698.875,2145.333,3681.083,3681.083,,,1,macOS say TTS; voice=Eddy (한국어(한국)); rate=175
+S02__K6,S02,K6,data/raw/S02/K6.wav,1690.333,2136.792,3684.375,3684.375,,,1,macOS say TTS; voice=Eddy (한국어(한국)); rate=175
+S02__K7,S02,K7,data/raw/S02/K7.wav,,,,2722.250,,,1,macOS say TTS; voice=Eddy (한국어(한국)); rate=175
+S02__K8,S02,K8,data/raw/S02/K8.wav,,,,3212.208,,,1,macOS say TTS; voice=Eddy (한국어(한국)); rate=175

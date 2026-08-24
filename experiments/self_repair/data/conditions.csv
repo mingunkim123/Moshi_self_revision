@@ -1,0 +1,22 @@
+condition_id,language,track,utterance,target,stale,is_repair,is_clean,is_long_gap,clean_match_id,smoke,pilot,notes
+K1,ko,natural,서울 날씨 알려줘,서울,,0,1,0,,1,1,clean Seoul
+K2,ko,natural,부산 날씨 알려줘,부산,,0,1,0,,1,1,clean Busan
+K3,ko,natural,"부산 날씨… 아니, 서울 날씨 알려줘",서울,부산,1,0,0,K1,1,1,natural 150-300 ms pause
+K4,ko,natural,"서울 날씨… 아니, 부산 날씨 알려줘",부산,서울,1,0,0,K2,1,1,reverse repair control
+K5,ko,natural,"부산 날씨… [800ms] 아니, 서울 날씨 알려줘",서울,부산,1,0,1,K1,1,1,long-gap stress; do not speak the bracketed text
+K6,ko,natural,"서울 날씨… [800ms] 아니, 부산 날씨 알려줘",부산,서울,1,0,1,K2,1,1,reverse long-gap stress; do not speak the bracketed text
+K7,ko,natural,부산과 서울 날씨 둘 다 알려줘,부산|서울,,0,0,0,,1,1,both-city recency control
+K8,ko,natural,"아니, 부산과 서울 둘 다 날씨 알려줘",부산|서울,,0,0,0,,1,1,non-repair marker control
+KP1,ko,resolution,"서울 날씨 알려줘. 답변은 도시 이름부터 말해줘",서울,,0,1,0,,1,0,clean language gate
+KP2,ko,resolution,"부산 날씨 알려줘. 답변은 도시 이름부터 말해줘",부산,,0,1,0,,1,0,clean language gate
+KP3,ko,resolution,"부산 날씨… 아니, 서울 날씨 알려줘. 답변은 도시 이름부터 말해줘",서울,부산,1,0,0,KP1,1,0,explicit resolution probe
+KP4,ko,resolution,"서울 날씨… 아니, 부산 날씨 알려줘. 답변은 도시 이름부터 말해줘",부산,서울,1,0,0,KP2,1,0,reverse resolution probe
+E1,en,natural,Could you tell me what the weather's like in Seoul,Seoul,,0,1,0,,1,1,English clean Seoul
+E2,en,natural,Could you tell me what the weather's like in Busan,Busan,,0,1,0,,1,1,English clean Busan
+E3,en,natural,"Could you tell me what the weather's like in Busan—uh, sorry, I meant Seoul",Seoul,Busan,1,0,0,E1,1,1,English spontaneous-style 200 ms repair
+E4,en,natural,"Could you tell me what the weather's like in Seoul—uh, sorry, I meant Busan",Busan,Seoul,1,0,0,E2,1,1,English reverse spontaneous-style 200 ms repair
+E5,en,natural,"Could you tell me what the weather's like in Busan—[800ms] uh, sorry, I meant Seoul",Seoul,Busan,1,0,1,E1,1,1,English long-gap stress; do not speak the bracketed text
+E6,en,natural,"Could you tell me what the weather's like in Seoul—[800ms] uh, sorry, I meant Busan",Busan,Seoul,1,0,1,E2,1,1,English reverse long-gap stress; do not speak the bracketed text
+E7,en,natural,Could you tell me what the weather's like in both Busan and Seoul,Busan|Seoul,,0,0,0,,1,1,English both-city recency control
+E8,en,natural,"Could you tell me what the weather's like in Busan—actually, could you check both Busan and Seoul",Busan|Seoul,,1,0,0,E7,1,1,English natural expansion repair from one city to both
+E9,en,natural,"Actually, could you tell me what the weather's like in both Busan and Seoul",Busan|Seoul,,0,0,0,,1,1,English non-repair discourse-marker control

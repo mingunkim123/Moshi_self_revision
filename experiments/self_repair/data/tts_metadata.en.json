@@ -1,0 +1,1613 @@
+{
+  "engine": "Microsoft Edge online neural TTS via edge-tts",
+  "edge_tts_version": "7.2.8",
+  "language": "en-US",
+  "sample_rate": 24000,
+  "sample_width_bytes": 2,
+  "speakers": {
+    "EN01": {
+      "voice": "en-US-AvaMultilingualNeural",
+      "rate": "-3%",
+      "pitch": "+0Hz"
+    },
+    "EN02": {
+      "voice": "en-US-AndrewMultilingualNeural",
+      "rate": "-2%",
+      "pitch": "+0Hz"
+    }
+  },
+  "items": [
+    {
+      "speaker_id": "EN01",
+      "condition_id": "E1",
+      "source_id": "E1",
+      "text": "Could you tell me what the weather's like in Seoul?",
+      "voice": "en-US-AvaMultilingualNeural",
+      "rate": "-3%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_en/EN01/E1.wav",
+      "duration_ms": 2472.0,
+      "repair_marker_onset_ms": null,
+      "repair_onset_ms": null,
+      "repair_end_ms": null,
+      "user_end_ms": 2472.0,
+      "insert_silence_at_ms": null,
+      "insert_silence_ms": null,
+      "word_boundaries": [
+        {
+          "text": "Could",
+          "offset_ms": 90.208,
+          "duration_ms": 128.875
+        },
+        {
+          "text": "you",
+          "offset_ms": 231.958,
+          "duration_ms": 103.083
+        },
+        {
+          "text": "tell",
+          "offset_ms": 335.041,
+          "duration_ms": 219.083
+        },
+        {
+          "text": "me",
+          "offset_ms": 567.0,
+          "duration_ms": 103.083
+        },
+        {
+          "text": "what",
+          "offset_ms": 683.0,
+          "duration_ms": 103.083
+        },
+        {
+          "text": "the",
+          "offset_ms": 798.958,
+          "duration_ms": 77.333
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 889.166,
+          "duration_ms": 476.791
+        },
+        {
+          "text": "like",
+          "offset_ms": 1378.875,
+          "duration_ms": 180.416
+        },
+        {
+          "text": "in",
+          "offset_ms": 1572.166,
+          "duration_ms": 116.0
+        },
+        {
+          "text": "Seoul",
+          "offset_ms": 1701.041,
+          "duration_ms": 412.375
+        }
+      ]
+    },
+    {
+      "speaker_id": "EN01",
+      "condition_id": "E2",
+      "source_id": "E2",
+      "text": "Could you tell me what the weather's like in Busan?",
+      "voice": "en-US-AvaMultilingualNeural",
+      "rate": "-3%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_en/EN01/E2.wav",
+      "duration_ms": 2568.0,
+      "repair_marker_onset_ms": null,
+      "repair_onset_ms": null,
+      "repair_end_ms": null,
+      "user_end_ms": 2568.0,
+      "insert_silence_at_ms": null,
+      "insert_silence_ms": null,
+      "word_boundaries": [
+        {
+          "text": "Could",
+          "offset_ms": 90.208,
+          "duration_ms": 128.875
+        },
+        {
+          "text": "you",
+          "offset_ms": 219.083,
+          "duration_ms": 77.333
+        },
+        {
+          "text": "tell",
+          "offset_ms": 309.291,
+          "duration_ms": 193.291
+        },
+        {
+          "text": "me",
+          "offset_ms": 515.458,
+          "duration_ms": 103.083
+        },
+        {
+          "text": "what",
+          "offset_ms": 631.458,
+          "duration_ms": 116.0
+        },
+        {
+          "text": "the",
+          "offset_ms": 760.291,
+          "duration_ms": 77.333
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 850.5,
+          "duration_ms": 438.125
+        },
+        {
+          "text": "like",
+          "offset_ms": 1301.541,
+          "duration_ms": 180.416
+        },
+        {
+          "text": "in",
+          "offset_ms": 1494.833,
+          "duration_ms": 116.0
+        },
+        {
+          "text": "Busan",
+          "offset_ms": 1623.708,
+          "duration_ms": 567.0
+        }
+      ]
+    },
+    {
+      "speaker_id": "EN01",
+      "condition_id": "E3",
+      "source_id": "E3",
+      "text": "Could you tell me what the weather's like in Busan uh, sorry, I meant Seoul?",
+      "voice": "en-US-AvaMultilingualNeural",
+      "rate": "-3%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_en/EN01/E3.wav",
+      "duration_ms": 4448.0,
+      "repair_marker_onset_ms": 2261.875,
+      "repair_onset_ms": 3318.541,
+      "repair_end_ms": 4078.875,
+      "user_end_ms": 4448.0,
+      "insert_silence_at_ms": 2061.875,
+      "insert_silence_ms": 200,
+      "word_boundaries": [
+        {
+          "text": "Could",
+          "offset_ms": 103.083,
+          "duration_ms": 103.083
+        },
+        {
+          "text": "you",
+          "offset_ms": 206.166,
+          "duration_ms": 77.333
+        },
+        {
+          "text": "tell",
+          "offset_ms": 296.375,
+          "duration_ms": 193.291
+        },
+        {
+          "text": "me",
+          "offset_ms": 502.583,
+          "duration_ms": 90.208
+        },
+        {
+          "text": "what",
+          "offset_ms": 605.666,
+          "duration_ms": 116.0
+        },
+        {
+          "text": "the",
+          "offset_ms": 721.666,
+          "duration_ms": 64.416
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 798.958,
+          "duration_ms": 386.583
+        },
+        {
+          "text": "like",
+          "offset_ms": 1198.458,
+          "duration_ms": 141.75
+        },
+        {
+          "text": "in",
+          "offset_ms": 1340.208,
+          "duration_ms": 90.208
+        },
+        {
+          "text": "Busan",
+          "offset_ms": 1443.291,
+          "duration_ms": 605.666
+        },
+        {
+          "text": "uh",
+          "offset_ms": 2261.875,
+          "duration_ms": 244.833
+        },
+        {
+          "text": "sorry",
+          "offset_ms": 2751.541,
+          "duration_ms": 541.25
+        },
+        {
+          "text": "I",
+          "offset_ms": 3318.541,
+          "duration_ms": 116.0
+        },
+        {
+          "text": "meant",
+          "offset_ms": 3447.416,
+          "duration_ms": 231.958
+        },
+        {
+          "text": "Seoul",
+          "offset_ms": 3679.375,
+          "duration_ms": 399.5
+        }
+      ]
+    },
+    {
+      "speaker_id": "EN01",
+      "condition_id": "E4",
+      "source_id": "E4",
+      "text": "Could you tell me what the weather's like in Seoul uh, sorry, I meant Busan?",
+      "voice": "en-US-AvaMultilingualNeural",
+      "rate": "-3%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_en/EN01/E4.wav",
+      "duration_ms": 4544.0,
+      "repair_marker_onset_ms": 2158.75,
+      "repair_onset_ms": 3331.458,
+      "repair_end_ms": 4169.041,
+      "user_end_ms": 4544.0,
+      "insert_silence_at_ms": 1958.75,
+      "insert_silence_ms": 200,
+      "word_boundaries": [
+        {
+          "text": "Could",
+          "offset_ms": 103.083,
+          "duration_ms": 103.083
+        },
+        {
+          "text": "you",
+          "offset_ms": 219.083,
+          "duration_ms": 77.291
+        },
+        {
+          "text": "tell",
+          "offset_ms": 296.375,
+          "duration_ms": 193.291
+        },
+        {
+          "text": "me",
+          "offset_ms": 502.583,
+          "duration_ms": 90.208
+        },
+        {
+          "text": "what",
+          "offset_ms": 592.791,
+          "duration_ms": 103.083
+        },
+        {
+          "text": "the",
+          "offset_ms": 708.75,
+          "duration_ms": 77.333
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 798.958,
+          "duration_ms": 347.958
+        },
+        {
+          "text": "like",
+          "offset_ms": 1159.791,
+          "duration_ms": 154.625
+        },
+        {
+          "text": "in",
+          "offset_ms": 1327.333,
+          "duration_ms": 116.0
+        },
+        {
+          "text": "Seoul",
+          "offset_ms": 1456.166,
+          "duration_ms": 438.125
+        },
+        {
+          "text": "uh",
+          "offset_ms": 2158.75,
+          "duration_ms": 154.625
+        },
+        {
+          "text": "sorry",
+          "offset_ms": 2790.208,
+          "duration_ms": 528.333
+        },
+        {
+          "text": "I",
+          "offset_ms": 3331.458,
+          "duration_ms": 115.958
+        },
+        {
+          "text": "meant",
+          "offset_ms": 3447.416,
+          "duration_ms": 244.833
+        },
+        {
+          "text": "Busan",
+          "offset_ms": 3692.25,
+          "duration_ms": 476.791
+        }
+      ]
+    },
+    {
+      "speaker_id": "EN01",
+      "condition_id": "E5",
+      "source_id": "E3",
+      "text": "Could you tell me what the weather's like in Busan uh, sorry, I meant Seoul?",
+      "voice": "en-US-AvaMultilingualNeural",
+      "rate": "-3%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_en/EN01/E5.wav",
+      "duration_ms": 5048.0,
+      "repair_marker_onset_ms": 2861.875,
+      "repair_onset_ms": 3918.541,
+      "repair_end_ms": 4678.875,
+      "user_end_ms": 5048.0,
+      "insert_silence_at_ms": 2061.875,
+      "insert_silence_ms": 800,
+      "word_boundaries": [
+        {
+          "text": "Could",
+          "offset_ms": 103.083,
+          "duration_ms": 103.083
+        },
+        {
+          "text": "you",
+          "offset_ms": 206.166,
+          "duration_ms": 77.333
+        },
+        {
+          "text": "tell",
+          "offset_ms": 296.375,
+          "duration_ms": 193.291
+        },
+        {
+          "text": "me",
+          "offset_ms": 502.583,
+          "duration_ms": 90.208
+        },
+        {
+          "text": "what",
+          "offset_ms": 605.666,
+          "duration_ms": 116.0
+        },
+        {
+          "text": "the",
+          "offset_ms": 721.666,
+          "duration_ms": 64.416
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 798.958,
+          "duration_ms": 386.583
+        },
+        {
+          "text": "like",
+          "offset_ms": 1198.458,
+          "duration_ms": 141.75
+        },
+        {
+          "text": "in",
+          "offset_ms": 1340.208,
+          "duration_ms": 90.208
+        },
+        {
+          "text": "Busan",
+          "offset_ms": 1443.291,
+          "duration_ms": 605.666
+        },
+        {
+          "text": "uh",
+          "offset_ms": 2861.875,
+          "duration_ms": 244.833
+        },
+        {
+          "text": "sorry",
+          "offset_ms": 3351.541,
+          "duration_ms": 541.25
+        },
+        {
+          "text": "I",
+          "offset_ms": 3918.541,
+          "duration_ms": 116.0
+        },
+        {
+          "text": "meant",
+          "offset_ms": 4047.416,
+          "duration_ms": 231.958
+        },
+        {
+          "text": "Seoul",
+          "offset_ms": 4279.375,
+          "duration_ms": 399.5
+        }
+      ]
+    },
+    {
+      "speaker_id": "EN01",
+      "condition_id": "E6",
+      "source_id": "E4",
+      "text": "Could you tell me what the weather's like in Seoul uh, sorry, I meant Busan?",
+      "voice": "en-US-AvaMultilingualNeural",
+      "rate": "-3%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_en/EN01/E6.wav",
+      "duration_ms": 5144.0,
+      "repair_marker_onset_ms": 2758.75,
+      "repair_onset_ms": 3931.458,
+      "repair_end_ms": 4769.041,
+      "user_end_ms": 5144.0,
+      "insert_silence_at_ms": 1958.75,
+      "insert_silence_ms": 800,
+      "word_boundaries": [
+        {
+          "text": "Could",
+          "offset_ms": 103.083,
+          "duration_ms": 103.083
+        },
+        {
+          "text": "you",
+          "offset_ms": 219.083,
+          "duration_ms": 77.291
+        },
+        {
+          "text": "tell",
+          "offset_ms": 296.375,
+          "duration_ms": 193.291
+        },
+        {
+          "text": "me",
+          "offset_ms": 502.583,
+          "duration_ms": 90.208
+        },
+        {
+          "text": "what",
+          "offset_ms": 592.791,
+          "duration_ms": 103.083
+        },
+        {
+          "text": "the",
+          "offset_ms": 708.75,
+          "duration_ms": 77.333
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 798.958,
+          "duration_ms": 347.958
+        },
+        {
+          "text": "like",
+          "offset_ms": 1159.791,
+          "duration_ms": 154.625
+        },
+        {
+          "text": "in",
+          "offset_ms": 1327.333,
+          "duration_ms": 116.0
+        },
+        {
+          "text": "Seoul",
+          "offset_ms": 1456.166,
+          "duration_ms": 438.125
+        },
+        {
+          "text": "uh",
+          "offset_ms": 2758.75,
+          "duration_ms": 154.625
+        },
+        {
+          "text": "sorry",
+          "offset_ms": 3390.208,
+          "duration_ms": 528.333
+        },
+        {
+          "text": "I",
+          "offset_ms": 3931.458,
+          "duration_ms": 115.958
+        },
+        {
+          "text": "meant",
+          "offset_ms": 4047.416,
+          "duration_ms": 244.833
+        },
+        {
+          "text": "Busan",
+          "offset_ms": 4292.25,
+          "duration_ms": 476.791
+        }
+      ]
+    },
+    {
+      "speaker_id": "EN01",
+      "condition_id": "E7",
+      "source_id": "E7",
+      "text": "Could you tell me what the weather's like in both Busan and Seoul?",
+      "voice": "en-US-AvaMultilingualNeural",
+      "rate": "-3%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_en/EN01/E7.wav",
+      "duration_ms": 3504.0,
+      "repair_marker_onset_ms": null,
+      "repair_onset_ms": null,
+      "repair_end_ms": null,
+      "user_end_ms": 3504.0,
+      "insert_silence_at_ms": null,
+      "insert_silence_ms": null,
+      "word_boundaries": [
+        {
+          "text": "Could",
+          "offset_ms": 90.208,
+          "duration_ms": 141.75
+        },
+        {
+          "text": "you",
+          "offset_ms": 231.958,
+          "duration_ms": 77.333
+        },
+        {
+          "text": "tell",
+          "offset_ms": 322.166,
+          "duration_ms": 206.166
+        },
+        {
+          "text": "me",
+          "offset_ms": 528.333,
+          "duration_ms": 103.083
+        },
+        {
+          "text": "what",
+          "offset_ms": 644.333,
+          "duration_ms": 103.083
+        },
+        {
+          "text": "the",
+          "offset_ms": 760.291,
+          "duration_ms": 77.333
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 850.5,
+          "duration_ms": 399.5
+        },
+        {
+          "text": "like",
+          "offset_ms": 1262.875,
+          "duration_ms": 193.291
+        },
+        {
+          "text": "in",
+          "offset_ms": 1469.083,
+          "duration_ms": 128.875
+        },
+        {
+          "text": "both",
+          "offset_ms": 1610.833,
+          "duration_ms": 270.625
+        },
+        {
+          "text": "Busan",
+          "offset_ms": 1881.458,
+          "duration_ms": 618.541
+        },
+        {
+          "text": "and",
+          "offset_ms": 2512.875,
+          "duration_ms": 167.541
+        },
+        {
+          "text": "Seoul",
+          "offset_ms": 2680.416,
+          "duration_ms": 451.041
+        }
+      ]
+    },
+    {
+      "speaker_id": "EN01",
+      "condition_id": "E8",
+      "source_id": "E8",
+      "text": "Could you tell me what the weather's like in Busan actually, could you check both Busan and Seoul?",
+      "voice": "en-US-AvaMultilingualNeural",
+      "rate": "-3%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_en/EN01/E8.wav",
+      "duration_ms": 5024.0,
+      "repair_marker_onset_ms": 2274.75,
+      "repair_onset_ms": 2777.333,
+      "repair_end_ms": 4632.999,
+      "user_end_ms": 5024.0,
+      "insert_silence_at_ms": 2074.75,
+      "insert_silence_ms": 200,
+      "word_boundaries": [
+        {
+          "text": "Could",
+          "offset_ms": 90.208,
+          "duration_ms": 141.75
+        },
+        {
+          "text": "you",
+          "offset_ms": 244.833,
+          "duration_ms": 77.333
+        },
+        {
+          "text": "tell",
+          "offset_ms": 322.166,
+          "duration_ms": 206.166
+        },
+        {
+          "text": "me",
+          "offset_ms": 541.25,
+          "duration_ms": 90.208
+        },
+        {
+          "text": "what",
+          "offset_ms": 644.333,
+          "duration_ms": 115.958
+        },
+        {
+          "text": "the",
+          "offset_ms": 760.291,
+          "duration_ms": 77.333
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 850.5,
+          "duration_ms": 373.708
+        },
+        {
+          "text": "like",
+          "offset_ms": 1237.125,
+          "duration_ms": 193.291
+        },
+        {
+          "text": "in",
+          "offset_ms": 1430.416,
+          "duration_ms": 128.875
+        },
+        {
+          "text": "Busan",
+          "offset_ms": 1572.166,
+          "duration_ms": 489.708
+        },
+        {
+          "text": "actually",
+          "offset_ms": 2274.75,
+          "duration_ms": 476.791
+        },
+        {
+          "text": "could",
+          "offset_ms": 2777.333,
+          "duration_ms": 154.625
+        },
+        {
+          "text": "you",
+          "offset_ms": 2931.958,
+          "duration_ms": 77.333
+        },
+        {
+          "text": "check",
+          "offset_ms": 3009.291,
+          "duration_ms": 283.5
+        },
+        {
+          "text": "both",
+          "offset_ms": 3305.666,
+          "duration_ms": 244.833
+        },
+        {
+          "text": "Busan",
+          "offset_ms": 3550.5,
+          "duration_ms": 541.25
+        },
+        {
+          "text": "and",
+          "offset_ms": 4091.75,
+          "duration_ms": 154.625
+        },
+        {
+          "text": "Seoul",
+          "offset_ms": 4259.291,
+          "duration_ms": 373.708
+        }
+      ]
+    },
+    {
+      "speaker_id": "EN01",
+      "condition_id": "E9",
+      "source_id": "E9",
+      "text": "Actually, could you tell me what the weather's like in both Busan and Seoul?",
+      "voice": "en-US-AvaMultilingualNeural",
+      "rate": "-3%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_en/EN01/E9.wav",
+      "duration_ms": 3840.0,
+      "repair_marker_onset_ms": null,
+      "repair_onset_ms": null,
+      "repair_end_ms": null,
+      "user_end_ms": 3840.0,
+      "insert_silence_at_ms": null,
+      "insert_silence_ms": null,
+      "word_boundaries": [
+        {
+          "text": "Actually",
+          "offset_ms": 90.208,
+          "duration_ms": 489.708
+        },
+        {
+          "text": "could",
+          "offset_ms": 605.666,
+          "duration_ms": 167.541
+        },
+        {
+          "text": "you",
+          "offset_ms": 773.208,
+          "duration_ms": 77.333
+        },
+        {
+          "text": "tell",
+          "offset_ms": 863.416,
+          "duration_ms": 180.416
+        },
+        {
+          "text": "me",
+          "offset_ms": 1056.708,
+          "duration_ms": 103.083
+        },
+        {
+          "text": "what",
+          "offset_ms": 1159.791,
+          "duration_ms": 90.208
+        },
+        {
+          "text": "the",
+          "offset_ms": 1262.875,
+          "duration_ms": 90.208
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 1353.083,
+          "duration_ms": 412.375
+        },
+        {
+          "text": "like",
+          "offset_ms": 1778.333,
+          "duration_ms": 154.625
+        },
+        {
+          "text": "in",
+          "offset_ms": 1933.0,
+          "duration_ms": 90.208
+        },
+        {
+          "text": "both",
+          "offset_ms": 2036.083,
+          "duration_ms": 244.833
+        },
+        {
+          "text": "Busan",
+          "offset_ms": 2293.833,
+          "duration_ms": 605.666
+        },
+        {
+          "text": "and",
+          "offset_ms": 2912.375,
+          "duration_ms": 154.625
+        },
+        {
+          "text": "Seoul",
+          "offset_ms": 3079.916,
+          "duration_ms": 399.5
+        }
+      ]
+    },
+    {
+      "speaker_id": "EN02",
+      "condition_id": "E1",
+      "source_id": "E1",
+      "text": "Could you tell me what the weather's like in Seoul?",
+      "voice": "en-US-AndrewMultilingualNeural",
+      "rate": "-2%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_en/EN02/E1.wav",
+      "duration_ms": 2064.0,
+      "repair_marker_onset_ms": null,
+      "repair_onset_ms": null,
+      "repair_end_ms": null,
+      "user_end_ms": 2064.0,
+      "insert_silence_at_ms": null,
+      "insert_silence_ms": null,
+      "word_boundaries": [
+        {
+          "text": "Could",
+          "offset_ms": 102.041,
+          "duration_ms": 102.041
+        },
+        {
+          "text": "you",
+          "offset_ms": 216.833,
+          "duration_ms": 76.541
+        },
+        {
+          "text": "tell",
+          "offset_ms": 293.375,
+          "duration_ms": 178.583
+        },
+        {
+          "text": "me",
+          "offset_ms": 484.708,
+          "duration_ms": 89.291
+        },
+        {
+          "text": "what",
+          "offset_ms": 586.75,
+          "duration_ms": 76.5
+        },
+        {
+          "text": "the",
+          "offset_ms": 663.25,
+          "duration_ms": 89.291
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 765.291,
+          "duration_ms": 306.125
+        },
+        {
+          "text": "like",
+          "offset_ms": 1084.166,
+          "duration_ms": 165.833
+        },
+        {
+          "text": "in",
+          "offset_ms": 1250.0,
+          "duration_ms": 114.791
+        },
+        {
+          "text": "Seoul",
+          "offset_ms": 1377.541,
+          "duration_ms": 331.625
+        }
+      ]
+    },
+    {
+      "speaker_id": "EN02",
+      "condition_id": "E2",
+      "source_id": "E2",
+      "text": "Could you tell me what the weather's like in Busan?",
+      "voice": "en-US-AndrewMultilingualNeural",
+      "rate": "-2%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_en/EN02/E2.wav",
+      "duration_ms": 2280.0,
+      "repair_marker_onset_ms": null,
+      "repair_onset_ms": null,
+      "repair_end_ms": null,
+      "user_end_ms": 2280.0,
+      "insert_silence_at_ms": null,
+      "insert_silence_ms": null,
+      "word_boundaries": [
+        {
+          "text": "Could",
+          "offset_ms": 102.041,
+          "duration_ms": 102.041
+        },
+        {
+          "text": "you",
+          "offset_ms": 216.833,
+          "duration_ms": 89.291
+        },
+        {
+          "text": "tell",
+          "offset_ms": 306.125,
+          "duration_ms": 191.333
+        },
+        {
+          "text": "me",
+          "offset_ms": 497.458,
+          "duration_ms": 89.291
+        },
+        {
+          "text": "what",
+          "offset_ms": 586.75,
+          "duration_ms": 114.791
+        },
+        {
+          "text": "the",
+          "offset_ms": 714.291,
+          "duration_ms": 76.541
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 803.583,
+          "duration_ms": 318.875
+        },
+        {
+          "text": "like",
+          "offset_ms": 1122.458,
+          "duration_ms": 165.833
+        },
+        {
+          "text": "in",
+          "offset_ms": 1301.0,
+          "duration_ms": 76.541
+        },
+        {
+          "text": "Busan",
+          "offset_ms": 1377.541,
+          "duration_ms": 522.958
+        }
+      ]
+    },
+    {
+      "speaker_id": "EN02",
+      "condition_id": "E3",
+      "source_id": "E3",
+      "text": "Could you tell me what the weather's like in Busan uh, sorry, I meant Seoul?",
+      "voice": "en-US-AndrewMultilingualNeural",
+      "rate": "-2%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_en/EN02/E3.wav",
+      "duration_ms": 4328.0,
+      "repair_marker_onset_ms": 2215.291,
+      "repair_onset_ms": 3363.25,
+      "repair_end_ms": 3950.0,
+      "user_end_ms": 4328.0,
+      "insert_silence_at_ms": 2015.2916666666667,
+      "insert_silence_ms": 200,
+      "word_boundaries": [
+        {
+          "text": "Could",
+          "offset_ms": 102.041,
+          "duration_ms": 102.041
+        },
+        {
+          "text": "you",
+          "offset_ms": 216.833,
+          "duration_ms": 76.541
+        },
+        {
+          "text": "tell",
+          "offset_ms": 293.375,
+          "duration_ms": 153.041
+        },
+        {
+          "text": "me",
+          "offset_ms": 446.416,
+          "duration_ms": 76.541
+        },
+        {
+          "text": "what",
+          "offset_ms": 522.958,
+          "duration_ms": 114.791
+        },
+        {
+          "text": "the",
+          "offset_ms": 637.75,
+          "duration_ms": 76.541
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 714.291,
+          "duration_ms": 318.875
+        },
+        {
+          "text": "like",
+          "offset_ms": 1033.166,
+          "duration_ms": 140.291
+        },
+        {
+          "text": "in",
+          "offset_ms": 1186.208,
+          "duration_ms": 76.541
+        },
+        {
+          "text": "Busan",
+          "offset_ms": 1275.5,
+          "duration_ms": 637.75
+        },
+        {
+          "text": "uh",
+          "offset_ms": 2215.291,
+          "duration_ms": 280.625
+        },
+        {
+          "text": "sorry",
+          "offset_ms": 2878.583,
+          "duration_ms": 459.166
+        },
+        {
+          "text": "I",
+          "offset_ms": 3363.25,
+          "duration_ms": 51.0
+        },
+        {
+          "text": "meant",
+          "offset_ms": 3414.291,
+          "duration_ms": 204.083
+        },
+        {
+          "text": "Seoul",
+          "offset_ms": 3618.375,
+          "duration_ms": 331.625
+        }
+      ]
+    },
+    {
+      "speaker_id": "EN02",
+      "condition_id": "E4",
+      "source_id": "E4",
+      "text": "Could you tell me what the weather's like in Seoul uh, sorry, I meant Busan?",
+      "voice": "en-US-AndrewMultilingualNeural",
+      "rate": "-2%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_en/EN02/E4.wav",
+      "duration_ms": 4064.0,
+      "repair_marker_onset_ms": 1768.875,
+      "repair_onset_ms": 2853.041,
+      "repair_end_ms": 3682.1240000000003,
+      "user_end_ms": 4064.0,
+      "insert_silence_at_ms": 1568.875,
+      "insert_silence_ms": 200,
+      "word_boundaries": [
+        {
+          "text": "Could",
+          "offset_ms": 102.041,
+          "duration_ms": 114.791
+        },
+        {
+          "text": "you",
+          "offset_ms": 216.833,
+          "duration_ms": 63.791
+        },
+        {
+          "text": "tell",
+          "offset_ms": 280.625,
+          "duration_ms": 140.291
+        },
+        {
+          "text": "me",
+          "offset_ms": 420.916,
+          "duration_ms": 76.541
+        },
+        {
+          "text": "what",
+          "offset_ms": 510.208,
+          "duration_ms": 89.291
+        },
+        {
+          "text": "the",
+          "offset_ms": 599.5,
+          "duration_ms": 63.75
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 663.25,
+          "duration_ms": 306.125
+        },
+        {
+          "text": "like",
+          "offset_ms": 982.125,
+          "duration_ms": 165.833
+        },
+        {
+          "text": "in",
+          "offset_ms": 1147.958,
+          "duration_ms": 76.541
+        },
+        {
+          "text": "Seoul",
+          "offset_ms": 1224.5,
+          "duration_ms": 331.625
+        },
+        {
+          "text": "uh",
+          "offset_ms": 1768.875,
+          "duration_ms": 178.583
+        },
+        {
+          "text": "sorry",
+          "offset_ms": 2342.875,
+          "duration_ms": 484.708
+        },
+        {
+          "text": "I",
+          "offset_ms": 2853.041,
+          "duration_ms": 63.791
+        },
+        {
+          "text": "meant",
+          "offset_ms": 2916.833,
+          "duration_ms": 229.583
+        },
+        {
+          "text": "Busan",
+          "offset_ms": 3159.166,
+          "duration_ms": 522.958
+        }
+      ]
+    },
+    {
+      "speaker_id": "EN02",
+      "condition_id": "E5",
+      "source_id": "E3",
+      "text": "Could you tell me what the weather's like in Busan uh, sorry, I meant Seoul?",
+      "voice": "en-US-AndrewMultilingualNeural",
+      "rate": "-2%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_en/EN02/E5.wav",
+      "duration_ms": 4928.0,
+      "repair_marker_onset_ms": 2815.291,
+      "repair_onset_ms": 3963.25,
+      "repair_end_ms": 4550.0,
+      "user_end_ms": 4928.0,
+      "insert_silence_at_ms": 2015.2916666666667,
+      "insert_silence_ms": 800,
+      "word_boundaries": [
+        {
+          "text": "Could",
+          "offset_ms": 102.041,
+          "duration_ms": 102.041
+        },
+        {
+          "text": "you",
+          "offset_ms": 216.833,
+          "duration_ms": 76.541
+        },
+        {
+          "text": "tell",
+          "offset_ms": 293.375,
+          "duration_ms": 153.041
+        },
+        {
+          "text": "me",
+          "offset_ms": 446.416,
+          "duration_ms": 76.541
+        },
+        {
+          "text": "what",
+          "offset_ms": 522.958,
+          "duration_ms": 114.791
+        },
+        {
+          "text": "the",
+          "offset_ms": 637.75,
+          "duration_ms": 76.541
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 714.291,
+          "duration_ms": 318.875
+        },
+        {
+          "text": "like",
+          "offset_ms": 1033.166,
+          "duration_ms": 140.291
+        },
+        {
+          "text": "in",
+          "offset_ms": 1186.208,
+          "duration_ms": 76.541
+        },
+        {
+          "text": "Busan",
+          "offset_ms": 1275.5,
+          "duration_ms": 637.75
+        },
+        {
+          "text": "uh",
+          "offset_ms": 2815.291,
+          "duration_ms": 280.625
+        },
+        {
+          "text": "sorry",
+          "offset_ms": 3478.583,
+          "duration_ms": 459.166
+        },
+        {
+          "text": "I",
+          "offset_ms": 3963.25,
+          "duration_ms": 51.0
+        },
+        {
+          "text": "meant",
+          "offset_ms": 4014.291,
+          "duration_ms": 204.083
+        },
+        {
+          "text": "Seoul",
+          "offset_ms": 4218.375,
+          "duration_ms": 331.625
+        }
+      ]
+    },
+    {
+      "speaker_id": "EN02",
+      "condition_id": "E6",
+      "source_id": "E4",
+      "text": "Could you tell me what the weather's like in Seoul uh, sorry, I meant Busan?",
+      "voice": "en-US-AndrewMultilingualNeural",
+      "rate": "-2%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_en/EN02/E6.wav",
+      "duration_ms": 4664.0,
+      "repair_marker_onset_ms": 2368.875,
+      "repair_onset_ms": 3453.041,
+      "repair_end_ms": 4282.124,
+      "user_end_ms": 4664.0,
+      "insert_silence_at_ms": 1568.875,
+      "insert_silence_ms": 800,
+      "word_boundaries": [
+        {
+          "text": "Could",
+          "offset_ms": 102.041,
+          "duration_ms": 114.791
+        },
+        {
+          "text": "you",
+          "offset_ms": 216.833,
+          "duration_ms": 63.791
+        },
+        {
+          "text": "tell",
+          "offset_ms": 280.625,
+          "duration_ms": 140.291
+        },
+        {
+          "text": "me",
+          "offset_ms": 420.916,
+          "duration_ms": 76.541
+        },
+        {
+          "text": "what",
+          "offset_ms": 510.208,
+          "duration_ms": 89.291
+        },
+        {
+          "text": "the",
+          "offset_ms": 599.5,
+          "duration_ms": 63.75
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 663.25,
+          "duration_ms": 306.125
+        },
+        {
+          "text": "like",
+          "offset_ms": 982.125,
+          "duration_ms": 165.833
+        },
+        {
+          "text": "in",
+          "offset_ms": 1147.958,
+          "duration_ms": 76.541
+        },
+        {
+          "text": "Seoul",
+          "offset_ms": 1224.5,
+          "duration_ms": 331.625
+        },
+        {
+          "text": "uh",
+          "offset_ms": 2368.875,
+          "duration_ms": 178.583
+        },
+        {
+          "text": "sorry",
+          "offset_ms": 2942.875,
+          "duration_ms": 484.708
+        },
+        {
+          "text": "I",
+          "offset_ms": 3453.041,
+          "duration_ms": 63.791
+        },
+        {
+          "text": "meant",
+          "offset_ms": 3516.833,
+          "duration_ms": 229.583
+        },
+        {
+          "text": "Busan",
+          "offset_ms": 3759.166,
+          "duration_ms": 522.958
+        }
+      ]
+    },
+    {
+      "speaker_id": "EN02",
+      "condition_id": "E7",
+      "source_id": "E7",
+      "text": "Could you tell me what the weather's like in both Busan and Seoul?",
+      "voice": "en-US-AndrewMultilingualNeural",
+      "rate": "-2%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_en/EN02/E7.wav",
+      "duration_ms": 3360.0,
+      "repair_marker_onset_ms": null,
+      "repair_onset_ms": null,
+      "repair_end_ms": null,
+      "user_end_ms": 3360.0,
+      "insert_silence_at_ms": null,
+      "insert_silence_ms": null,
+      "word_boundaries": [
+        {
+          "text": "Could",
+          "offset_ms": 102.041,
+          "duration_ms": 114.791
+        },
+        {
+          "text": "you",
+          "offset_ms": 229.583,
+          "duration_ms": 63.791
+        },
+        {
+          "text": "tell",
+          "offset_ms": 293.375,
+          "duration_ms": 165.791
+        },
+        {
+          "text": "me",
+          "offset_ms": 459.166,
+          "duration_ms": 89.291
+        },
+        {
+          "text": "what",
+          "offset_ms": 548.458,
+          "duration_ms": 89.291
+        },
+        {
+          "text": "the",
+          "offset_ms": 637.75,
+          "duration_ms": 76.541
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 714.291,
+          "duration_ms": 369.875
+        },
+        {
+          "text": "like",
+          "offset_ms": 1084.166,
+          "duration_ms": 191.333
+        },
+        {
+          "text": "in",
+          "offset_ms": 1275.5,
+          "duration_ms": 102.041
+        },
+        {
+          "text": "both",
+          "offset_ms": 1390.291,
+          "duration_ms": 369.916
+        },
+        {
+          "text": "Busan",
+          "offset_ms": 1772.958,
+          "duration_ms": 599.5
+        },
+        {
+          "text": "and",
+          "offset_ms": 2436.208,
+          "duration_ms": 127.541
+        },
+        {
+          "text": "Seoul",
+          "offset_ms": 2576.541,
+          "duration_ms": 420.916
+        }
+      ]
+    },
+    {
+      "speaker_id": "EN02",
+      "condition_id": "E8",
+      "source_id": "E8",
+      "text": "Could you tell me what the weather's like in Busan actually, could you check both Busan and Seoul?",
+      "voice": "en-US-AndrewMultilingualNeural",
+      "rate": "-2%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_en/EN02/E8.wav",
+      "duration_ms": 5024.0,
+      "repair_marker_onset_ms": 2100.5,
+      "repair_onset_ms": 2865.833,
+      "repair_end_ms": 4651.541,
+      "user_end_ms": 5024.0,
+      "insert_silence_at_ms": 1900.5,
+      "insert_silence_ms": 200,
+      "word_boundaries": [
+        {
+          "text": "Could",
+          "offset_ms": 102.041,
+          "duration_ms": 127.541
+        },
+        {
+          "text": "you",
+          "offset_ms": 229.583,
+          "duration_ms": 63.791
+        },
+        {
+          "text": "tell",
+          "offset_ms": 306.125,
+          "duration_ms": 165.833
+        },
+        {
+          "text": "me",
+          "offset_ms": 471.958,
+          "duration_ms": 89.25
+        },
+        {
+          "text": "what",
+          "offset_ms": 561.208,
+          "duration_ms": 102.041
+        },
+        {
+          "text": "the",
+          "offset_ms": 663.25,
+          "duration_ms": 89.291
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 765.291,
+          "duration_ms": 318.875
+        },
+        {
+          "text": "like",
+          "offset_ms": 1084.166,
+          "duration_ms": 165.833
+        },
+        {
+          "text": "in",
+          "offset_ms": 1250.0,
+          "duration_ms": 89.291
+        },
+        {
+          "text": "Busan",
+          "offset_ms": 1352.041,
+          "duration_ms": 548.458
+        },
+        {
+          "text": "actually",
+          "offset_ms": 2100.5,
+          "duration_ms": 561.208
+        },
+        {
+          "text": "could",
+          "offset_ms": 2865.833,
+          "duration_ms": 127.541
+        },
+        {
+          "text": "you",
+          "offset_ms": 2993.375,
+          "duration_ms": 76.541
+        },
+        {
+          "text": "check",
+          "offset_ms": 3069.916,
+          "duration_ms": 267.875
+        },
+        {
+          "text": "both",
+          "offset_ms": 3350.5,
+          "duration_ms": 242.333
+        },
+        {
+          "text": "Busan",
+          "offset_ms": 3605.625,
+          "duration_ms": 510.208
+        },
+        {
+          "text": "and",
+          "offset_ms": 4154.0830000000005,
+          "duration_ms": 89.291
+        },
+        {
+          "text": "Seoul",
+          "offset_ms": 4256.125,
+          "duration_ms": 395.416
+        }
+      ]
+    },
+    {
+      "speaker_id": "EN02",
+      "condition_id": "E9",
+      "source_id": "E9",
+      "text": "Actually, could you tell me what the weather's like in both Busan and Seoul?",
+      "voice": "en-US-AndrewMultilingualNeural",
+      "rate": "-2%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_en/EN02/E9.wav",
+      "duration_ms": 3792.0,
+      "repair_marker_onset_ms": null,
+      "repair_onset_ms": null,
+      "repair_end_ms": null,
+      "user_end_ms": 3792.0,
+      "insert_silence_at_ms": null,
+      "insert_silence_ms": null,
+      "word_boundaries": [
+        {
+          "text": "Actually",
+          "offset_ms": 102.041,
+          "duration_ms": 548.458
+        },
+        {
+          "text": "could",
+          "offset_ms": 854.583,
+          "duration_ms": 140.291
+        },
+        {
+          "text": "you",
+          "offset_ms": 994.916,
+          "duration_ms": 63.75
+        },
+        {
+          "text": "tell",
+          "offset_ms": 1058.666,
+          "duration_ms": 165.833
+        },
+        {
+          "text": "me",
+          "offset_ms": 1224.5,
+          "duration_ms": 89.291
+        },
+        {
+          "text": "what",
+          "offset_ms": 1313.791,
+          "duration_ms": 114.791
+        },
+        {
+          "text": "the",
+          "offset_ms": 1428.583,
+          "duration_ms": 76.5
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 1505.083,
+          "duration_ms": 331.625
+        },
+        {
+          "text": "like",
+          "offset_ms": 1836.75,
+          "duration_ms": 165.791
+        },
+        {
+          "text": "in",
+          "offset_ms": 2002.541,
+          "duration_ms": 89.291
+        },
+        {
+          "text": "both",
+          "offset_ms": 2091.833,
+          "duration_ms": 293.375
+        },
+        {
+          "text": "Busan",
+          "offset_ms": 2385.208,
+          "duration_ms": 561.208
+        },
+        {
+          "text": "and",
+          "offset_ms": 2959.166,
+          "duration_ms": 102.041
+        },
+        {
+          "text": "Seoul",
+          "offset_ms": 3061.208,
+          "duration_ms": 369.916
+        }
+      ]
+    }
+  ]
+}

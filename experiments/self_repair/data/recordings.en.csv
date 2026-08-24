@@ -1,0 +1,19 @@
+﻿trial_id,speaker_id,condition_id,raw_audio_path,repair_marker_onset_ms,repair_onset_ms,repair_end_ms,user_end_ms,insert_silence_at_ms,insert_silence_ms,accepted,notes
+EN01__E1,EN01,E1,data/raw_en/EN01/E1.wav,,,,2472.0,,,1,neural TTS; voice=en-US-AvaMultilingualNeural; rate=-3%; continuous utterance
+EN01__E2,EN01,E2,data/raw_en/EN01/E2.wav,,,,2568.0,,,1,neural TTS; voice=en-US-AvaMultilingualNeural; rate=-3%; continuous utterance
+EN01__E3,EN01,E3,data/raw_en/EN01/E3.wav,2261.875,3318.541,4078.875,4448.0,,,1,neural TTS; voice=en-US-AvaMultilingualNeural; rate=-3%; continuous utterance
+EN01__E4,EN01,E4,data/raw_en/EN01/E4.wav,2158.75,3331.458,4169.041,4544.0,,,1,neural TTS; voice=en-US-AvaMultilingualNeural; rate=-3%; continuous utterance
+EN01__E5,EN01,E5,data/raw_en/EN01/E5.wav,2861.875,3918.541,4678.875,5048.0,,,1,neural TTS; voice=en-US-AvaMultilingualNeural; rate=-3%; continuous utterance
+EN01__E6,EN01,E6,data/raw_en/EN01/E6.wav,2758.75,3931.458,4769.041,5144.0,,,1,neural TTS; voice=en-US-AvaMultilingualNeural; rate=-3%; continuous utterance
+EN01__E7,EN01,E7,data/raw_en/EN01/E7.wav,,,,3504.0,,,1,neural TTS; voice=en-US-AvaMultilingualNeural; rate=-3%; continuous utterance
+EN01__E8,EN01,E8,data/raw_en/EN01/E8.wav,2274.75,2777.333,4632.999,5024.0,,,1,neural TTS; voice=en-US-AvaMultilingualNeural; rate=-3%; continuous utterance
+EN01__E9,EN01,E9,data/raw_en/EN01/E9.wav,,,,3840.0,,,1,neural TTS; voice=en-US-AvaMultilingualNeural; rate=-3%; continuous utterance
+EN02__E1,EN02,E1,data/raw_en/EN02/E1.wav,,,,2064.0,,,1,neural TTS; voice=en-US-AndrewMultilingualNeural; rate=-2%; continuous utterance
+EN02__E2,EN02,E2,data/raw_en/EN02/E2.wav,,,,2280.0,,,1,neural TTS; voice=en-US-AndrewMultilingualNeural; rate=-2%; continuous utterance
+EN02__E3,EN02,E3,data/raw_en/EN02/E3.wav,2215.291,3363.25,3950.0,4328.0,,,1,neural TTS; voice=en-US-AndrewMultilingualNeural; rate=-2%; continuous utterance
+EN02__E4,EN02,E4,data/raw_en/EN02/E4.wav,1768.875,2853.041,3682.1240000000003,4064.0,,,1,neural TTS; voice=en-US-AndrewMultilingualNeural; rate=-2%; continuous utterance
+EN02__E5,EN02,E5,data/raw_en/EN02/E5.wav,2815.291,3963.25,4550.0,4928.0,,,1,neural TTS; voice=en-US-AndrewMultilingualNeural; rate=-2%; continuous utterance
+EN02__E6,EN02,E6,data/raw_en/EN02/E6.wav,2368.875,3453.041,4282.124,4664.0,,,1,neural TTS; voice=en-US-AndrewMultilingualNeural; rate=-2%; continuous utterance
+EN02__E7,EN02,E7,data/raw_en/EN02/E7.wav,,,,3360.0,,,1,neural TTS; voice=en-US-AndrewMultilingualNeural; rate=-2%; continuous utterance
+EN02__E8,EN02,E8,data/raw_en/EN02/E8.wav,2100.5,2865.833,4651.541,5024.0,,,1,neural TTS; voice=en-US-AndrewMultilingualNeural; rate=-2%; continuous utterance
+EN02__E9,EN02,E9,data/raw_en/EN02/E9.wav,,,,3792.0,,,1,neural TTS; voice=en-US-AndrewMultilingualNeural; rate=-2%; continuous utterance

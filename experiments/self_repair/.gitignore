@@ -1,0 +1,20 @@
+__pycache__/
+scripts/__pycache__/
+# Curated, versioned stimuli override the repository-wide *.wav ignore rule.
+!data/raw/**/*.wav
+!data/raw_en/**/*.wav
+data/prepared/*
+!data/prepared/.gitkeep
+data/prepared_en/
+results/*
+!results/.gitkeep
+results_en/
+annotations/*.csv
+!annotations/.gitkeep
+annotations/audio/
+annotations/audio_en/
+data/manifest*.csv
+data/tts_metadata.json.tmp
+data/tts_smoke_set.zip
+data/tts_metadata.en.json.tmp
+data/tts_english_set.zip

@@ -1,0 +1,26 @@
+{
+  "experiment_name": "moshi_ko_self_repair_pilot_v1",
+  "hf_repo": "kyutai/moshiko-pytorch-bf16",
+  "revision": null,
+  "device": "cuda",
+  "dtype": "bfloat16",
+  "cfg_coef": 1.0,
+  "seeds": [17, 29, 42, 101, 2026],
+  "generation": {
+    "use_sampling": true,
+    "temp": 0.8,
+    "temp_text": 0.7,
+    "top_k": 250,
+    "top_k_text": 25
+  },
+  "audio": {
+    "sample_rate": 24000,
+    "frame_size": 1920,
+    "prefix_silence_ms": 480,
+    "suffix_silence_ms": 8000,
+    "target_active_rms_dbfs": -23.0,
+    "active_threshold_dbfs": -45.0,
+    "peak_limit_dbfs": -1.0
+  },
+  "hash_large_model_files": false
+}

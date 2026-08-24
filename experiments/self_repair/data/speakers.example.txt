@@ -1,0 +1,3 @@
+# Replace these IDs with pseudonymous participant IDs.
+S01
+S02

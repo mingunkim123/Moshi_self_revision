@@ -1,0 +1,209 @@
+{
+  "engine": "macOS say",
+  "sample_rate": 24000,
+  "sample_width_bytes": 2,
+  "speakers": {
+    "S01": {
+      "voice": "Yuna",
+      "rate": 180
+    },
+    "S02": {
+      "voice": "Eddy (한국어(한국))",
+      "rate": 175
+    }
+  },
+  "items": [
+    {
+      "speaker_id": "S01",
+      "condition_id": "K1",
+      "voice": "Yuna",
+      "rate": 180,
+      "relative_path": "data/raw/S01/K1.wav",
+      "duration_ms": 1353.5416666666667,
+      "repair_marker_onset_ms": null,
+      "repair_onset_ms": null,
+      "repair_end_ms": null,
+      "user_end_ms": 1353.5416666666667
+    },
+    {
+      "speaker_id": "S01",
+      "condition_id": "K2",
+      "voice": "Yuna",
+      "rate": 180,
+      "relative_path": "data/raw/S01/K2.wav",
+      "duration_ms": 1371.6666666666667,
+      "repair_marker_onset_ms": null,
+      "repair_onset_ms": null,
+      "repair_end_ms": null,
+      "user_end_ms": 1371.6666666666667
+    },
+    {
+      "speaker_id": "S01",
+      "condition_id": "K3",
+      "voice": "Yuna",
+      "rate": 180,
+      "relative_path": "data/raw/S01/K3.wav",
+      "duration_ms": 2834.2083333333335,
+      "repair_marker_onset_ms": 1026.1666666666667,
+      "repair_onset_ms": 1480.6666666666667,
+      "repair_end_ms": 2834.2083333333335,
+      "user_end_ms": 2834.2083333333335
+    },
+    {
+      "speaker_id": "S01",
+      "condition_id": "K4",
+      "voice": "Yuna",
+      "rate": 180,
+      "relative_path": "data/raw/S01/K4.wav",
+      "duration_ms": 2834.1666666666665,
+      "repair_marker_onset_ms": 1008.0,
+      "repair_onset_ms": 1462.5,
+      "repair_end_ms": 2834.1666666666665,
+      "user_end_ms": 2834.1666666666665
+    },
+    {
+      "speaker_id": "S01",
+      "condition_id": "K5",
+      "voice": "Yuna",
+      "rate": 180,
+      "relative_path": "data/raw/S01/K5.wav",
+      "duration_ms": 3434.2083333333335,
+      "repair_marker_onset_ms": 1626.1666666666667,
+      "repair_onset_ms": 2080.6666666666665,
+      "repair_end_ms": 3434.2083333333335,
+      "user_end_ms": 3434.2083333333335
+    },
+    {
+      "speaker_id": "S01",
+      "condition_id": "K6",
+      "voice": "Yuna",
+      "rate": 180,
+      "relative_path": "data/raw/S01/K6.wav",
+      "duration_ms": 3434.1666666666665,
+      "repair_marker_onset_ms": 1608.0,
+      "repair_onset_ms": 2062.5,
+      "repair_end_ms": 3434.1666666666665,
+      "user_end_ms": 3434.1666666666665
+    },
+    {
+      "speaker_id": "S01",
+      "condition_id": "K7",
+      "voice": "Yuna",
+      "rate": 180,
+      "relative_path": "data/raw/S01/K7.wav",
+      "duration_ms": 2299.7083333333335,
+      "repair_marker_onset_ms": null,
+      "repair_onset_ms": null,
+      "repair_end_ms": null,
+      "user_end_ms": 2299.7083333333335
+    },
+    {
+      "speaker_id": "S01",
+      "condition_id": "K8",
+      "voice": "Yuna",
+      "rate": 180,
+      "relative_path": "data/raw/S01/K8.wav",
+      "duration_ms": 2769.2916666666665,
+      "repair_marker_onset_ms": null,
+      "repair_onset_ms": null,
+      "repair_end_ms": null,
+      "user_end_ms": 2769.2916666666665
+    },
+    {
+      "speaker_id": "S02",
+      "condition_id": "K1",
+      "voice": "Eddy (한국어(한국))",
+      "rate": 175,
+      "relative_path": "data/raw/S02/K1.wav",
+      "duration_ms": 1535.75,
+      "repair_marker_onset_ms": null,
+      "repair_onset_ms": null,
+      "repair_end_ms": null,
+      "user_end_ms": 1535.75
+    },
+    {
+      "speaker_id": "S02",
+      "condition_id": "K2",
+      "voice": "Eddy (한국어(한국))",
+      "rate": 175,
+      "relative_path": "data/raw/S02/K2.wav",
+      "duration_ms": 1547.5833333333333,
+      "repair_marker_onset_ms": null,
+      "repair_onset_ms": null,
+      "repair_end_ms": null,
+      "user_end_ms": 1547.5833333333333
+    },
+    {
+      "speaker_id": "S02",
+      "condition_id": "K3",
+      "voice": "Eddy (한국어(한국))",
+      "rate": 175,
+      "relative_path": "data/raw/S02/K3.wav",
+      "duration_ms": 3081.0833333333335,
+      "repair_marker_onset_ms": 1098.875,
+      "repair_onset_ms": 1545.3333333333333,
+      "repair_end_ms": 3081.0833333333335,
+      "user_end_ms": 3081.0833333333335
+    },
+    {
+      "speaker_id": "S02",
+      "condition_id": "K4",
+      "voice": "Eddy (한국어(한국))",
+      "rate": 175,
+      "relative_path": "data/raw/S02/K4.wav",
+      "duration_ms": 3084.375,
+      "repair_marker_onset_ms": 1090.3333333333333,
+      "repair_onset_ms": 1536.7916666666667,
+      "repair_end_ms": 3084.375,
+      "user_end_ms": 3084.375
+    },
+    {
+      "speaker_id": "S02",
+      "condition_id": "K5",
+      "voice": "Eddy (한국어(한국))",
+      "rate": 175,
+      "relative_path": "data/raw/S02/K5.wav",
+      "duration_ms": 3681.0833333333335,
+      "repair_marker_onset_ms": 1698.875,
+      "repair_onset_ms": 2145.3333333333335,
+      "repair_end_ms": 3681.0833333333335,
+      "user_end_ms": 3681.0833333333335
+    },
+    {
+      "speaker_id": "S02",
+      "condition_id": "K6",
+      "voice": "Eddy (한국어(한국))",
+      "rate": 175,
+      "relative_path": "data/raw/S02/K6.wav",
+      "duration_ms": 3684.375,
+      "repair_marker_onset_ms": 1690.3333333333333,
+      "repair_onset_ms": 2136.7916666666665,
+      "repair_end_ms": 3684.375,
+      "user_end_ms": 3684.375
+    },
+    {
+      "speaker_id": "S02",
+      "condition_id": "K7",
+      "voice": "Eddy (한국어(한국))",
+      "rate": 175,
+      "relative_path": "data/raw/S02/K7.wav",
+      "duration_ms": 2722.25,
+      "repair_marker_onset_ms": null,
+      "repair_onset_ms": null,
+      "repair_end_ms": null,
+      "user_end_ms": 2722.25
+    },
+    {
+      "speaker_id": "S02",
+      "condition_id": "K8",
+      "voice": "Eddy (한국어(한국))",
+      "rate": 175,
+      "relative_path": "data/raw/S02/K8.wav",
+      "duration_ms": 3212.2083333333335,
+      "repair_marker_onset_ms": null,
+      "repair_onset_ms": null,
+      "repair_end_ms": null,
+      "user_end_ms": 3212.2083333333335
+    }
+  ]
+}
