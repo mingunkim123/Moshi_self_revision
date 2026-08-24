@@ -38,7 +38,8 @@ export NO_TORCH_COMPILE=1
   --condition E1 \
   --condition E3 \
   --condition E8 \
-  --seeds 17
+  --seeds 17 \
+  --overwrite
 
 echo
 echo "Smoke run complete. Inspect these three response WAV files:"

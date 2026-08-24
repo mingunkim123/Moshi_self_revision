@@ -50,6 +50,9 @@ experiments/self_repair/results_en/raw/EN01__E8/seed_17/response.wav
 E1은 clean Seoul, E3은 Busan에서 Seoul로 교체, E8은 Busan에서
 Busan+Seoul로 확장하는 조건이다.
 
+영어 자극은 사용자 발화가 끝난 뒤 16초를 더 입력해 긴 두 도시 응답도
+수집한다. smoke 명령을 다시 실행하면 이 세 결과는 새 관찰창으로 덮어쓴다.
+
 ## 5. 전체 90개 실행
 
 세 smoke 응답이 정상이라면 실행한다.
