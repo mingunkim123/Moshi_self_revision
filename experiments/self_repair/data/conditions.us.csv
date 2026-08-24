@@ -1,0 +1,10 @@
+condition_id,language,track,utterance,target,stale,is_repair,is_clean,is_long_gap,clean_match_id,smoke,pilot,notes
+E1,en,natural,Could you tell me what the weather's like in Seattle,Seattle,,0,1,0,,1,1,US lexical-control clean Seattle
+E2,en,natural,Could you tell me what the weather's like in Boston,Boston,,0,1,0,,1,1,US lexical-control clean Boston
+E3,en,natural,"Could you tell me what the weather's like in Boston—uh, sorry, I meant Seattle",Seattle,Boston,1,0,0,E1,1,1,US lexical-control spontaneous-style 200 ms repair
+E4,en,natural,"Could you tell me what the weather's like in Seattle—uh, sorry, I meant Boston",Boston,Seattle,1,0,0,E2,1,1,US lexical-control reverse spontaneous-style 200 ms repair
+E5,en,natural,"Could you tell me what the weather's like in Boston—[800ms] uh, sorry, I meant Seattle",Seattle,Boston,1,0,1,E1,1,1,US lexical-control long-gap stress; do not speak the bracketed text
+E6,en,natural,"Could you tell me what the weather's like in Seattle—[800ms] uh, sorry, I meant Boston",Boston,Seattle,1,0,1,E2,1,1,US lexical-control reverse long-gap stress; do not speak the bracketed text
+E7,en,natural,Could you tell me what the weather's like in both Boston and Seattle,Boston|Seattle,,0,0,0,,1,1,US lexical-control both-city recency control
+E8,en,natural,"Could you tell me what the weather's like in Boston—actually, could you check both Boston and Seattle",Boston|Seattle,,1,0,0,E7,1,1,US lexical-control natural expansion repair from one city to both
+E9,en,natural,"Actually, could you tell me what the weather's like in both Boston and Seattle",Boston|Seattle,,0,0,0,,1,1,US lexical-control non-repair discourse-marker control

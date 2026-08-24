@@ -1,0 +1,1615 @@
+{
+  "engine": "Microsoft Edge online neural TTS via edge-tts",
+  "edge_tts_version": "7.2.8",
+  "language": "en-US",
+  "city_a": "Boston",
+  "city_b": "Seattle",
+  "sample_rate": 24000,
+  "sample_width_bytes": 2,
+  "speakers": {
+    "EN01": {
+      "voice": "en-US-AvaMultilingualNeural",
+      "rate": "-3%",
+      "pitch": "+0Hz"
+    },
+    "EN02": {
+      "voice": "en-US-AndrewMultilingualNeural",
+      "rate": "-2%",
+      "pitch": "+0Hz"
+    }
+  },
+  "items": [
+    {
+      "speaker_id": "EN01",
+      "condition_id": "E1",
+      "source_id": "E1",
+      "text": "Could you tell me what the weather's like in Seattle?",
+      "voice": "en-US-AvaMultilingualNeural",
+      "rate": "-3%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_us/EN01/E1.wav",
+      "duration_ms": 2520.0,
+      "repair_marker_onset_ms": null,
+      "repair_onset_ms": null,
+      "repair_end_ms": null,
+      "user_end_ms": 2520.0,
+      "insert_silence_at_ms": null,
+      "insert_silence_ms": null,
+      "word_boundaries": [
+        {
+          "text": "Could",
+          "offset_ms": 90.208,
+          "duration_ms": 141.75
+        },
+        {
+          "text": "you",
+          "offset_ms": 231.958,
+          "duration_ms": 103.083
+        },
+        {
+          "text": "tell",
+          "offset_ms": 347.958,
+          "duration_ms": 206.166
+        },
+        {
+          "text": "me",
+          "offset_ms": 554.125,
+          "duration_ms": 103.083
+        },
+        {
+          "text": "what",
+          "offset_ms": 670.083,
+          "duration_ms": 103.083
+        },
+        {
+          "text": "the",
+          "offset_ms": 786.083,
+          "duration_ms": 90.208
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 889.166,
+          "duration_ms": 412.375
+        },
+        {
+          "text": "like",
+          "offset_ms": 1314.416,
+          "duration_ms": 167.541
+        },
+        {
+          "text": "in",
+          "offset_ms": 1494.833,
+          "duration_ms": 116.0
+        },
+        {
+          "text": "Seattle",
+          "offset_ms": 1623.708,
+          "duration_ms": 528.333
+        }
+      ]
+    },
+    {
+      "speaker_id": "EN01",
+      "condition_id": "E2",
+      "source_id": "E2",
+      "text": "Could you tell me what the weather's like in Boston?",
+      "voice": "en-US-AvaMultilingualNeural",
+      "rate": "-3%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_us/EN01/E2.wav",
+      "duration_ms": 2640.0,
+      "repair_marker_onset_ms": null,
+      "repair_onset_ms": null,
+      "repair_end_ms": null,
+      "user_end_ms": 2640.0,
+      "insert_silence_at_ms": null,
+      "insert_silence_ms": null,
+      "word_boundaries": [
+        {
+          "text": "Could",
+          "offset_ms": 90.208,
+          "duration_ms": 141.75
+        },
+        {
+          "text": "you",
+          "offset_ms": 244.833,
+          "duration_ms": 103.083
+        },
+        {
+          "text": "tell",
+          "offset_ms": 347.958,
+          "duration_ms": 206.166
+        },
+        {
+          "text": "me",
+          "offset_ms": 567.0,
+          "duration_ms": 116.0
+        },
+        {
+          "text": "what",
+          "offset_ms": 695.875,
+          "duration_ms": 116.0
+        },
+        {
+          "text": "the",
+          "offset_ms": 824.75,
+          "duration_ms": 90.208
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 927.833,
+          "duration_ms": 451.041
+        },
+        {
+          "text": "like",
+          "offset_ms": 1391.75,
+          "duration_ms": 206.166
+        },
+        {
+          "text": "in",
+          "offset_ms": 1610.833,
+          "duration_ms": 103.083
+        },
+        {
+          "text": "Boston",
+          "offset_ms": 1726.791,
+          "duration_ms": 554.125
+        }
+      ]
+    },
+    {
+      "speaker_id": "EN01",
+      "condition_id": "E3",
+      "source_id": "E3",
+      "text": "Could you tell me what the weather's like in Boston uh, sorry, I meant Seattle?",
+      "voice": "en-US-AvaMultilingualNeural",
+      "rate": "-3%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_us/EN01/E3.wav",
+      "duration_ms": 4352.0,
+      "repair_marker_onset_ms": 2145.875,
+      "repair_onset_ms": 3163.916,
+      "repair_end_ms": 3975.791,
+      "user_end_ms": 4352.0,
+      "insert_silence_at_ms": 1945.875,
+      "insert_silence_ms": 200,
+      "word_boundaries": [
+        {
+          "text": "Could",
+          "offset_ms": 90.208,
+          "duration_ms": 128.875
+        },
+        {
+          "text": "you",
+          "offset_ms": 219.083,
+          "duration_ms": 90.208
+        },
+        {
+          "text": "tell",
+          "offset_ms": 309.291,
+          "duration_ms": 206.166
+        },
+        {
+          "text": "me",
+          "offset_ms": 528.333,
+          "duration_ms": 90.208
+        },
+        {
+          "text": "what",
+          "offset_ms": 631.458,
+          "duration_ms": 90.208
+        },
+        {
+          "text": "the",
+          "offset_ms": 734.541,
+          "duration_ms": 77.333
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 824.75,
+          "duration_ms": 373.708
+        },
+        {
+          "text": "like",
+          "offset_ms": 1211.333,
+          "duration_ms": 141.75
+        },
+        {
+          "text": "in",
+          "offset_ms": 1366.0,
+          "duration_ms": 90.208
+        },
+        {
+          "text": "Boston",
+          "offset_ms": 1469.083,
+          "duration_ms": 476.791
+        },
+        {
+          "text": "uh",
+          "offset_ms": 2145.875,
+          "duration_ms": 193.291
+        },
+        {
+          "text": "sorry",
+          "offset_ms": 2596.916,
+          "duration_ms": 554.125
+        },
+        {
+          "text": "I",
+          "offset_ms": 3163.916,
+          "duration_ms": 116.0
+        },
+        {
+          "text": "meant",
+          "offset_ms": 3279.916,
+          "duration_ms": 219.083
+        },
+        {
+          "text": "Seattle",
+          "offset_ms": 3511.875,
+          "duration_ms": 463.916
+        }
+      ]
+    },
+    {
+      "speaker_id": "EN01",
+      "condition_id": "E4",
+      "source_id": "E4",
+      "text": "Could you tell me what the weather's like in Seattle uh, sorry, I meant Boston?",
+      "voice": "en-US-AvaMultilingualNeural",
+      "rate": "-3%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_us/EN01/E4.wav",
+      "duration_ms": 4328.0,
+      "repair_marker_onset_ms": 2236.083,
+      "repair_onset_ms": 3112.375,
+      "repair_end_ms": 3962.916,
+      "user_end_ms": 4328.0,
+      "insert_silence_at_ms": 2036.0833333333333,
+      "insert_silence_ms": 200,
+      "word_boundaries": [
+        {
+          "text": "Could",
+          "offset_ms": 103.083,
+          "duration_ms": 116.0
+        },
+        {
+          "text": "you",
+          "offset_ms": 219.083,
+          "duration_ms": 77.291
+        },
+        {
+          "text": "tell",
+          "offset_ms": 296.375,
+          "duration_ms": 180.416
+        },
+        {
+          "text": "me",
+          "offset_ms": 489.708,
+          "duration_ms": 90.208
+        },
+        {
+          "text": "what",
+          "offset_ms": 592.791,
+          "duration_ms": 103.083
+        },
+        {
+          "text": "the",
+          "offset_ms": 708.75,
+          "duration_ms": 77.333
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 798.958,
+          "duration_ms": 360.833
+        },
+        {
+          "text": "like",
+          "offset_ms": 1159.791,
+          "duration_ms": 193.291
+        },
+        {
+          "text": "in",
+          "offset_ms": 1366.0,
+          "duration_ms": 141.75
+        },
+        {
+          "text": "Seattle",
+          "offset_ms": 1520.625,
+          "duration_ms": 502.583
+        },
+        {
+          "text": "uh",
+          "offset_ms": 2236.083,
+          "duration_ms": 103.083
+        },
+        {
+          "text": "sorry",
+          "offset_ms": 2609.791,
+          "duration_ms": 476.791
+        },
+        {
+          "text": "I",
+          "offset_ms": 3112.375,
+          "duration_ms": 128.875
+        },
+        {
+          "text": "meant",
+          "offset_ms": 3254.125,
+          "duration_ms": 219.083
+        },
+        {
+          "text": "Boston",
+          "offset_ms": 3473.208,
+          "duration_ms": 489.708
+        }
+      ]
+    },
+    {
+      "speaker_id": "EN01",
+      "condition_id": "E5",
+      "source_id": "E3",
+      "text": "Could you tell me what the weather's like in Boston uh, sorry, I meant Seattle?",
+      "voice": "en-US-AvaMultilingualNeural",
+      "rate": "-3%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_us/EN01/E5.wav",
+      "duration_ms": 4952.0,
+      "repair_marker_onset_ms": 2745.875,
+      "repair_onset_ms": 3763.916,
+      "repair_end_ms": 4575.791,
+      "user_end_ms": 4952.0,
+      "insert_silence_at_ms": 1945.875,
+      "insert_silence_ms": 800,
+      "word_boundaries": [
+        {
+          "text": "Could",
+          "offset_ms": 90.208,
+          "duration_ms": 128.875
+        },
+        {
+          "text": "you",
+          "offset_ms": 219.083,
+          "duration_ms": 90.208
+        },
+        {
+          "text": "tell",
+          "offset_ms": 309.291,
+          "duration_ms": 206.166
+        },
+        {
+          "text": "me",
+          "offset_ms": 528.333,
+          "duration_ms": 90.208
+        },
+        {
+          "text": "what",
+          "offset_ms": 631.458,
+          "duration_ms": 90.208
+        },
+        {
+          "text": "the",
+          "offset_ms": 734.541,
+          "duration_ms": 77.333
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 824.75,
+          "duration_ms": 373.708
+        },
+        {
+          "text": "like",
+          "offset_ms": 1211.333,
+          "duration_ms": 141.75
+        },
+        {
+          "text": "in",
+          "offset_ms": 1366.0,
+          "duration_ms": 90.208
+        },
+        {
+          "text": "Boston",
+          "offset_ms": 1469.083,
+          "duration_ms": 476.791
+        },
+        {
+          "text": "uh",
+          "offset_ms": 2745.875,
+          "duration_ms": 193.291
+        },
+        {
+          "text": "sorry",
+          "offset_ms": 3196.916,
+          "duration_ms": 554.125
+        },
+        {
+          "text": "I",
+          "offset_ms": 3763.916,
+          "duration_ms": 116.0
+        },
+        {
+          "text": "meant",
+          "offset_ms": 3879.916,
+          "duration_ms": 219.083
+        },
+        {
+          "text": "Seattle",
+          "offset_ms": 4111.875,
+          "duration_ms": 463.916
+        }
+      ]
+    },
+    {
+      "speaker_id": "EN01",
+      "condition_id": "E6",
+      "source_id": "E4",
+      "text": "Could you tell me what the weather's like in Seattle uh, sorry, I meant Boston?",
+      "voice": "en-US-AvaMultilingualNeural",
+      "rate": "-3%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_us/EN01/E6.wav",
+      "duration_ms": 4928.0,
+      "repair_marker_onset_ms": 2836.083,
+      "repair_onset_ms": 3712.375,
+      "repair_end_ms": 4562.916,
+      "user_end_ms": 4928.0,
+      "insert_silence_at_ms": 2036.0833333333333,
+      "insert_silence_ms": 800,
+      "word_boundaries": [
+        {
+          "text": "Could",
+          "offset_ms": 103.083,
+          "duration_ms": 116.0
+        },
+        {
+          "text": "you",
+          "offset_ms": 219.083,
+          "duration_ms": 77.291
+        },
+        {
+          "text": "tell",
+          "offset_ms": 296.375,
+          "duration_ms": 180.416
+        },
+        {
+          "text": "me",
+          "offset_ms": 489.708,
+          "duration_ms": 90.208
+        },
+        {
+          "text": "what",
+          "offset_ms": 592.791,
+          "duration_ms": 103.083
+        },
+        {
+          "text": "the",
+          "offset_ms": 708.75,
+          "duration_ms": 77.333
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 798.958,
+          "duration_ms": 360.833
+        },
+        {
+          "text": "like",
+          "offset_ms": 1159.791,
+          "duration_ms": 193.291
+        },
+        {
+          "text": "in",
+          "offset_ms": 1366.0,
+          "duration_ms": 141.75
+        },
+        {
+          "text": "Seattle",
+          "offset_ms": 1520.625,
+          "duration_ms": 502.583
+        },
+        {
+          "text": "uh",
+          "offset_ms": 2836.083,
+          "duration_ms": 103.083
+        },
+        {
+          "text": "sorry",
+          "offset_ms": 3209.791,
+          "duration_ms": 476.791
+        },
+        {
+          "text": "I",
+          "offset_ms": 3712.375,
+          "duration_ms": 128.875
+        },
+        {
+          "text": "meant",
+          "offset_ms": 3854.125,
+          "duration_ms": 219.083
+        },
+        {
+          "text": "Boston",
+          "offset_ms": 4073.208,
+          "duration_ms": 489.708
+        }
+      ]
+    },
+    {
+      "speaker_id": "EN01",
+      "condition_id": "E7",
+      "source_id": "E7",
+      "text": "Could you tell me what the weather's like in both Boston and Seattle?",
+      "voice": "en-US-AvaMultilingualNeural",
+      "rate": "-3%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_us/EN01/E7.wav",
+      "duration_ms": 3432.0,
+      "repair_marker_onset_ms": null,
+      "repair_onset_ms": null,
+      "repair_end_ms": null,
+      "user_end_ms": 3432.0,
+      "insert_silence_at_ms": null,
+      "insert_silence_ms": null,
+      "word_boundaries": [
+        {
+          "text": "Could",
+          "offset_ms": 90.208,
+          "duration_ms": 103.083
+        },
+        {
+          "text": "you",
+          "offset_ms": 193.291,
+          "duration_ms": 90.208
+        },
+        {
+          "text": "tell",
+          "offset_ms": 296.375,
+          "duration_ms": 193.291
+        },
+        {
+          "text": "me",
+          "offset_ms": 502.583,
+          "duration_ms": 103.083
+        },
+        {
+          "text": "what",
+          "offset_ms": 618.541,
+          "duration_ms": 103.083
+        },
+        {
+          "text": "the",
+          "offset_ms": 734.541,
+          "duration_ms": 90.208
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 837.625,
+          "duration_ms": 412.375
+        },
+        {
+          "text": "like",
+          "offset_ms": 1262.875,
+          "duration_ms": 193.291
+        },
+        {
+          "text": "in",
+          "offset_ms": 1456.166,
+          "duration_ms": 90.208
+        },
+        {
+          "text": "both",
+          "offset_ms": 1559.291,
+          "duration_ms": 244.833
+        },
+        {
+          "text": "Boston",
+          "offset_ms": 1804.125,
+          "duration_ms": 554.125
+        },
+        {
+          "text": "and",
+          "offset_ms": 2371.125,
+          "duration_ms": 180.416
+        },
+        {
+          "text": "Seattle",
+          "offset_ms": 2564.416,
+          "duration_ms": 502.583
+        }
+      ]
+    },
+    {
+      "speaker_id": "EN01",
+      "condition_id": "E8",
+      "source_id": "E8",
+      "text": "Could you tell me what the weather's like in Boston actually, could you check both Boston and Seattle?",
+      "voice": "en-US-AvaMultilingualNeural",
+      "rate": "-3%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_us/EN01/E8.wav",
+      "duration_ms": 5264.0,
+      "repair_marker_onset_ms": 2326.291,
+      "repair_onset_ms": 2815.958,
+      "repair_end_ms": 4877.833,
+      "user_end_ms": 5264.0,
+      "insert_silence_at_ms": 2126.2916666666665,
+      "insert_silence_ms": 200,
+      "word_boundaries": [
+        {
+          "text": "Could",
+          "offset_ms": 103.083,
+          "duration_ms": 128.875
+        },
+        {
+          "text": "you",
+          "offset_ms": 244.833,
+          "duration_ms": 90.208
+        },
+        {
+          "text": "tell",
+          "offset_ms": 347.958,
+          "duration_ms": 206.166
+        },
+        {
+          "text": "me",
+          "offset_ms": 567.0,
+          "duration_ms": 103.083
+        },
+        {
+          "text": "what",
+          "offset_ms": 670.083,
+          "duration_ms": 116.0
+        },
+        {
+          "text": "the",
+          "offset_ms": 786.083,
+          "duration_ms": 90.208
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 889.166,
+          "duration_ms": 412.375
+        },
+        {
+          "text": "like",
+          "offset_ms": 1314.416,
+          "duration_ms": 206.166
+        },
+        {
+          "text": "in",
+          "offset_ms": 1533.5,
+          "duration_ms": 128.875
+        },
+        {
+          "text": "Boston",
+          "offset_ms": 1675.25,
+          "duration_ms": 438.125
+        },
+        {
+          "text": "actually",
+          "offset_ms": 2326.291,
+          "duration_ms": 476.791
+        },
+        {
+          "text": "could",
+          "offset_ms": 2815.958,
+          "duration_ms": 141.75
+        },
+        {
+          "text": "you",
+          "offset_ms": 2970.625,
+          "duration_ms": 77.333
+        },
+        {
+          "text": "check",
+          "offset_ms": 3060.833,
+          "duration_ms": 270.625
+        },
+        {
+          "text": "both",
+          "offset_ms": 3344.333,
+          "duration_ms": 231.958
+        },
+        {
+          "text": "Boston",
+          "offset_ms": 3576.291,
+          "duration_ms": 579.916
+        },
+        {
+          "text": "and",
+          "offset_ms": 4169.0830000000005,
+          "duration_ms": 193.291
+        },
+        {
+          "text": "Seattle",
+          "offset_ms": 4362.375,
+          "duration_ms": 515.458
+        }
+      ]
+    },
+    {
+      "speaker_id": "EN01",
+      "condition_id": "E9",
+      "source_id": "E9",
+      "text": "Actually, could you tell me what the weather's like in both Boston and Seattle?",
+      "voice": "en-US-AvaMultilingualNeural",
+      "rate": "-3%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_us/EN01/E9.wav",
+      "duration_ms": 4320.0,
+      "repair_marker_onset_ms": null,
+      "repair_onset_ms": null,
+      "repair_end_ms": null,
+      "user_end_ms": 4320.0,
+      "insert_silence_at_ms": null,
+      "insert_silence_ms": null,
+      "word_boundaries": [
+        {
+          "text": "Actually",
+          "offset_ms": 103.083,
+          "duration_ms": 554.125
+        },
+        {
+          "text": "could",
+          "offset_ms": 850.5,
+          "duration_ms": 154.625
+        },
+        {
+          "text": "you",
+          "offset_ms": 1018.041,
+          "duration_ms": 90.208
+        },
+        {
+          "text": "tell",
+          "offset_ms": 1121.125,
+          "duration_ms": 193.291
+        },
+        {
+          "text": "me",
+          "offset_ms": 1327.333,
+          "duration_ms": 103.083
+        },
+        {
+          "text": "what",
+          "offset_ms": 1443.291,
+          "duration_ms": 116.0
+        },
+        {
+          "text": "the",
+          "offset_ms": 1572.166,
+          "duration_ms": 77.333
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 1662.375,
+          "duration_ms": 399.5
+        },
+        {
+          "text": "like",
+          "offset_ms": 2074.75,
+          "duration_ms": 180.416
+        },
+        {
+          "text": "in",
+          "offset_ms": 2268.041,
+          "duration_ms": 103.083
+        },
+        {
+          "text": "both",
+          "offset_ms": 2384.0,
+          "duration_ms": 244.833
+        },
+        {
+          "text": "Boston",
+          "offset_ms": 2628.875,
+          "duration_ms": 592.791
+        },
+        {
+          "text": "and",
+          "offset_ms": 3234.541,
+          "duration_ms": 180.416
+        },
+        {
+          "text": "Seattle",
+          "offset_ms": 3427.833,
+          "duration_ms": 502.583
+        }
+      ]
+    },
+    {
+      "speaker_id": "EN02",
+      "condition_id": "E1",
+      "source_id": "E1",
+      "text": "Could you tell me what the weather's like in Seattle?",
+      "voice": "en-US-AndrewMultilingualNeural",
+      "rate": "-2%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_us/EN02/E1.wav",
+      "duration_ms": 2376.0,
+      "repair_marker_onset_ms": null,
+      "repair_onset_ms": null,
+      "repair_end_ms": null,
+      "user_end_ms": 2376.0,
+      "insert_silence_at_ms": null,
+      "insert_silence_ms": null,
+      "word_boundaries": [
+        {
+          "text": "Could",
+          "offset_ms": 102.041,
+          "duration_ms": 102.041
+        },
+        {
+          "text": "you",
+          "offset_ms": 204.083,
+          "duration_ms": 63.791
+        },
+        {
+          "text": "tell",
+          "offset_ms": 280.625,
+          "duration_ms": 165.833
+        },
+        {
+          "text": "me",
+          "offset_ms": 459.166,
+          "duration_ms": 89.291
+        },
+        {
+          "text": "what",
+          "offset_ms": 548.458,
+          "duration_ms": 114.791
+        },
+        {
+          "text": "the",
+          "offset_ms": 663.25,
+          "duration_ms": 89.291
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 752.541,
+          "duration_ms": 433.666
+        },
+        {
+          "text": "like",
+          "offset_ms": 1186.208,
+          "duration_ms": 204.083
+        },
+        {
+          "text": "in",
+          "offset_ms": 1403.041,
+          "duration_ms": 102.041
+        },
+        {
+          "text": "Seattle",
+          "offset_ms": 1505.083,
+          "duration_ms": 510.208
+        }
+      ]
+    },
+    {
+      "speaker_id": "EN02",
+      "condition_id": "E2",
+      "source_id": "E2",
+      "text": "Could you tell me what the weather's like in Boston?",
+      "voice": "en-US-AndrewMultilingualNeural",
+      "rate": "-2%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_us/EN02/E2.wav",
+      "duration_ms": 2232.0,
+      "repair_marker_onset_ms": null,
+      "repair_onset_ms": null,
+      "repair_end_ms": null,
+      "user_end_ms": 2232.0,
+      "insert_silence_at_ms": null,
+      "insert_silence_ms": null,
+      "word_boundaries": [
+        {
+          "text": "Could",
+          "offset_ms": 102.041,
+          "duration_ms": 127.541
+        },
+        {
+          "text": "you",
+          "offset_ms": 229.583,
+          "duration_ms": 76.541
+        },
+        {
+          "text": "tell",
+          "offset_ms": 306.125,
+          "duration_ms": 191.333
+        },
+        {
+          "text": "me",
+          "offset_ms": 497.458,
+          "duration_ms": 102.041
+        },
+        {
+          "text": "what",
+          "offset_ms": 599.5,
+          "duration_ms": 102.041
+        },
+        {
+          "text": "the",
+          "offset_ms": 701.541,
+          "duration_ms": 89.291
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 790.833,
+          "duration_ms": 395.375
+        },
+        {
+          "text": "like",
+          "offset_ms": 1186.208,
+          "duration_ms": 165.833
+        },
+        {
+          "text": "in",
+          "offset_ms": 1352.041,
+          "duration_ms": 76.541
+        },
+        {
+          "text": "Boston",
+          "offset_ms": 1441.333,
+          "duration_ms": 433.666
+        }
+      ]
+    },
+    {
+      "speaker_id": "EN02",
+      "condition_id": "E3",
+      "source_id": "E3",
+      "text": "Could you tell me what the weather's like in Boston uh, sorry, I meant Seattle?",
+      "voice": "en-US-AndrewMultilingualNeural",
+      "rate": "-2%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_us/EN02/E3.wav",
+      "duration_ms": 4352.0,
+      "repair_marker_onset_ms": 1947.458,
+      "repair_onset_ms": 3235.708,
+      "repair_end_ms": 3975.4990000000003,
+      "user_end_ms": 4352.0,
+      "insert_silence_at_ms": 1747.4583333333333,
+      "insert_silence_ms": 200,
+      "word_boundaries": [
+        {
+          "text": "Could",
+          "offset_ms": 114.791,
+          "duration_ms": 114.791
+        },
+        {
+          "text": "you",
+          "offset_ms": 229.583,
+          "duration_ms": 63.791
+        },
+        {
+          "text": "tell",
+          "offset_ms": 293.375,
+          "duration_ms": 153.041
+        },
+        {
+          "text": "me",
+          "offset_ms": 446.416,
+          "duration_ms": 89.291
+        },
+        {
+          "text": "what",
+          "offset_ms": 548.458,
+          "duration_ms": 102.041
+        },
+        {
+          "text": "the",
+          "offset_ms": 650.5,
+          "duration_ms": 76.541
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 727.041,
+          "duration_ms": 306.125
+        },
+        {
+          "text": "like",
+          "offset_ms": 1033.166,
+          "duration_ms": 140.291
+        },
+        {
+          "text": "in",
+          "offset_ms": 1173.458,
+          "duration_ms": 76.541
+        },
+        {
+          "text": "Boston",
+          "offset_ms": 1250.0,
+          "duration_ms": 484.708
+        },
+        {
+          "text": "uh",
+          "offset_ms": 1947.458,
+          "duration_ms": 242.333
+        },
+        {
+          "text": "sorry",
+          "offset_ms": 2470.416,
+          "duration_ms": 484.708
+        },
+        {
+          "text": "I",
+          "offset_ms": 3235.708,
+          "duration_ms": 76.541
+        },
+        {
+          "text": "meant",
+          "offset_ms": 3312.25,
+          "duration_ms": 204.083
+        },
+        {
+          "text": "Seattle",
+          "offset_ms": 3516.333,
+          "duration_ms": 459.166
+        }
+      ]
+    },
+    {
+      "speaker_id": "EN02",
+      "condition_id": "E4",
+      "source_id": "E4",
+      "text": "Could you tell me what the weather's like in Seattle uh, sorry, I meant Boston?",
+      "voice": "en-US-AndrewMultilingualNeural",
+      "rate": "-2%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_us/EN02/E4.wav",
+      "duration_ms": 4544.0,
+      "repair_marker_onset_ms": 2138.791,
+      "repair_onset_ms": 3465.291,
+      "repair_end_ms": 4166.832,
+      "user_end_ms": 4544.0,
+      "insert_silence_at_ms": 1938.7916666666667,
+      "insert_silence_ms": 200,
+      "word_boundaries": [
+        {
+          "text": "Could",
+          "offset_ms": 102.041,
+          "duration_ms": 114.791
+        },
+        {
+          "text": "you",
+          "offset_ms": 229.583,
+          "duration_ms": 76.541
+        },
+        {
+          "text": "tell",
+          "offset_ms": 318.875,
+          "duration_ms": 153.041
+        },
+        {
+          "text": "me",
+          "offset_ms": 471.958,
+          "duration_ms": 89.25
+        },
+        {
+          "text": "what",
+          "offset_ms": 561.208,
+          "duration_ms": 89.291
+        },
+        {
+          "text": "the",
+          "offset_ms": 650.5,
+          "duration_ms": 76.541
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 739.791,
+          "duration_ms": 318.875
+        },
+        {
+          "text": "like",
+          "offset_ms": 1058.666,
+          "duration_ms": 153.041
+        },
+        {
+          "text": "in",
+          "offset_ms": 1211.75,
+          "duration_ms": 76.5
+        },
+        {
+          "text": "Seattle",
+          "offset_ms": 1288.25,
+          "duration_ms": 535.708
+        },
+        {
+          "text": "uh",
+          "offset_ms": 2138.791,
+          "duration_ms": 216.833
+        },
+        {
+          "text": "sorry",
+          "offset_ms": 2776.541,
+          "duration_ms": 471.958
+        },
+        {
+          "text": "I",
+          "offset_ms": 3465.291,
+          "duration_ms": 63.791
+        },
+        {
+          "text": "meant",
+          "offset_ms": 3529.083,
+          "duration_ms": 204.083
+        },
+        {
+          "text": "Boston",
+          "offset_ms": 3733.166,
+          "duration_ms": 433.666
+        }
+      ]
+    },
+    {
+      "speaker_id": "EN02",
+      "condition_id": "E5",
+      "source_id": "E3",
+      "text": "Could you tell me what the weather's like in Boston uh, sorry, I meant Seattle?",
+      "voice": "en-US-AndrewMultilingualNeural",
+      "rate": "-2%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_us/EN02/E5.wav",
+      "duration_ms": 4952.0,
+      "repair_marker_onset_ms": 2547.458,
+      "repair_onset_ms": 3835.708,
+      "repair_end_ms": 4575.499000000001,
+      "user_end_ms": 4952.0,
+      "insert_silence_at_ms": 1747.4583333333333,
+      "insert_silence_ms": 800,
+      "word_boundaries": [
+        {
+          "text": "Could",
+          "offset_ms": 114.791,
+          "duration_ms": 114.791
+        },
+        {
+          "text": "you",
+          "offset_ms": 229.583,
+          "duration_ms": 63.791
+        },
+        {
+          "text": "tell",
+          "offset_ms": 293.375,
+          "duration_ms": 153.041
+        },
+        {
+          "text": "me",
+          "offset_ms": 446.416,
+          "duration_ms": 89.291
+        },
+        {
+          "text": "what",
+          "offset_ms": 548.458,
+          "duration_ms": 102.041
+        },
+        {
+          "text": "the",
+          "offset_ms": 650.5,
+          "duration_ms": 76.541
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 727.041,
+          "duration_ms": 306.125
+        },
+        {
+          "text": "like",
+          "offset_ms": 1033.166,
+          "duration_ms": 140.291
+        },
+        {
+          "text": "in",
+          "offset_ms": 1173.458,
+          "duration_ms": 76.541
+        },
+        {
+          "text": "Boston",
+          "offset_ms": 1250.0,
+          "duration_ms": 484.708
+        },
+        {
+          "text": "uh",
+          "offset_ms": 2547.458,
+          "duration_ms": 242.333
+        },
+        {
+          "text": "sorry",
+          "offset_ms": 3070.416,
+          "duration_ms": 484.708
+        },
+        {
+          "text": "I",
+          "offset_ms": 3835.708,
+          "duration_ms": 76.541
+        },
+        {
+          "text": "meant",
+          "offset_ms": 3912.25,
+          "duration_ms": 204.083
+        },
+        {
+          "text": "Seattle",
+          "offset_ms": 4116.3330000000005,
+          "duration_ms": 459.166
+        }
+      ]
+    },
+    {
+      "speaker_id": "EN02",
+      "condition_id": "E6",
+      "source_id": "E4",
+      "text": "Could you tell me what the weather's like in Seattle uh, sorry, I meant Boston?",
+      "voice": "en-US-AndrewMultilingualNeural",
+      "rate": "-2%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_us/EN02/E6.wav",
+      "duration_ms": 5144.0,
+      "repair_marker_onset_ms": 2738.791,
+      "repair_onset_ms": 4065.291,
+      "repair_end_ms": 4766.832,
+      "user_end_ms": 5144.0,
+      "insert_silence_at_ms": 1938.7916666666667,
+      "insert_silence_ms": 800,
+      "word_boundaries": [
+        {
+          "text": "Could",
+          "offset_ms": 102.041,
+          "duration_ms": 114.791
+        },
+        {
+          "text": "you",
+          "offset_ms": 229.583,
+          "duration_ms": 76.541
+        },
+        {
+          "text": "tell",
+          "offset_ms": 318.875,
+          "duration_ms": 153.041
+        },
+        {
+          "text": "me",
+          "offset_ms": 471.958,
+          "duration_ms": 89.25
+        },
+        {
+          "text": "what",
+          "offset_ms": 561.208,
+          "duration_ms": 89.291
+        },
+        {
+          "text": "the",
+          "offset_ms": 650.5,
+          "duration_ms": 76.541
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 739.791,
+          "duration_ms": 318.875
+        },
+        {
+          "text": "like",
+          "offset_ms": 1058.666,
+          "duration_ms": 153.041
+        },
+        {
+          "text": "in",
+          "offset_ms": 1211.75,
+          "duration_ms": 76.5
+        },
+        {
+          "text": "Seattle",
+          "offset_ms": 1288.25,
+          "duration_ms": 535.708
+        },
+        {
+          "text": "uh",
+          "offset_ms": 2738.791,
+          "duration_ms": 216.833
+        },
+        {
+          "text": "sorry",
+          "offset_ms": 3376.541,
+          "duration_ms": 471.958
+        },
+        {
+          "text": "I",
+          "offset_ms": 4065.291,
+          "duration_ms": 63.791
+        },
+        {
+          "text": "meant",
+          "offset_ms": 4129.0830000000005,
+          "duration_ms": 204.083
+        },
+        {
+          "text": "Boston",
+          "offset_ms": 4333.166,
+          "duration_ms": 433.666
+        }
+      ]
+    },
+    {
+      "speaker_id": "EN02",
+      "condition_id": "E7",
+      "source_id": "E7",
+      "text": "Could you tell me what the weather's like in both Boston and Seattle?",
+      "voice": "en-US-AndrewMultilingualNeural",
+      "rate": "-2%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_us/EN02/E7.wav",
+      "duration_ms": 3648.0,
+      "repair_marker_onset_ms": null,
+      "repair_onset_ms": null,
+      "repair_end_ms": null,
+      "user_end_ms": 3648.0,
+      "insert_silence_at_ms": null,
+      "insert_silence_ms": null,
+      "word_boundaries": [
+        {
+          "text": "Could",
+          "offset_ms": 127.541,
+          "duration_ms": 127.541
+        },
+        {
+          "text": "you",
+          "offset_ms": 255.083,
+          "duration_ms": 63.791
+        },
+        {
+          "text": "tell",
+          "offset_ms": 318.875,
+          "duration_ms": 178.583
+        },
+        {
+          "text": "me",
+          "offset_ms": 497.458,
+          "duration_ms": 89.291
+        },
+        {
+          "text": "what",
+          "offset_ms": 586.75,
+          "duration_ms": 102.041
+        },
+        {
+          "text": "the",
+          "offset_ms": 688.791,
+          "duration_ms": 76.5
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 765.291,
+          "duration_ms": 357.125
+        },
+        {
+          "text": "like",
+          "offset_ms": 1135.208,
+          "duration_ms": 165.833
+        },
+        {
+          "text": "in",
+          "offset_ms": 1313.791,
+          "duration_ms": 89.25
+        },
+        {
+          "text": "both",
+          "offset_ms": 1403.041,
+          "duration_ms": 369.916
+        },
+        {
+          "text": "Boston",
+          "offset_ms": 1785.708,
+          "duration_ms": 561.208
+        },
+        {
+          "text": "and",
+          "offset_ms": 2461.75,
+          "duration_ms": 267.875
+        },
+        {
+          "text": "Seattle",
+          "offset_ms": 2742.333,
+          "duration_ms": 535.708
+        }
+      ]
+    },
+    {
+      "speaker_id": "EN02",
+      "condition_id": "E8",
+      "source_id": "E8",
+      "text": "Could you tell me what the weather's like in Boston actually, could you check both Boston and Seattle?",
+      "voice": "en-US-AndrewMultilingualNeural",
+      "rate": "-2%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_us/EN02/E8.wav",
+      "duration_ms": 5504.0,
+      "repair_marker_onset_ms": 2075.0,
+      "repair_onset_ms": 3031.625,
+      "repair_end_ms": 5123.458,
+      "user_end_ms": 5504.0,
+      "insert_silence_at_ms": 1875.0,
+      "insert_silence_ms": 200,
+      "word_boundaries": [
+        {
+          "text": "Could",
+          "offset_ms": 102.041,
+          "duration_ms": 102.041
+        },
+        {
+          "text": "you",
+          "offset_ms": 204.083,
+          "duration_ms": 89.291
+        },
+        {
+          "text": "tell",
+          "offset_ms": 293.375,
+          "duration_ms": 178.583
+        },
+        {
+          "text": "me",
+          "offset_ms": 484.708,
+          "duration_ms": 102.041
+        },
+        {
+          "text": "what",
+          "offset_ms": 586.75,
+          "duration_ms": 102.041
+        },
+        {
+          "text": "the",
+          "offset_ms": 688.791,
+          "duration_ms": 89.291
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 790.833,
+          "duration_ms": 357.125
+        },
+        {
+          "text": "like",
+          "offset_ms": 1160.708,
+          "duration_ms": 178.583
+        },
+        {
+          "text": "in",
+          "offset_ms": 1339.291,
+          "duration_ms": 89.291
+        },
+        {
+          "text": "Boston",
+          "offset_ms": 1428.583,
+          "duration_ms": 433.666
+        },
+        {
+          "text": "actually",
+          "offset_ms": 2075.0,
+          "duration_ms": 561.208
+        },
+        {
+          "text": "could",
+          "offset_ms": 3031.625,
+          "duration_ms": 140.291
+        },
+        {
+          "text": "you",
+          "offset_ms": 3171.958,
+          "duration_ms": 114.791
+        },
+        {
+          "text": "check",
+          "offset_ms": 3286.75,
+          "duration_ms": 267.833
+        },
+        {
+          "text": "both",
+          "offset_ms": 3554.583,
+          "duration_ms": 216.833
+        },
+        {
+          "text": "Boston",
+          "offset_ms": 3784.166,
+          "duration_ms": 522.958
+        },
+        {
+          "text": "and",
+          "offset_ms": 4421.958,
+          "duration_ms": 191.333
+        },
+        {
+          "text": "Seattle",
+          "offset_ms": 4626.0,
+          "duration_ms": 497.458
+        }
+      ]
+    },
+    {
+      "speaker_id": "EN02",
+      "condition_id": "E9",
+      "source_id": "E9",
+      "text": "Actually, could you tell me what the weather's like in both Boston and Seattle?",
+      "voice": "en-US-AndrewMultilingualNeural",
+      "rate": "-2%",
+      "pitch": "+0Hz",
+      "relative_path": "data/raw_us/EN02/E9.wav",
+      "duration_ms": 4512.0,
+      "repair_marker_onset_ms": null,
+      "repair_onset_ms": null,
+      "repair_end_ms": null,
+      "user_end_ms": 4512.0,
+      "insert_silence_at_ms": null,
+      "insert_silence_ms": null,
+      "word_boundaries": [
+        {
+          "text": "Actually",
+          "offset_ms": 102.041,
+          "duration_ms": 586.75
+        },
+        {
+          "text": "could",
+          "offset_ms": 1109.708,
+          "duration_ms": 127.541
+        },
+        {
+          "text": "you",
+          "offset_ms": 1237.25,
+          "duration_ms": 63.75
+        },
+        {
+          "text": "tell",
+          "offset_ms": 1301.0,
+          "duration_ms": 178.583
+        },
+        {
+          "text": "me",
+          "offset_ms": 1479.583,
+          "duration_ms": 89.291
+        },
+        {
+          "text": "what",
+          "offset_ms": 1568.875,
+          "duration_ms": 102.041
+        },
+        {
+          "text": "the",
+          "offset_ms": 1670.916,
+          "duration_ms": 76.541
+        },
+        {
+          "text": "weather's",
+          "offset_ms": 1747.458,
+          "duration_ms": 344.375
+        },
+        {
+          "text": "like",
+          "offset_ms": 2104.583,
+          "duration_ms": 165.833
+        },
+        {
+          "text": "in",
+          "offset_ms": 2270.416,
+          "duration_ms": 89.291
+        },
+        {
+          "text": "both",
+          "offset_ms": 2372.458,
+          "duration_ms": 331.625
+        },
+        {
+          "text": "Boston",
+          "offset_ms": 2716.833,
+          "duration_ms": 586.75
+        },
+        {
+          "text": "and",
+          "offset_ms": 3456.625,
+          "duration_ms": 127.541
+        },
+        {
+          "text": "Seattle",
+          "offset_ms": 3596.958,
+          "duration_ms": 548.458
+        }
+      ]
+    }
+  ]
+}

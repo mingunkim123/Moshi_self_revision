@@ -46,37 +46,45 @@ class Source:
     repair_end_occurrence: int = 1
 
 
-SOURCES = {
-    "E1": Source("Could you tell me what the weather's like in Seoul?"),
-    "E2": Source("Could you tell me what the weather's like in Busan?"),
-    # No punctuation is placed before the repair marker. The neural model creates
-    # one continuous prosodic contour; the controlled pause is inserted later.
-    "E3": Source(
-        "Could you tell me what the weather's like in Busan uh, sorry, I meant Seoul?",
-        marker_word="uh",
-        repair_word="I",
-        repair_end_word="Seoul",
-    ),
-    "E4": Source(
-        "Could you tell me what the weather's like in Seoul uh, sorry, I meant Busan?",
-        marker_word="uh",
-        repair_word="I",
-        repair_end_word="Busan",
-    ),
-    "E7": Source(
-        "Could you tell me what the weather's like in both Busan and Seoul?"
-    ),
-    "E8": Source(
-        "Could you tell me what the weather's like in Busan actually, could you check both Busan and Seoul?",
-        marker_word="actually",
-        repair_word="could",
-        repair_occurrence=2,
-        repair_end_word="Seoul",
-    ),
-    "E9": Source(
-        "Actually, could you tell me what the weather's like in both Busan and Seoul?"
-    ),
-}
+def build_sources(city_a: str, city_b: str) -> dict[str, Source]:
+    """Build the matched E1-E9 design for an arbitrary ordered city pair.
+
+    city_a occupies the original Busan position and city_b the original Seoul
+    position. Keeping the E condition IDs allows the existing scorer to compare
+    a new lexical control with the preregistered design without special cases.
+    """
+    return {
+        "E1": Source(f"Could you tell me what the weather's like in {city_b}?"),
+        "E2": Source(f"Could you tell me what the weather's like in {city_a}?"),
+        # No punctuation is placed before the repair marker. The neural model
+        # creates one continuous prosodic contour; the controlled pause is
+        # inserted later.
+        "E3": Source(
+            f"Could you tell me what the weather's like in {city_a} uh, sorry, I meant {city_b}?",
+            marker_word="uh",
+            repair_word="I",
+            repair_end_word=city_b,
+        ),
+        "E4": Source(
+            f"Could you tell me what the weather's like in {city_b} uh, sorry, I meant {city_a}?",
+            marker_word="uh",
+            repair_word="I",
+            repair_end_word=city_a,
+        ),
+        "E7": Source(
+            f"Could you tell me what the weather's like in both {city_a} and {city_b}?"
+        ),
+        "E8": Source(
+            f"Could you tell me what the weather's like in {city_a} actually, could you check both {city_a} and {city_b}?",
+            marker_word="actually",
+            repair_word="could",
+            repair_occurrence=2,
+            repair_end_word=city_b,
+        ),
+        "E9": Source(
+            f"Actually, could you tell me what the weather's like in both {city_a} and {city_b}?"
+        ),
+    }
 
 # E5/E6 reuse the exact E3/E4 neural waveform. Only inserted silence differs.
 CONDITIONS = {
@@ -108,6 +116,16 @@ def parse_args() -> argparse.Namespace:
         "--metadata",
         type=Path,
         default=EXPERIMENT_ROOT / "data/tts_metadata.en.json",
+    )
+    parser.add_argument(
+        "--city-a",
+        default="Busan",
+        help="City occupying the original Busan position.",
+    )
+    parser.add_argument(
+        "--city-b",
+        default="Seoul",
+        help="City occupying the original Seoul position.",
     )
     parser.add_argument("--overwrite", action="store_true")
     return parser.parse_args()
@@ -272,6 +290,7 @@ def update_recordings(
 
 def main() -> None:
     args = parse_args()
+    sources = build_sources(args.city_a, args.city_b)
     for speaker_id in SPEAKERS:
         for condition_id in CONDITIONS:
             path = args.raw_root / speaker_id / f"{condition_id}.wav"
@@ -284,7 +303,7 @@ def main() -> None:
         temporary_dir = Path(temporary)
         for speaker_id, settings in SPEAKERS.items():
             source_cache: dict[str, tuple[bytes, list[dict[str, object]]]] = {}
-            for source_id, source in SOURCES.items():
+            for source_id, source in sources.items():
                 source_cache[source_id] = synthesize_source(
                     source,
                     str(settings["voice"]),
@@ -294,7 +313,7 @@ def main() -> None:
                     f"{speaker_id}_{source_id}",
                 )
             for condition_id, (source_id, pause_ms) in CONDITIONS.items():
-                source = SOURCES[source_id]
+                source = sources[source_id]
                 base_frames, boundaries = source_cache[source_id]
                 marker = (
                     find_boundary(boundaries, source.marker_word, source.marker_occurrence)
@@ -368,6 +387,8 @@ def main() -> None:
             "engine": "Microsoft Edge online neural TTS via edge-tts",
             "edge_tts_version": importlib.metadata.version("edge-tts"),
             "language": "en-US",
+            "city_a": args.city_a,
+            "city_b": args.city_b,
             "sample_rate": 24000,
             "sample_width_bytes": 2,
             "speakers": SPEAKERS,

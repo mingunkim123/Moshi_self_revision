@@ -43,6 +43,37 @@ experiments/self_repair/runpod/run_english_pilot.sh
 
 추론이 끝나면 `results_en/metrics.auto.md`에 inner-text 기반 1차 결과가 바로 생성된다. Seoul/Busan 중 하나만 명확히 나온 응답은 자동 분류하고, 둘 다 나오거나 둘 다 없는 응답은 `AUTO_HEURISTIC_REVIEW`로 표시한다. 최종 보고에는 표시된 행을 사람이 확인한다.
 
+## Boston–Seattle 어휘 친숙도 대조군
+
+Busan의 clean 인식률이 낮으면 수정발화 실패와 도시명 인식 실패가 섞인다. 기존
+Seoul–Busan 결과를 보존한 채, 더 익숙한 미국 도시명으로 E1–E9 구조를 그대로
+복제한 대조군을 실행한다. `city-a=Boston`은 기존 Busan 위치, `city-b=Seattle`은
+기존 Seoul 위치에 대응한다. 화자, seed, sampling, 무음 길이와 평가 규칙은 같다.
+
+RunPod에서 다음 순서로 실행한다.
+
+```bash
+cd /workspace/moshi_repo
+git pull origin main
+chmod +x experiments/self_repair/runpod/*.sh
+
+# clean Boston/Seattle, 교체 수정, 확장 수정 네 개만 먼저 확인
+experiments/self_repair/runpod/run_us_smoke.sh
+
+# smoke WAV가 정상일 때 나머지를 포함한 90개 실행
+experiments/self_repair/runpod/run_us_pilot.sh
+
+cat experiments/self_repair/results_us/metrics.auto.md
+```
+
+Boston/Seattle TTS 18개는 `data/raw_us/`에 고정해 두었다. 도시쌍이나 음성을
+바꿀 때만 `experiments/self_repair/runpod/synthesize_us_tts.sh`로 다시 생성한다.
+
+해석은 clean gate를 먼저 본다. Boston과 Seattle clean이 모두 80% 이상인데 수정
+조건만 크게 하락하면 repair-specific evidence가 강해진다. 새 도시쌍에서 clean과
+수정이 모두 높으면 기존 결과는 주로 Busan의 음향/어휘 인식 문제로 해석한다.
+날씨 수치의 사실성은 여전히 평가하지 않는다.
+
 ## 디렉터리
 
 - `config/experiment.json`: 체크포인트, seed, sampling, 오디오 설정
