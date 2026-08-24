@@ -148,7 +148,7 @@ python experiments/self_repair/scripts/prepare_stimuli.py \
 - 24 kHz mono
 - active-speech RMS 목표 −23 dBFS, peak 최대 −1 dBFS
 - 앞 무음 480 ms
-- 응답 수집용 뒤 무음: 한국어 설정 8초, 영어 설정 16초. 두 도시를 차례로 답하는 E7–E9가 중간에 잘리지 않도록 영어 관찰창을 더 길게 둔다.
+- 응답 수집용 뒤 무음: 한국어 설정 8초, 영어 설정 40초. Moshi 오프라인 추론에는 의미적 EOS가 없으므로, 두 도시를 차례로 답하는 E7–E9와 장문 응답이 중간에 잘리지 않도록 영어 관찰창을 충분히 길게 둔다.
 - 1,920 samples, 즉 Mimi 80 ms frame의 정수배
 - prepared WAV SHA-256 및 조정된 타임스탬프 저장
 
