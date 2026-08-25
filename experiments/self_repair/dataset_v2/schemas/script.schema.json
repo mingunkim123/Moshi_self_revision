@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/moshi-self-repair-v2/script.schema.json",
+  "title": "Generated matched-bundle script",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "text_bundle_id",
+    "script_id",
+    "scenario_id",
+    "direction_id",
+    "condition",
+    "root_slot",
+    "old_value",
+    "new_value",
+    "segments",
+    "pre_repair_units",
+    "post_repair_units",
+    "dependency_count",
+    "repair_cue",
+    "closing_prompt",
+    "transcript",
+    "normalized_transcript",
+    "pre_repair_state",
+    "repair_rebindings",
+    "gold_state",
+    "blueprint_hash",
+    "generator_version",
+    "config_hash",
+    "generation_seed"
+  ],
+  "properties": {
+    "schema_version": {"const": "2.0.0"},
+    "text_bundle_id": {"type": "string", "pattern": "^travel_[0-9]{3}__(a_to_b|b_to_a)$"},
+    "script_id": {"type": "string", "minLength": 1},
+    "scenario_id": {"type": "string", "pattern": "^travel_[0-9]{3}$"},
+    "direction_id": {"enum": ["a_to_b", "b_to_a"]},
+    "condition": {
+      "enum": [
+        "clean_final",
+        "immediate_repair",
+        "delayed_neutral",
+        "delayed_one_dependency",
+        "delayed_three_dependencies"
+      ]
+    },
+    "root_slot": {"const": "destination"},
+    "old_value": {"type": "string", "minLength": 1},
+    "new_value": {"type": "string", "minLength": 1},
+    "segments": {"type": "array", "minItems": 8, "items": {"$ref": "#/$defs/segment"}},
+    "pre_repair_units": {"type": "array", "items": {"type": "string"}},
+    "post_repair_units": {"type": "array", "items": {"type": "string"}},
+    "dependency_count": {"type": "integer", "enum": [0, 1, 3]},
+    "repair_cue": {"type": ["string", "null"]},
+    "closing_prompt": {"type": "string", "minLength": 1},
+    "transcript": {"type": "string", "minLength": 1},
+    "normalized_transcript": {"type": "string", "minLength": 1},
+    "pre_repair_state": {"type": "object"},
+    "repair_rebindings": {"type": "array", "items": {"$ref": "#/$defs/rebinding"}},
+    "gold_state": {"type": "object", "minProperties": 1},
+    "one_dependency_unit": {"type": ["string", "null"]},
+    "one_dependency_pre_position": {"type": ["integer", "null"], "minimum": 1, "maximum": 3},
+    "rotation_id": {"type": ["string", "null"]},
+    "blueprint_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "generator_version": {"type": "string", "minLength": 1},
+    "config_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "generation_seed": {"type": "integer"}
+  },
+  "$defs": {
+    "segment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["segment_index", "role", "text", "boundary_after"],
+      "properties": {
+        "segment_index": {"type": "integer", "minimum": 0},
+        "role": {
+          "enum": ["clean_root", "initial_old_root", "repair_cue", "semantic_unit", "closing_prompt"]
+        },
+        "unit_id": {"type": ["string", "null"]},
+        "text": {"type": "string", "minLength": 1},
+        "binding": {"type": ["string", "null"]},
+        "relation": {"type": ["string", "null"]},
+        "boundary_after": {"enum": ["nonterminal_semicolon", "terminal"]}
+      }
+    },
+    "rebinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["unit_id", "relation", "from", "to"],
+      "properties": {
+        "unit_id": {"enum": ["D1", "D2", "D3"]},
+        "relation": {"type": "string"},
+        "from": {"type": "string"},
+        "to": {"type": "string"}
+      }
+    }
+  }
+}

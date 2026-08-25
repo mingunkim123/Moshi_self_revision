@@ -1,0 +1,157 @@
+{
+  "schema_version": "2.0.0",
+  "reviewer_id": "codex_agent_independent_quality",
+  "reviewed_at": "2026-08-26T00:00:00Z",
+  "patches": [
+    {
+      "scenario_id": "travel_002",
+      "unit_id": "D2",
+      "expected_text": "The recommendations should feature well-lit photography walking routes suitable for safely carrying camera gear",
+      "text": "The recommendations should feature well-lit photography walking routes suitable for carrying camera gear"
+    },
+    {
+      "scenario_id": "travel_002",
+      "unit_id": "N3",
+      "expected_text": "The plan should account for a room budget capped at one hundred eighty dollars",
+      "text": "The plan should account for a nightly room cap of one hundred eighty dollars"
+    },
+    {
+      "scenario_id": "travel_003",
+      "unit_id": "D1",
+      "expected_text": "The recommendations should feature family attractions suitable for mixed ages",
+      "text": "The recommendations should account for family attractions suitable for mixed ages"
+    },
+    {
+      "scenario_id": "travel_003",
+      "unit_id": "N1",
+      "expected_text": "The recommendations should feature options suited to children aged six and eleven",
+      "text": "The recommendations should account for two children aged six and eleven"
+    },
+    {
+      "scenario_id": "travel_007",
+      "unit_id": "D2",
+      "expected_text": "The recommendations should feature inexpensive meal options near major transit stops",
+      "text": "The recommendations should account for inexpensive meals near major transit stops"
+    },
+    {
+      "scenario_id": "travel_007",
+      "unit_id": "N2",
+      "expected_text": "The recommendations should feature student discounts requiring a valid identification card",
+      "text": "The recommendations should account for discounts available with my valid student ID",
+      "state_patch_updates": {
+        "traveler.requests_student_discounts": true
+      }
+    },
+    {
+      "scenario_id": "travel_011",
+      "unit_id": "D1",
+      "expected_text": "The plan should include small venues offering jazz or indie evening shows",
+      "text": "The plan should include small venues offering evening jazz or indie rock shows",
+      "state_patch_updates": {
+        "music_venue.genres": [
+          "jazz",
+          "indie_rock"
+        ]
+      }
+    },
+    {
+      "scenario_id": "travel_011",
+      "unit_id": "N1",
+      "expected_text": "The plan should include a preference for jazz and indie over large pop concerts",
+      "text": "The plan should include a preference for jazz and indie rock over large pop concerts",
+      "state_patch_deletes": [
+        "traveler.avoids"
+      ],
+      "state_patch_updates": {
+        "traveler.lower_preference": "large_pop_concerts"
+      }
+    },
+    {
+      "scenario_id": "travel_013",
+      "unit_id": "N3",
+      "expected_text": "The itinerary should allow for a quiet-room budget near two hundred twenty dollars",
+      "text": "The itinerary should allow a quiet room budget near two hundred twenty dollars nightly"
+    },
+    {
+      "scenario_id": "travel_018",
+      "unit_id": "D2",
+      "expected_text": "The plan should account for warm indoor lunch options for the winter itinerary",
+      "text": "The plan should account for indoor lunch spots serving warm meals during winter"
+    },
+    {
+      "scenario_id": "travel_018",
+      "unit_id": "N3",
+      "expected_text": "The itinerary should allow for rooms under two hundred forty dollars nightly",
+      "text": "The itinerary should allow nightly rooms costing at most two hundred forty dollars"
+    },
+    {
+      "scenario_id": "travel_021",
+      "unit_id": "D1",
+      "expected_text": "The plan should include car-free sightseeing organized around public transportation",
+      "text": "The plan should account for car-free sightseeing organized around public transportation"
+    },
+    {
+      "scenario_id": "travel_021",
+      "unit_id": "N1",
+      "expected_text": "The plan should include transportation requiring no driver's license",
+      "text": "The plan should account for my lack of a valid driver's license"
+    },
+    {
+      "scenario_id": "travel_022",
+      "unit_id": "D1",
+      "expected_text": "The itinerary should cover dog-friendly waterfront parks with clearly stated leash rules",
+      "text": "The itinerary should account for dog-friendly waterfront parks with clearly stated leash rules"
+    },
+    {
+      "scenario_id": "travel_022",
+      "unit_id": "N1",
+      "expected_text": "The itinerary should cover options suitable for a fully vaccinated thirty-eight-pound dog",
+      "text": "The itinerary should account for a fully vaccinated dog weighing thirty-eight pounds"
+    },
+    {
+      "scenario_id": "travel_022",
+      "unit_id": "D2",
+      "expected_text": "The recommendations should feature covered pet-friendly patio lunch options suitable for calm medium-sized dogs",
+      "text": "The recommendations should account for covered pet-friendly patio lunches for a calm medium-sized dog"
+    },
+    {
+      "scenario_id": "travel_022",
+      "unit_id": "N2",
+      "expected_text": "The recommendations should feature dining options suitable for a dog calm around diners and animals",
+      "text": "The recommendations should account for a dog that remains calm around diners and animals"
+    },
+    {
+      "scenario_id": "travel_027",
+      "unit_id": "N1",
+      "expected_text": "The itinerary should cover strict avoidance of peanuts, sesame, and cross-contact",
+      "text": "The itinerary should cover strict cross-contact avoidance for severe peanut and sesame allergies"
+    },
+    {
+      "scenario_id": "travel_027",
+      "unit_id": "N3",
+      "expected_text": "The plan should account for a suite budget under two hundred eighty dollars",
+      "text": "The plan should account for nightly suite rates under two hundred eighty dollars"
+    },
+    {
+      "scenario_id": "travel_028",
+      "unit_id": "D1",
+      "expected_text": "The recommendations should feature an efficient six-hour layover itinerary",
+      "text": "The recommendations should account for an efficient six-hour daytime itinerary during the layover",
+      "state_patch_updates": {
+        "short_itinerary.time_period": "daytime"
+      }
+    },
+    {
+      "scenario_id": "travel_028",
+      "unit_id": "N1",
+      "expected_text": "The recommendations should feature options for a seven o'clock morning arrival",
+      "text": "The recommendations should account for a scheduled seven o'clock morning arrival"
+    },
+    {
+      "scenario_id": "travel_030",
+      "unit_id": "N3",
+      "expected_text": "The itinerary should cover rooms under two hundred sixty dollars nightly",
+      "text": "The itinerary should cover nightly lodging below two hundred sixty dollars"
+    }
+  ]
+}

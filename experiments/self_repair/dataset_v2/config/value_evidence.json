@@ -1,0 +1,37 @@
+{
+  "schema_version": "2.0.0",
+  "scope": "city proper or directly connected metropolitan transit area when explicitly identified",
+  "values": {
+    "Boston": {
+      "aliases": ["Boston", "Beantown", "Greater Boston"],
+      "illustrative_entities": [
+        "Freedom Trail",
+        "Fenway Park",
+        "Boston Common",
+        "Beacon Hill",
+        "Back Bay",
+        "North End",
+        "Faneuil Hall",
+        "MBTA",
+        "Museum of Fine Arts Boston",
+        "Isabella Stewart Gardner Museum"
+      ]
+    },
+    "Seattle": {
+      "aliases": ["Seattle", "Emerald City", "Seattle metropolitan area"],
+      "illustrative_entities": [
+        "Space Needle",
+        "Pike Place Market",
+        "Seattle Center",
+        "Chihuly Garden and Glass",
+        "Museum of Pop Culture",
+        "Pioneer Square",
+        "Capitol Hill",
+        "Ballard",
+        "Fremont",
+        "Link light rail"
+      ]
+    }
+  },
+  "annotation_rule": "Lists are illustrative, not exhaustive. An unlisted entity is usable only when both annotators can identify its city binding from the response without live web research; otherwise label unresolved. Generic advice with no city evidence is unresolved, not inferred correct."
+}

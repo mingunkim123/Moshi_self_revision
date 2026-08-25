@@ -1,0 +1,28 @@
+{
+  "candidate_count_if_fully_run": 180,
+  "release_eligible": false,
+  "schema_version": "2.0.0",
+  "selection": [
+    {
+      "length_rank": "shortest",
+      "mean_words": 81.8,
+      "scenario_id": "travel_001"
+    },
+    {
+      "length_rank": "median",
+      "mean_words": 91.8,
+      "scenario_id": "travel_011"
+    },
+    {
+      "length_rank": "longest",
+      "mean_words": 108.8,
+      "scenario_id": "travel_022"
+    }
+  ],
+  "source_track_id": "edge_private_calibration_r1",
+  "speaker_ids": [
+    "edge_fast",
+    "edge_slow"
+  ],
+  "target_count": 60
+}

@@ -1,0 +1,30 @@
+{
+  "candidate_count": 180,
+  "failed_candidate_ids": [
+    "travel_011__a_to_b__clean_final__edge_private_calibration_r1__edge_slow__cand01",
+    "travel_011__a_to_b__clean_final__edge_private_calibration_r1__edge_slow__cand02",
+    "travel_011__a_to_b__clean_final__edge_private_calibration_r1__edge_slow__cand03",
+    "travel_011__a_to_b__delayed_one_dependency__edge_private_calibration_r1__edge_slow__cand01",
+    "travel_011__a_to_b__delayed_one_dependency__edge_private_calibration_r1__edge_slow__cand02",
+    "travel_011__a_to_b__delayed_one_dependency__edge_private_calibration_r1__edge_slow__cand03",
+    "travel_022__a_to_b__delayed_neutral__edge_private_calibration_r1__edge_slow__cand01",
+    "travel_022__a_to_b__delayed_neutral__edge_private_calibration_r1__edge_slow__cand02",
+    "travel_022__a_to_b__delayed_neutral__edge_private_calibration_r1__edge_slow__cand03",
+    "travel_022__a_to_b__delayed_three_dependencies__edge_private_calibration_r1__edge_slow__cand01",
+    "travel_022__a_to_b__delayed_three_dependencies__edge_private_calibration_r1__edge_slow__cand02",
+    "travel_022__a_to_b__delayed_three_dependencies__edge_private_calibration_r1__edge_slow__cand03",
+    "travel_022__a_to_b__immediate_repair__edge_private_calibration_r1__edge_slow__cand01",
+    "travel_022__a_to_b__immediate_repair__edge_private_calibration_r1__edge_slow__cand02",
+    "travel_022__a_to_b__immediate_repair__edge_private_calibration_r1__edge_slow__cand03",
+    "travel_022__b_to_a__clean_final__edge_private_calibration_r1__edge_slow__cand01",
+    "travel_022__b_to_a__clean_final__edge_private_calibration_r1__edge_slow__cand02",
+    "travel_022__b_to_a__clean_final__edge_private_calibration_r1__edge_slow__cand03",
+    "travel_022__b_to_a__delayed_neutral__edge_private_calibration_r1__edge_slow__cand01",
+    "travel_022__b_to_a__delayed_neutral__edge_private_calibration_r1__edge_slow__cand02",
+    "travel_022__b_to_a__delayed_neutral__edge_private_calibration_r1__edge_slow__cand03",
+    "travel_022__b_to_a__delayed_three_dependencies__edge_private_calibration_r1__edge_slow__cand02"
+  ],
+  "failed_count": 22,
+  "passed_count": 158,
+  "schema_version": "2.0.0"
+}

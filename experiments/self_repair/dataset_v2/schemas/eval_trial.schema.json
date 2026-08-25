@@ -1,0 +1,353 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/moshi-self-repair-v2/eval-trial.schema.json",
+  "title": "Moshi evaluation trial with immutable capture and response evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "eval_run_id",
+    "eval_trial_id",
+    "accepted_audio_id",
+    "model_repo",
+    "resolved_revision",
+    "generation_config_hash",
+    "code_commit",
+    "generation_seed",
+    "condition",
+    "input_stimulus",
+    "capture_contract",
+    "matrix_contract",
+    "execution_contract",
+    "response"
+  ],
+  "properties": {
+    "schema_version": {"const": "2.0.0"},
+    "eval_run_id": {"type": "string", "minLength": 1},
+    "eval_trial_id": {"type": "string", "minLength": 1},
+    "accepted_audio_id": {"type": "string", "minLength": 1},
+    "model_repo": {"type": "string", "minLength": 1},
+    "resolved_revision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "generation_config_hash": {"$ref": "#/$defs/sha256"},
+    "code_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "generation_seed": {"type": "integer", "minimum": 0},
+    "condition": {"$ref": "#/$defs/condition"},
+    "input_stimulus": {"$ref": "#/$defs/input_stimulus"},
+    "capture_contract": {"$ref": "#/$defs/capture_contract"},
+    "matrix_contract": {"$ref": "#/$defs/matrix_contract"},
+    "execution_contract": {"$ref": "#/$defs/execution_contract"},
+    "response": {
+      "oneOf": [
+        {"$ref": "#/$defs/pending_response"},
+        {"$ref": "#/$defs/completed_response"}
+      ]
+    },
+    "stream_events": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/stream_event"}
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "response": {
+            "type": "object",
+            "properties": {"status": {"const": "completed"}},
+            "required": ["status"]
+          }
+        }
+      },
+      "then": {"required": ["stream_events"]},
+      "else": {"not": {"required": ["stream_events"]}}
+    }
+  ],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "condition": {
+      "enum": [
+        "clean_final",
+        "immediate_repair",
+        "delayed_neutral",
+        "delayed_one_dependency",
+        "delayed_three_dependencies"
+      ]
+    },
+    "relative_path": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*\\\\)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"
+    },
+    "input_stimulus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "prepared_stimulus_id",
+        "preparation_hash",
+        "uri",
+        "sha256",
+        "duration_ms",
+        "sample_rate",
+        "channels",
+        "sample_width_bytes",
+        "timeline",
+        "mimi_frame_samples"
+      ],
+      "properties": {
+        "prepared_stimulus_id": {"type": "string", "minLength": 1},
+        "preparation_hash": {"$ref": "#/$defs/sha256"},
+        "uri": {"$ref": "#/$defs/relative_path"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "duration_ms": {"type": "number", "exclusiveMinimum": 0},
+        "sample_rate": {"const": 24000},
+        "channels": {"const": 1},
+        "sample_width_bytes": {"const": 2},
+        "timeline": {"const": "prepared_stream_relative"},
+        "mimi_frame_samples": {"const": 1920}
+      }
+    },
+    "prepared_timing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "old_value_onset_ms",
+        "old_value_offset_ms",
+        "repair_cue_onset_ms",
+        "new_value_onset_ms",
+        "new_value_offset_ms",
+        "repeated_old_onset_ms",
+        "repeated_old_offset_ms",
+        "repair_cue_offset_ms",
+        "closing_prompt_onset_ms",
+        "closing_prompt_offset_ms",
+        "utterance_end_ms",
+        "actual_latency_ms",
+        "post_final_value_duration_ms",
+        "post_repair_duration_ms",
+        "post_cue_duration_ms"
+      ],
+      "properties": {
+        "old_value_onset_ms": {"type": ["number", "null"]},
+        "old_value_offset_ms": {"type": ["number", "null"]},
+        "repair_cue_onset_ms": {"type": ["number", "null"]},
+        "new_value_onset_ms": {"type": "number", "minimum": 0},
+        "new_value_offset_ms": {"type": "number", "minimum": 0},
+        "repeated_old_onset_ms": {"type": ["number", "null"]},
+        "repeated_old_offset_ms": {"type": ["number", "null"]},
+        "repair_cue_offset_ms": {"type": ["number", "null"]},
+        "closing_prompt_onset_ms": {"type": "number", "minimum": 0},
+        "closing_prompt_offset_ms": {"type": "number", "minimum": 0},
+        "utterance_end_ms": {"type": "number", "minimum": 0},
+        "actual_latency_ms": {"type": ["number", "null"]},
+        "post_final_value_duration_ms": {"type": "number", "minimum": 0},
+        "post_repair_duration_ms": {"type": "number", "minimum": 0},
+        "post_cue_duration_ms": {"type": ["number", "null"]}
+      }
+    },
+    "capture_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "condition",
+        "timebase",
+        "stream_origin_ms",
+        "prepared_timing",
+        "prepared_timing_sha256",
+        "primary_window_start_ms",
+        "utterance_end_ms",
+        "response_capture_ms",
+        "requested_target_end_ms",
+        "target_end_sample_count",
+        "target_end_frame_count",
+        "actual_target_end_ms"
+      ],
+      "properties": {
+        "condition": {"$ref": "#/$defs/condition"},
+        "timebase": {"const": "prepared_stream_relative"},
+        "stream_origin_ms": {"const": 0},
+        "prepared_timing": {"$ref": "#/$defs/prepared_timing"},
+        "prepared_timing_sha256": {"$ref": "#/$defs/sha256"},
+        "primary_window_start_ms": {"type": "number", "minimum": 0},
+        "utterance_end_ms": {"type": "number", "minimum": 0},
+        "response_capture_ms": {"type": "number", "exclusiveMinimum": 0},
+        "requested_target_end_ms": {"type": "number", "exclusiveMinimum": 0},
+        "target_end_sample_count": {"type": "integer", "exclusiveMinimum": 0},
+        "target_end_frame_count": {"type": "integer", "exclusiveMinimum": 0},
+        "actual_target_end_ms": {"type": "number", "exclusiveMinimum": 0}
+      }
+    },
+    "matrix_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "production_matrix",
+        "accepted_audio_count",
+        "generation_seeds",
+        "eval_trial_count",
+        "accepted_audio_set_sha256",
+        "prepared_stimulus_set_sha256",
+        "prepared_manifest_content_sha256"
+      ],
+      "properties": {
+        "production_matrix": {"type": "boolean"},
+        "accepted_audio_count": {"type": "integer", "exclusiveMinimum": 0},
+        "generation_seeds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "integer", "minimum": 0}
+        },
+        "eval_trial_count": {"type": "integer", "exclusiveMinimum": 0},
+        "accepted_audio_set_sha256": {"$ref": "#/$defs/sha256"},
+        "prepared_stimulus_set_sha256": {"$ref": "#/$defs/sha256"},
+        "prepared_manifest_content_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "execution_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "runner_version",
+        "runner_source_sha256",
+        "input_sample_rate",
+        "mimi_frame_samples",
+        "prefix_silence_ms",
+        "response_capture_ms",
+        "reset_model_stream_between_trials",
+        "reset_rng_for_each_trial_seed",
+        "required_model_type",
+        "required_max_lm_delay"
+      ],
+      "properties": {
+        "runner_version": {"const": "2.2.0"},
+        "runner_source_sha256": {"$ref": "#/$defs/sha256"},
+        "input_sample_rate": {"const": 24000},
+        "mimi_frame_samples": {"const": 1920},
+        "prefix_silence_ms": {"type": "number", "exclusiveMinimum": 0},
+        "response_capture_ms": {"type": "number", "exclusiveMinimum": 0},
+        "reset_model_stream_between_trials": {"const": true},
+        "reset_rng_for_each_trial_seed": {"const": true},
+        "required_model_type": {"const": "moshi"},
+        "required_max_lm_delay": {"const": 1}
+      }
+    },
+    "pending_response": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {"status": {"const": "pending"}}
+    },
+    "completed_response": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "transcript",
+        "transcript_sha256",
+        "audio_path",
+        "audio_sha256",
+        "audio_duration_ms",
+        "audio_sample_rate",
+        "audio_channels",
+        "audio_sample_width_bytes",
+        "elapsed_seconds",
+        "generation_seed",
+        "timebase",
+        "stream_origin_ms",
+        "primary_window_start_ms",
+        "requested_target_end_ms",
+        "actual_target_end_ms",
+        "fed_sample_count",
+        "fed_frame_count",
+        "output_sample_count",
+        "output_frame_count",
+        "appended_zero_sample_count",
+        "coverage_complete",
+        "eos_reached",
+        "stream_reset",
+        "rng_reset",
+        "backend",
+        "runner_source_sha256",
+        "effective_generation_config_sha256",
+        "stream_events_sha256",
+        "evidence_sha256"
+      ],
+      "properties": {
+        "status": {"const": "completed"},
+        "transcript": {"type": "string"},
+        "transcript_sha256": {"$ref": "#/$defs/sha256"},
+        "audio_path": {"$ref": "#/$defs/relative_path"},
+        "audio_sha256": {"$ref": "#/$defs/sha256"},
+        "audio_duration_ms": {"type": "number", "exclusiveMinimum": 0},
+        "audio_sample_rate": {"const": 24000},
+        "audio_channels": {"const": 1},
+        "audio_sample_width_bytes": {"const": 2},
+        "elapsed_seconds": {"type": "number", "minimum": 0},
+        "generation_seed": {"type": "integer", "minimum": 0},
+        "timebase": {"const": "prepared_stream_relative"},
+        "stream_origin_ms": {"const": 0},
+        "primary_window_start_ms": {"type": "number", "minimum": 0},
+        "requested_target_end_ms": {"type": "number", "exclusiveMinimum": 0},
+        "actual_target_end_ms": {"type": "number", "exclusiveMinimum": 0},
+        "fed_sample_count": {"type": "integer", "exclusiveMinimum": 0},
+        "fed_frame_count": {"type": "integer", "exclusiveMinimum": 0},
+        "output_sample_count": {"type": "integer", "exclusiveMinimum": 0},
+        "output_frame_count": {"type": "integer", "exclusiveMinimum": 0},
+        "appended_zero_sample_count": {"type": "integer", "minimum": 0},
+        "coverage_complete": {"const": true},
+        "eos_reached": {"const": false},
+        "stream_reset": {"const": true},
+        "rng_reset": {"const": true},
+        "backend": {"$ref": "#/$defs/backend"},
+        "runner_source_sha256": {"$ref": "#/$defs/sha256"},
+        "effective_generation_config_sha256": {"$ref": "#/$defs/sha256"},
+        "stream_events_sha256": {"$ref": "#/$defs/sha256"},
+        "evidence_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "backend": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version",
+        "model_repo",
+        "resolved_revision",
+        "snapshot_revision",
+        "code_commit",
+        "model_type",
+        "mimi_sample_rate",
+        "frame_size",
+        "max_lm_delay",
+        "effective_generation_config",
+        "effective_generation_config_sha256"
+      ],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "version": {"type": "string", "minLength": 1},
+        "model_repo": {"type": "string", "minLength": 1},
+        "resolved_revision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "snapshot_revision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "code_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "model_type": {"const": "moshi"},
+        "mimi_sample_rate": {"const": 24000},
+        "frame_size": {"const": 1920},
+        "max_lm_delay": {"const": 1},
+        "effective_generation_config": {"type": "object", "minProperties": 1},
+        "effective_generation_config_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "stream_event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["frame_index", "time_ms", "token_id", "piece"],
+      "properties": {
+        "frame_index": {"type": "integer", "minimum": 0},
+        "time_ms": {"type": "number", "minimum": 0},
+        "token_id": {"type": "integer", "minimum": 0},
+        "piece": {"type": "string"}
+      }
+    }
+  }
+}

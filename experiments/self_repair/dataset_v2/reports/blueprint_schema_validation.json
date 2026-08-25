@@ -1,0 +1,9 @@
+{
+  "errors": [],
+  "input": "experiments/self_repair/dataset_v2/blueprints/scenarios.jsonl",
+  "kind": "blueprint",
+  "row_count": 30,
+  "schema": "experiments/self_repair/dataset_v2/schemas/blueprint.schema.json",
+  "schema_version": "2.0.0",
+  "valid": true
+}

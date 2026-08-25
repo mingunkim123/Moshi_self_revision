@@ -1,0 +1,10 @@
+{
+  "error_count": 0,
+  "errors": [],
+  "input": "experiments/self_repair/dataset_v2/generated/scripts.jsonl",
+  "input_sha256": "9a602686c6f6f9ac4521c175db5edcae882633f88b5c060ef2909ed0bf8912f1",
+  "schema_version": "2.0.0",
+  "script_count": 300,
+  "text_bundle_count": 60,
+  "valid": true
+}

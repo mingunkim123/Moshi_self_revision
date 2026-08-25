@@ -1,0 +1,22 @@
+{
+  "checked_at": "2026-08-26T01:48:00+09:00",
+  "engine": "edge-tts 7.2.8",
+  "voice": "en-US-AvaMultilingualNeural",
+  "rate": "+0%",
+  "pitch": "+0Hz",
+  "repeat_count": 3,
+  "input_text": "I'm planning a first-time weekend trip to Boston; Sorry, I mean Seattle, not Boston; Could you help me plan all of that?",
+  "wav_sha256": [
+    "47d709e651333cd560e48902980c85d070f690b0980cab8723ecff48efe0f6a4",
+    "2bcb6a805eeb28709d4c453bc02abe4916313421c900d85f02544b3097db8ded",
+    "404631e9a41dbbe0747b00414674a0f70b7af8c488a68db2be1789d699b6ccb6"
+  ],
+  "duration_ms": [6912.0, 7176.0, 7176.0],
+  "zero_lag_waveform_correlation": {
+    "repeat_1_vs_2": -0.0133398714,
+    "repeat_1_vs_3": -0.0133741496,
+    "repeat_2_vs_3": 0.9988895875
+  },
+  "result": "partially_variable",
+  "interpretation": "Three calls are not byte-identical, but two are nearly waveform-identical. Production must deduplicate canonical hashes and must not count a duplicate waveform as an independent candidate."
+}

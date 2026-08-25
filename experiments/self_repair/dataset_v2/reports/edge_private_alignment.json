@@ -1,0 +1,9 @@
+{
+  "alignment_version": "2.0.0",
+  "candidate_count": 180,
+  "independent_forced_alignment": false,
+  "manual_review_required_count": 180,
+  "method": "provider_word_boundaries_seed",
+  "output": "experiments/self_repair/dataset_v2/calibration/edge_private_aligned_candidates.jsonl",
+  "schema_version": "2.0.0"
+}

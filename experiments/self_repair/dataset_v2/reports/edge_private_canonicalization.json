@@ -1,0 +1,5 @@
+{
+  "canonical_candidate_count": 180,
+  "output": "experiments/self_repair/dataset_v2/calibration/edge_private_canonical_candidates.jsonl",
+  "schema_version": "2.0.0"
+}

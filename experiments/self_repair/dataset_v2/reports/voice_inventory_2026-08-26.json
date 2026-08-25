@@ -1,0 +1,20 @@
+{
+  "checked_at": "2026-08-26T01:46:48+09:00",
+  "edge_tts_version": "7.2.8",
+  "provider": "Microsoft Edge online speech service via edge-tts",
+  "requested_voices": [
+    "en-US-AvaMultilingualNeural",
+    "en-US-AndrewMultilingualNeural",
+    "en-US-EmmaMultilingualNeural",
+    "en-US-BrianMultilingualNeural",
+    "en-US-JennyNeural",
+    "en-US-GuyNeural",
+    "en-US-AriaNeural",
+    "en-US-ChristopherNeural",
+    "en-US-MichelleNeural",
+    "en-US-RogerNeural"
+  ],
+  "availability_check": "passed",
+  "redistribution_rights_check": "pending",
+  "notes": "Three tentative voices (Davis, Jane, Jason) were absent from the live inventory and were replaced before assignment freeze. Availability does not establish redistribution rights."
+}

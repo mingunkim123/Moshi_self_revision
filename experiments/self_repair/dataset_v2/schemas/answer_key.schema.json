@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/moshi-self-repair-v2/answer-key.schema.json",
+  "title": "Condition-blind scenario direction answer key",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "answer_key_id",
+    "scenario_id",
+    "context_label",
+    "direction_id",
+    "target_value",
+    "stale_value",
+    "target_evidence",
+    "stale_evidence",
+    "dependent_relations",
+    "root_invariant_constraints",
+    "final_window_rule",
+    "partial_response_rule",
+    "generic_response_rule",
+    "safety_note"
+  ],
+  "properties": {
+    "schema_version": {"const": "2.0.0"},
+    "answer_key_id": {"type": "string", "pattern": "^travel_[0-9]{3}__(a_to_b|b_to_a)$"},
+    "scenario_id": {"type": "string", "pattern": "^travel_[0-9]{3}$"},
+    "context_label": {"type": "string", "minLength": 1},
+    "direction_id": {"enum": ["a_to_b", "b_to_a"]},
+    "target_value": {"enum": ["Boston", "Seattle"]},
+    "stale_value": {"enum": ["Boston", "Seattle"]},
+    "target_evidence": {"$ref": "#/$defs/valueEvidence"},
+    "stale_evidence": {"$ref": "#/$defs/valueEvidence"},
+    "dependent_relations": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {"$ref": "#/$defs/relation"}
+    },
+    "root_invariant_constraints": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {"$ref": "#/$defs/invariant"}
+    },
+    "final_window_rule": {"type": "string", "minLength": 1},
+    "partial_response_rule": {"type": "string", "minLength": 1},
+    "generic_response_rule": {"type": "string", "minLength": 1},
+    "safety_note": {"type": ["string", "null"]}
+  },
+  "$defs": {
+    "valueEvidence": {
+      "type": "object",
+      "required": ["aliases", "illustrative_entities"],
+      "additionalProperties": false,
+      "properties": {
+        "aliases": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "illustrative_entities": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+      }
+    },
+    "relation": {
+      "type": "object",
+      "required": ["unit_id", "relation", "planning_constraint", "new_bound_state", "old_bound_state"],
+      "additionalProperties": false,
+      "properties": {
+        "unit_id": {"enum": ["D1", "D2", "D3"]},
+        "relation": {"type": "string", "minLength": 1},
+        "planning_constraint": {"type": "string", "minLength": 1},
+        "new_bound_state": {"type": "object"},
+        "old_bound_state": {"type": "object"}
+      }
+    },
+    "invariant": {
+      "type": "object",
+      "required": ["unit_id", "relation", "state"],
+      "additionalProperties": false,
+      "properties": {
+        "unit_id": {"enum": ["N1", "N2", "N3"]},
+        "relation": {"type": "string", "minLength": 1},
+        "state": {"type": "object"}
+      }
+    }
+  }
+}

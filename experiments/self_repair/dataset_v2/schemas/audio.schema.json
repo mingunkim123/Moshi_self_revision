@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/moshi-self-repair-v2/audio.schema.json",
+  "title": "Audio candidate or accepted rendition manifest row",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "rendition_target_id",
+    "script_id",
+    "text_bundle_id",
+    "matched_audio_bundle_id",
+    "source_track_id",
+    "speaker_id",
+    "condition",
+    "lifecycle_status"
+  ],
+  "properties": {
+    "schema_version": {"const": "2.0.0"},
+    "rendition_target_id": {"type": "string", "minLength": 1},
+    "candidate_id": {"type": ["string", "null"]},
+    "selected_candidate_id": {"type": ["string", "null"]},
+    "accepted_audio_id": {"type": ["string", "null"]},
+    "script_id": {"type": "string", "minLength": 1},
+    "text_bundle_id": {"type": "string", "minLength": 1},
+    "matched_audio_bundle_id": {"type": "string", "minLength": 1},
+    "source_track_id": {"type": "string", "minLength": 1},
+    "speaker_id": {"type": "string", "minLength": 1},
+    "condition": {"type": "string", "minLength": 1},
+    "lifecycle_status": {
+      "enum": ["raw_candidate", "canonical_candidate", "accepted", "prepared", "rejected", "quarantined", "purged"]
+    },
+    "raw_candidate": {"$ref": "#/$defs/artifact"},
+    "canonical_candidate": {"$ref": "#/$defs/artifact"},
+    "accepted_utterance": {"$ref": "#/$defs/artifact"},
+    "prepared_stimulus": {"$ref": "#/$defs/artifact"},
+    "timing": {"$ref": "#/$defs/timing"},
+    "alignment": {"type": "object"},
+    "synthesis": {"type": "object"},
+    "selection": {"type": "object"},
+    "qc": {"type": "object"},
+    "analysis_fold": {"type": "integer", "minimum": 1, "maximum": 5},
+    "inferential_role": {"enum": ["confirmatory_evaluation", "engineering_calibration_only"]}
+  },
+  "$defs": {
+    "artifact": {
+      "type": ["object", "null"],
+      "required": ["uri", "sha256", "duration_ms", "sample_rate", "channels"],
+      "properties": {
+        "uri": {"type": "string"},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "duration_ms": {"type": "number", "exclusiveMinimum": 0},
+        "sample_rate": {"type": "integer", "exclusiveMinimum": 0},
+        "channels": {"type": "integer", "exclusiveMinimum": 0},
+        "sample_width_bytes": {"type": "integer", "exclusiveMinimum": 0},
+        "timeline": {"enum": ["content_relative", "prepared_stream_relative"]}
+      }
+    },
+    "timing": {
+      "type": ["object", "null"],
+      "properties": {
+        "old_value_onset_ms": {"type": ["number", "null"]},
+        "old_value_offset_ms": {"type": ["number", "null"]},
+        "repair_cue_onset_ms": {"type": ["number", "null"]},
+        "new_value_onset_ms": {"type": "number"},
+        "new_value_offset_ms": {"type": "number"},
+        "repeated_old_onset_ms": {"type": ["number", "null"]},
+        "repeated_old_offset_ms": {"type": ["number", "null"]},
+        "repair_cue_offset_ms": {"type": ["number", "null"]},
+        "closing_prompt_onset_ms": {"type": "number"},
+        "closing_prompt_offset_ms": {"type": "number"},
+        "utterance_end_ms": {"type": "number"},
+        "actual_latency_ms": {"type": ["number", "null"]},
+        "post_final_value_duration_ms": {"type": "number"},
+        "post_repair_duration_ms": {"type": "number"},
+        "post_cue_duration_ms": {"type": ["number", "null"]}
+      }
+    }
+  }
+}

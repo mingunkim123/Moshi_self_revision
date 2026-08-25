@@ -1,0 +1,9 @@
+{
+  "blueprint_count": 30,
+  "error_count": 0,
+  "errors": [],
+  "input": "experiments/self_repair/dataset_v2/blueprints/scenarios.jsonl",
+  "input_sha256": "e7d3b18077f6f1a0f348b5217c5d32710465c9167ff220bef197b17800827057",
+  "schema_version": "2.0.0",
+  "valid": true
+}

@@ -1,0 +1,11 @@
+{
+  "blueprint_count": 30,
+  "config_hash": "a7b44b6b29fdcfd0bcb0ed5da9f77650d70aeaf49768e84477f332363c843fa3",
+  "generation_seed": 20260826,
+  "generator_version": "2.0.0",
+  "output": "experiments/self_repair/dataset_v2/generated/scripts.jsonl",
+  "output_hash": "5d68576438182626b2c2a5356f0c878d166e82f1f0fba09ef8f673ebf2507ddf",
+  "schema_version": "2.0.0",
+  "script_count": 300,
+  "text_bundle_count": 60
+}

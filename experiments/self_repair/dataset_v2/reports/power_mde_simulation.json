@@ -1,0 +1,276 @@
+{
+  "design": {
+    "baseline_probability": 0.8,
+    "direction_speaker_axis_intercept_sd_logit": 0.3,
+    "directions_x_speakers_per_scenario_condition": 4,
+    "generation_seeds_per_rendition": 5,
+    "primary_estimator": "equal-weight scenario-cluster contrast with 10000-replicate cluster bootstrap CI",
+    "scenario_clusters": 30,
+    "scenario_condition_slope_sd_logit": 0.25,
+    "scenario_random_intercept_sd_logit": 0.6,
+    "test_proxy": "two-sided equal-weight paired scenario contrast, t(29), alpha=0.05"
+  },
+  "effect_grid": [
+    {
+      "effect_log_odds": -0.0,
+      "mean_absolute_percentage_point_difference": 0.2706000000000001,
+      "mean_dep3_rate": 0.7778971666666666,
+      "mean_neutral_rate": 0.7806031666666667,
+      "monte_carlo_se": 0.0022502833154960733,
+      "power": 0.0535
+    },
+    {
+      "effect_log_odds": -0.05,
+      "mean_absolute_percentage_point_difference": 1.0021499999999999,
+      "mean_dep3_rate": 0.7701246666666668,
+      "mean_neutral_rate": 0.7801461666666667,
+      "monte_carlo_se": 0.0024510887376837254,
+      "power": 0.0642
+    },
+    {
+      "effect_log_odds": -0.1,
+      "mean_absolute_percentage_point_difference": 1.886133333333333,
+      "mean_dep3_rate": 0.7610761666666667,
+      "mean_neutral_rate": 0.7799375,
+      "monte_carlo_se": 0.003147502978552999,
+      "power": 0.1115
+    },
+    {
+      "effect_log_odds": -0.15,
+      "mean_absolute_percentage_point_difference": 2.719333333333333,
+      "mean_dep3_rate": 0.7529806666666667,
+      "mean_neutral_rate": 0.780174,
+      "monte_carlo_se": 0.0038443713400242697,
+      "power": 0.1803
+    },
+    {
+      "effect_log_odds": -0.2,
+      "mean_absolute_percentage_point_difference": 3.553033333333333,
+      "mean_dep3_rate": 0.7451278333333333,
+      "mean_neutral_rate": 0.7806581666666667,
+      "monte_carlo_se": 0.004466653221372799,
+      "power": 0.2753
+    },
+    {
+      "effect_log_odds": -0.25,
+      "mean_absolute_percentage_point_difference": 4.440183333333334,
+      "mean_dep3_rate": 0.7355983333333334,
+      "mean_neutral_rate": 0.7800001666666666,
+      "monte_carlo_se": 0.0048948544411453136,
+      "power": 0.398
+    },
+    {
+      "effect_log_odds": -0.3,
+      "mean_absolute_percentage_point_difference": 5.321133333333332,
+      "mean_dep3_rate": 0.7271486666666666,
+      "mean_neutral_rate": 0.78036,
+      "monte_carlo_se": 0.004991984675457248,
+      "power": 0.5283
+    },
+    {
+      "effect_log_odds": -0.35,
+      "mean_absolute_percentage_point_difference": 6.2489,
+      "mean_dep3_rate": 0.7180938333333334,
+      "mean_neutral_rate": 0.7805828333333333,
+      "monte_carlo_se": 0.004742461807964299,
+      "power": 0.6584
+    },
+    {
+      "effect_log_odds": -0.4,
+      "mean_absolute_percentage_point_difference": 7.245550000000001,
+      "mean_dep3_rate": 0.7083335000000001,
+      "mean_neutral_rate": 0.7807890000000001,
+      "monte_carlo_se": 0.004160585415539501,
+      "power": 0.7773
+    },
+    {
+      "effect_log_odds": -0.45,
+      "mean_absolute_percentage_point_difference": 8.100999999999999,
+      "mean_dep3_rate": 0.6993681666666667,
+      "mean_neutral_rate": 0.7803781666666667,
+      "monte_carlo_se": 0.0035618701548484335,
+      "power": 0.8509
+    },
+    {
+      "effect_log_odds": -0.5,
+      "mean_absolute_percentage_point_difference": 9.063699999999999,
+      "mean_dep3_rate": 0.6899981666666667,
+      "mean_neutral_rate": 0.7806351666666667,
+      "monte_carlo_se": 0.002673831520496383,
+      "power": 0.9225
+    },
+    {
+      "effect_log_odds": -0.55,
+      "mean_absolute_percentage_point_difference": 10.059933333333333,
+      "mean_dep3_rate": 0.6797678333333333,
+      "mean_neutral_rate": 0.7803671666666667,
+      "monte_carlo_se": 0.0018604082885216363,
+      "power": 0.9641
+    },
+    {
+      "effect_log_odds": -0.6,
+      "mean_absolute_percentage_point_difference": 11.099749999999998,
+      "mean_dep3_rate": 0.6697386666666667,
+      "mean_neutral_rate": 0.7807361666666667,
+      "monte_carlo_se": 0.0013185867434492146,
+      "power": 0.9823
+    },
+    {
+      "effect_log_odds": -0.65,
+      "mean_absolute_percentage_point_difference": 12.048433333333332,
+      "mean_dep3_rate": 0.6602618333333333,
+      "mean_neutral_rate": 0.7807461666666666,
+      "monte_carlo_se": 0.0008157885755512907,
+      "power": 0.9933
+    },
+    {
+      "effect_log_odds": -0.7,
+      "mean_absolute_percentage_point_difference": 13.06838333333333,
+      "mean_dep3_rate": 0.6491970000000001,
+      "mean_neutral_rate": 0.7798808333333334,
+      "monte_carlo_se": 0.00047903131421651017,
+      "power": 0.9977
+    },
+    {
+      "effect_log_odds": -0.75,
+      "mean_absolute_percentage_point_difference": 14.1575,
+      "mean_dep3_rate": 0.6390218333333333,
+      "mean_neutral_rate": 0.7805968333333334,
+      "monte_carlo_se": 0.0003314800144805098,
+      "power": 0.9989
+    },
+    {
+      "effect_log_odds": -0.8,
+      "mean_absolute_percentage_point_difference": 15.151033333333336,
+      "mean_dep3_rate": 0.6286390000000001,
+      "mean_neutral_rate": 0.7801493333333334,
+      "monte_carlo_se": 0.0,
+      "power": 1.0
+    },
+    {
+      "effect_log_odds": -0.85,
+      "mean_absolute_percentage_point_difference": 16.239883333333335,
+      "mean_dep3_rate": 0.618078,
+      "mean_neutral_rate": 0.7804768333333333,
+      "monte_carlo_se": 0.0001414072133945005,
+      "power": 0.9998
+    },
+    {
+      "effect_log_odds": -0.9,
+      "mean_absolute_percentage_point_difference": 17.32678333333333,
+      "mean_dep3_rate": 0.6073345,
+      "mean_neutral_rate": 0.7806023333333334,
+      "monte_carlo_se": 0.0,
+      "power": 1.0
+    },
+    {
+      "effect_log_odds": -0.95,
+      "mean_absolute_percentage_point_difference": 18.391799999999996,
+      "mean_dep3_rate": 0.5966153333333334,
+      "mean_neutral_rate": 0.7805333333333333,
+      "monte_carlo_se": 0.0,
+      "power": 1.0
+    },
+    {
+      "effect_log_odds": -1.0,
+      "mean_absolute_percentage_point_difference": 19.500866666666667,
+      "mean_dep3_rate": 0.5859709999999999,
+      "mean_neutral_rate": 0.7809796666666667,
+      "monte_carlo_se": 0.0,
+      "power": 1.0
+    },
+    {
+      "effect_log_odds": -1.05,
+      "mean_absolute_percentage_point_difference": 20.54253333333333,
+      "mean_dep3_rate": 0.5749373333333334,
+      "mean_neutral_rate": 0.7803626666666668,
+      "monte_carlo_se": 0.0,
+      "power": 1.0
+    },
+    {
+      "effect_log_odds": -1.1,
+      "mean_absolute_percentage_point_difference": 21.654183333333336,
+      "mean_dep3_rate": 0.564036,
+      "mean_neutral_rate": 0.7805778333333333,
+      "monte_carlo_se": 0.0,
+      "power": 1.0
+    },
+    {
+      "effect_log_odds": -1.15,
+      "mean_absolute_percentage_point_difference": 22.769716666666667,
+      "mean_dep3_rate": 0.5527635,
+      "mean_neutral_rate": 0.7804606666666667,
+      "monte_carlo_se": 0.0,
+      "power": 1.0
+    },
+    {
+      "effect_log_odds": -1.2,
+      "mean_absolute_percentage_point_difference": 23.90086666666667,
+      "mean_dep3_rate": 0.5413918333333333,
+      "mean_neutral_rate": 0.7804005,
+      "monte_carlo_se": 0.0,
+      "power": 1.0
+    },
+    {
+      "effect_log_odds": -1.25,
+      "mean_absolute_percentage_point_difference": 25.013050000000003,
+      "mean_dep3_rate": 0.5303513333333333,
+      "mean_neutral_rate": 0.7804818333333333,
+      "monte_carlo_se": 0.0,
+      "power": 1.0
+    },
+    {
+      "effect_log_odds": -1.3,
+      "mean_absolute_percentage_point_difference": 26.13256666666667,
+      "mean_dep3_rate": 0.5196566666666667,
+      "mean_neutral_rate": 0.7809823333333333,
+      "monte_carlo_se": 0.0,
+      "power": 1.0
+    },
+    {
+      "effect_log_odds": -1.35,
+      "mean_absolute_percentage_point_difference": 27.27741666666667,
+      "mean_dep3_rate": 0.5078181666666667,
+      "mean_neutral_rate": 0.7805923333333333,
+      "monte_carlo_se": 0.0,
+      "power": 1.0
+    },
+    {
+      "effect_log_odds": -1.4,
+      "mean_absolute_percentage_point_difference": 28.361816666666666,
+      "mean_dep3_rate": 0.49690316666666673,
+      "mean_neutral_rate": 0.7805213333333334,
+      "monte_carlo_se": 0.0,
+      "power": 1.0
+    },
+    {
+      "effect_log_odds": -1.45,
+      "mean_absolute_percentage_point_difference": 29.44775,
+      "mean_dep3_rate": 0.486055,
+      "mean_neutral_rate": 0.7805325,
+      "monte_carlo_se": 0.0,
+      "power": 1.0
+    },
+    {
+      "effect_log_odds": -1.5,
+      "mean_absolute_percentage_point_difference": 30.610633333333336,
+      "mean_dep3_rate": 0.4746296666666667,
+      "mean_neutral_rate": 0.7807360000000001,
+      "monte_carlo_se": 0.0,
+      "power": 1.0
+    }
+  ],
+  "interpretation": "The MDE is conditional on explicit variance assumptions and is a sensitivity analysis, not evidence about Moshi. Re-run if pilot ICC or baseline differs materially.",
+  "mde_at_80_percent_power": {
+    "effect_log_odds": -0.45,
+    "mean_absolute_percentage_point_difference": 8.100999999999999,
+    "mean_dep3_rate": 0.6993681666666667,
+    "mean_neutral_rate": 0.7803781666666667,
+    "monte_carlo_se": 0.0035618701548484335,
+    "power": 0.8509
+  },
+  "schema_version": "2.0.0",
+  "simulation_seed": 20260826,
+  "simulations_per_effect": 10000,
+  "status": "design_sensitivity_not_observed_data"
+}

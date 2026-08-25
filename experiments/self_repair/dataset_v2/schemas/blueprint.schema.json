@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/moshi-self-repair-v2/blueprint.schema.json",
+  "title": "Moshi self-repair semantic blueprint",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "scenario_id",
+    "context_label",
+    "language",
+    "domain",
+    "root_slot",
+    "value_a",
+    "value_b",
+    "root_template",
+    "dependent_units",
+    "neutral_units",
+    "repair_template",
+    "closing_prompt",
+    "gold_state_template",
+    "one_dependency_unit",
+    "one_dependency_pre_position",
+    "rotation_id",
+    "reviews",
+    "review_status",
+    "source"
+  ],
+  "properties": {
+    "schema_version": {"const": "2.0.0"},
+    "scenario_id": {"type": "string", "pattern": "^travel_[0-9]{3}$"},
+    "context_label": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_]*$"},
+    "language": {"const": "en"},
+    "domain": {"const": "travel"},
+    "root_slot": {"const": "destination"},
+    "value_a": {"type": "string", "minLength": 1},
+    "value_b": {"type": "string", "minLength": 1},
+    "root_template": {"type": "string", "minLength": 1},
+    "dependent_units": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {"$ref": "#/$defs/dependentUnit"}
+    },
+    "neutral_units": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {"$ref": "#/$defs/neutralUnit"}
+    },
+    "repair_template": {"type": "string", "minLength": 1},
+    "closing_prompt": {"type": "string", "minLength": 1},
+    "gold_state_template": {"type": "object", "minProperties": 7},
+    "one_dependency_unit": {"enum": ["D1", "D2", "D3"]},
+    "one_dependency_pre_position": {"type": "integer", "minimum": 1, "maximum": 3},
+    "rotation_id": {"enum": ["R1", "R2", "R3"]},
+    "reviews": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {"$ref": "#/$defs/review"}
+    },
+    "review_status": {"const": "approved"},
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authoring_method", "license"],
+      "properties": {
+        "authoring_method": {"type": "string", "minLength": 1},
+        "license": {"type": "string", "minLength": 1},
+        "notes": {"type": "string"}
+      }
+    }
+  },
+  "$defs": {
+    "baseUnit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "unit_id",
+        "text",
+        "relation",
+        "binding",
+        "state_patch",
+        "balance_pair_id",
+        "speech_act",
+        "boundary_type"
+        ,"planning_frame_id"
+        ,"pragmatic_function"
+      ],
+      "properties": {
+        "unit_id": {"type": "string"},
+        "text": {"type": "string", "minLength": 1},
+        "relation": {"type": "string", "minLength": 1},
+        "binding": {"enum": ["root_dependent", "root_invariant"]},
+        "state_patch": {"type": "object", "minProperties": 1},
+        "balance_pair_id": {"enum": ["P1", "P2", "P3"]},
+        "speech_act": {"const": "statement"},
+        "boundary_type": {"const": "nonterminal"}
+        ,"planning_frame_id": {
+          "enum": [
+            "F1_plan_include",
+            "F2_itinerary_cover",
+            "F3_recommendations_feature",
+            "F4_plan_account",
+            "F5_itinerary_allow"
+          ]
+        }
+        ,"pragmatic_function": {"const": "planning_constraint"}
+      }
+    },
+    "dependentUnit": {
+      "allOf": [
+        {"$ref": "#/$defs/baseUnit"},
+        {
+          "type": "object",
+          "properties": {
+            "unit_id": {"enum": ["D1", "D2", "D3"]},
+            "binding": {"const": "root_dependent"}
+          }
+        }
+      ]
+    },
+    "neutralUnit": {
+      "allOf": [
+        {"$ref": "#/$defs/baseUnit"},
+        {
+          "type": "object",
+          "properties": {
+            "unit_id": {"enum": ["N1", "N2", "N3"]},
+            "binding": {"const": "root_invariant"}
+          }
+        }
+      ]
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reviewer_id", "decision", "reviewed_at"],
+      "properties": {
+        "reviewer_id": {"type": "string", "minLength": 1},
+        "decision": {"const": "approved"},
+        "reviewed_at": {"type": "string", "format": "date-time"},
+        "notes": {"type": "string"}
+      }
+    }
+  }
+}

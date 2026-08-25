@@ -1,0 +1,125 @@
+{
+  "schema_version": "2.0.0",
+  "dataset_id": "moshi_self_repair_matched_bundle_v2",
+  "purpose": "controlled_evaluation",
+  "language": "en",
+  "domain": "travel",
+  "root_slot": "destination",
+  "value_a": "Boston",
+  "value_b": "Seattle",
+  "repair_template": "Sorry, I mean {new}, not {old}",
+  "closing_prompt": "Could you help me plan all of that?",
+  "generation_seed": 20260826,
+  "counts": {
+    "scenarios": 30,
+    "directions_per_scenario": 2,
+    "conditions_per_text_bundle": 5,
+    "speakers_per_text_bundle": 2,
+    "text_bundles": 60,
+    "scripts": 300,
+    "matched_audio_bundles_per_track": 120,
+    "rendition_targets_per_track": 600,
+    "initial_candidates_per_target": 3,
+    "maximum_candidates_per_target": 5
+  },
+  "conditions": [
+    "clean_final",
+    "immediate_repair",
+    "delayed_neutral",
+    "delayed_one_dependency",
+    "delayed_three_dependencies"
+  ],
+  "counterbalance": {
+    "dependency_identities": ["D1", "D2", "D3"],
+    "pre_positions": [1, 2, 3],
+    "target_per_identity": 10,
+    "target_per_position": 10,
+    "cross_cell_min": 3,
+    "cross_cell_max": 4
+  },
+  "text_qc": {
+    "neutral_forbidden_terms": [
+      "Boston",
+      "Seattle",
+      "there",
+      "that city",
+      "local",
+      "while I am there"
+    ],
+    "maximum_balance_pair_word_delta": 2,
+    "planning_frames": [
+      "F1_plan_include",
+      "F2_itinerary_cover",
+      "F3_recommendations_feature",
+      "F4_plan_account",
+      "F5_itinerary_allow"
+    ],
+    "target_frame_count_per_binding": 18,
+    "target_frame_count_per_unit_identity": 6,
+    "required_reviews": 2
+  },
+  "timing": {
+    "status": "pending_empirical_calibration",
+    "illustrative_target_latency_ms": 4000,
+    "initial_tolerance_ms": 300,
+    "primary_matching_scope": "within_matched_audio_bundle",
+    "analysis_uses_actual_timing": true
+  },
+  "audio": {
+    "canonical_sample_rate": 24000,
+    "canonical_channels": 1,
+    "canonical_sample_width_bytes": 2,
+    "target_active_rms_dbfs": -23.0,
+    "peak_limit_dbfs": -1.0,
+    "mimi_frame_samples": 1920,
+    "prefix_silence_ms": 480,
+    "response_capture_ms": 40000
+  },
+  "source_tracks": {
+    "tts_controlled_r1": {
+      "status": "voice_availability_and_redistribution_review_pending",
+      "speaker_count": 10,
+      "speakers": [
+        {"speaker_id": "tts01", "voice": "en-US-AvaMultilingualNeural"},
+        {"speaker_id": "tts02", "voice": "en-US-AndrewMultilingualNeural"},
+        {"speaker_id": "tts03", "voice": "en-US-EmmaMultilingualNeural"},
+        {"speaker_id": "tts04", "voice": "en-US-BrianMultilingualNeural"},
+        {"speaker_id": "tts05", "voice": "en-US-JennyNeural"},
+        {"speaker_id": "tts06", "voice": "en-US-GuyNeural"},
+        {"speaker_id": "tts07", "voice": "en-US-AriaNeural"},
+        {"speaker_id": "tts08", "voice": "en-US-ChristopherNeural"},
+        {"speaker_id": "tts09", "voice": "en-US-MichelleNeural"},
+        {"speaker_id": "tts10", "voice": "en-US-RogerNeural"}
+      ]
+    }
+  },
+  "engineering_calibration": {
+    "source_track_id": "edge_private_calibration_r1",
+    "provider": "edge_private_smoke",
+    "release_eligible": false,
+    "speakers": [
+      {"speaker_id": "edge_fast", "voice": "en-US-GuyNeural"},
+      {"speaker_id": "edge_slow", "voice": "en-US-RogerNeural"}
+    ],
+    "scenario_selection": "shortest_median_longest_by_mean_script_word_count",
+    "candidates_per_target": 3
+  },
+  "release": {
+    "inferential_role": "confirmatory_evaluation",
+    "analysis_folds": 5,
+    "audio_storage": "external_artifact_store_pending_selection",
+    "core_model_outputs_must_remain_unseen_until_protocol_freeze": true
+  },
+  "evaluation": {
+    "generation_seeds": [17, 29, 42, 101, 2026],
+    "primary_endpoint": "final_target_correct",
+    "secondary_endpoints": [
+      "stale_state_error",
+      "relation_rebinding_accuracy",
+      "early_stale_response",
+      "recovery"
+    ],
+    "annotations_per_trial": 2,
+    "adjudication_on_disagreement": true
+  }
+}

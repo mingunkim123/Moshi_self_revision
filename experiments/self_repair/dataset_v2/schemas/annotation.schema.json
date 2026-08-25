@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/moshi-self-repair-v2/annotation.schema.json",
+  "title": "Condition-blind response annotation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "blind_id",
+    "eval_trial_id",
+    "annotator_id",
+    "overall_label",
+    "relation_labels",
+    "final_target_correct",
+    "stale_state_error",
+    "adjudicator"
+  ],
+  "properties": {
+    "schema_version": {"const": "2.0.0"},
+    "blind_id": {"type": "string", "minLength": 1},
+    "eval_trial_id": {"type": "string", "minLength": 1},
+    "annotator_id": {"type": "string", "minLength": 1},
+    "overall_label": {
+      "enum": [
+        "target_only",
+        "stale_only",
+        "both",
+        "recovered",
+        "clarification",
+        "irrelevant",
+        "no_speech",
+        "unintelligible",
+        "no_evidence"
+      ]
+    },
+    "relation_labels": {
+      "type": "object",
+      "required": ["D1", "D2", "D3"],
+      "additionalProperties": false,
+      "properties": {
+        "D1": {"$ref": "#/$defs/relationLabel"},
+        "D2": {"$ref": "#/$defs/relationLabel"},
+        "D3": {"$ref": "#/$defs/relationLabel"}
+      }
+    },
+    "final_target_correct": {"type": "boolean"},
+    "stale_state_error": {"type": "boolean"},
+    "assistant_started_before_repair": {"type": ["boolean", "null"]},
+    "notes": {"type": "string"},
+    "adjudicator": {"type": "boolean"}
+  },
+  "$defs": {
+    "relationLabel": {
+      "enum": ["new_bound", "old_bound", "both", "unresolved", "not_addressed"]
+    }
+  }
+}

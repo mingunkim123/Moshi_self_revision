@@ -22,3 +22,11 @@ data/tts_metadata.json.tmp
 data/tts_smoke_set.zip
 data/tts_metadata.en.json.tmp
 data/tts_english_set.zip
+dataset_v2/artifacts/
+dataset_v2/calibration/*
+!dataset_v2/calibration/edge_private_targets.jsonl
+dataset_v2/manifests/
+dataset_v2/evaluation/
+dataset_v2/annotations/packages/
+dataset_v2/release_evidence/
+dataset_v2/releases/

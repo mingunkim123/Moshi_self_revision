@@ -1,0 +1,27 @@
+{
+  "schema_version": "2.0.0",
+  "experiment_name": "moshi_self_repair_matched_bundle_v2",
+  "model_repo": "kyutai/moshiko-pytorch-bf16",
+  "requested_revision": null,
+  "device": "cuda",
+  "dtype": "bfloat16",
+  "cfg_coef": 1.0,
+  "generation_seeds": [17, 29, 42, 101, 2026],
+  "generation": {
+    "use_sampling": true,
+    "temp": 0.8,
+    "temp_text": 0.7,
+    "top_k": 250,
+    "top_k_text": 25
+  },
+  "streaming": {
+    "input_sample_rate": 24000,
+    "mimi_frame_samples": 1920,
+    "prefix_silence_ms": 480,
+    "response_capture_ms": 40000,
+    "reset_model_stream_between_trials": true,
+    "reset_rng_for_each_trial_seed": true
+  },
+  "reuse_policy": "require_exact_eval_run_id_and_input_hash",
+  "hash_large_model_files": false
+}

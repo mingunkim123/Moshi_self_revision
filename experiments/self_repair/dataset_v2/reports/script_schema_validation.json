@@ -1,0 +1,9 @@
+{
+  "errors": [],
+  "input": "experiments/self_repair/dataset_v2/generated/scripts.jsonl",
+  "kind": "script",
+  "row_count": 300,
+  "schema": "experiments/self_repair/dataset_v2/schemas/script.schema.json",
+  "schema_version": "2.0.0",
+  "valid": true
+}

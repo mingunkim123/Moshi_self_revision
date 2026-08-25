@@ -1,0 +1,25 @@
+{
+  "checked_at": "2026-08-26T01:50:00+09:00",
+  "engine": "edge-tts 7.2.8",
+  "rate": "+0%",
+  "pitch": "+0Hz",
+  "active_threshold_dbfs": -50.0,
+  "screen_text_sha256": "pending_canonical_script_freeze",
+  "measurements": [
+    {"speaker_id": "tts01", "voice": "en-US-AvaMultilingualNeural", "file_duration_ms": 16704.0, "speech_end_proxy_ms": 16322.0, "tail_silence_proxy_ms": 382.0},
+    {"speaker_id": "tts02", "voice": "en-US-AndrewMultilingualNeural", "file_duration_ms": 16656.0, "speech_end_proxy_ms": 16268.3, "tail_silence_proxy_ms": 387.7},
+    {"speaker_id": "tts03", "voice": "en-US-EmmaMultilingualNeural", "file_duration_ms": 17208.0, "speech_end_proxy_ms": 16846.8, "tail_silence_proxy_ms": 361.2},
+    {"speaker_id": "tts04", "voice": "en-US-BrianMultilingualNeural", "file_duration_ms": 17592.0, "speech_end_proxy_ms": 17192.5, "tail_silence_proxy_ms": 399.5},
+    {"speaker_id": "tts05", "voice": "en-US-JennyNeural", "file_duration_ms": 17232.0, "speech_end_proxy_ms": 16347.9, "tail_silence_proxy_ms": 884.1},
+    {"speaker_id": "tts06", "voice": "en-US-GuyNeural", "file_duration_ms": 15216.0, "speech_end_proxy_ms": 14351.5, "tail_silence_proxy_ms": 864.5},
+    {"speaker_id": "tts07", "voice": "en-US-AriaNeural", "file_duration_ms": 17952.0, "speech_end_proxy_ms": 17100.9, "tail_silence_proxy_ms": 851.1},
+    {"speaker_id": "tts08", "voice": "en-US-ChristopherNeural", "file_duration_ms": 17016.0, "speech_end_proxy_ms": 16158.9, "tail_silence_proxy_ms": 857.1},
+    {"speaker_id": "tts09", "voice": "en-US-MichelleNeural", "file_duration_ms": 16392.0, "speech_end_proxy_ms": 15496.0, "tail_silence_proxy_ms": 896.0},
+    {"speaker_id": "tts10", "voice": "en-US-RogerNeural", "file_duration_ms": 20232.0, "speech_end_proxy_ms": 19318.2, "tail_silence_proxy_ms": 913.8}
+  ],
+  "fastest_speaker_id": "tts06",
+  "slowest_speaker_id": "tts10",
+  "median_pair_speaker_ids": ["tts01", "tts05"],
+  "result": "voice_speed_range_is_material",
+  "interpretation": "Fastest-to-slowest speech-end proxy differs by 4966.7 ms. Timing gates must be within-speaker/bundle and accepted audio must separate speech end from file tail. This is a private engineering screen, not release audio."
+}

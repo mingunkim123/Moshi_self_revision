@@ -1,6 +1,6 @@
 # 자기수정 matched-bundle 데이터셋 구축 계획
 
-- 문서 상태: 실행 전 계획안
+- 문서 상태: 실행 중 — text/pipeline 및 private calibration 완료, production authority gate 대기
 - 작성일: 2026-08-26
 - 적용 위치: `experiments/self_repair/`
 - 핵심 산출물: 의미 설계도 30개, 생성 대본 300개, accepted audio 600개
@@ -9,6 +9,24 @@
 버전 용어는 기존 E1–E9 파일럿을 legacy v1, 이 문서에서 새로 만드는 matched-bundle
 release를 dataset/schema v2.0.0으로 통일한다. 새 경로, `VERSION`, schema와 release tag는
 모두 v2를 가리킨다.
+
+## 실행 체크포인트 — 2026-08-26
+
+| 단계 | 상태 | 검증 증거 |
+|---|---|---|
+| 설계·스키마·분석 계약 | 완료 | v2 config 3개, schema 6개, 분석/주석 계약 |
+| 의미 설계도 | 완료 | 30/30 독립 agent review 승인, 구조·schema error 0 |
+| 대본·답안 키 | 완료 | 300 scripts, 60 answer keys, byte-level 재생성 일치 |
+| 화자 배정 | 완료 | 120 matched bundles, 600 rendition targets, 10 voices 균형 |
+| 비공개 TTS calibration | 완료 | 180/180 합성·provider boundary mapping, 158 QC pass, 22 clipping 제외 |
+| production TTS/독립 정렬 | 사용자 결정 필요 | provider·권리·credential·artifact store 미승인 |
+| accepted 600·Moshi 3,000·annotation | 대기 | production audio 이후 실행 |
+| human/pause extension | 대기 | core 결과와 별도 consent/예산 결정 이후 실행 |
+
+비공개 calibration에서는 fast/slow voice 사이의 global timing overlap이 없었다. 따라서
+원문의 4,000 ms 설명값을 production target으로 쓰지 않고 화자별 자연 발화 target을
+승인된 provider에서 다시 측정한다. 상세 결과는
+`dataset_v2/reports/edge_private_timing_calibration.json`에 기록한다.
 
 ## 0. 한눈에 보는 계획
 
@@ -117,7 +135,8 @@ human track은 같은 `script_id`를 공유해도 `source_track_id`가 달라 ID
 ### 1.3 데이터 트랙과 수량의 해석
 
 600개는 한 audio track의 accepted 수량이다. TTS 600개와 human 600개를 모두 만들면
-총 1,200개이며, 두 트랙을 같은 데이터처럼 섞지 않고 `source_type`으로 구분한다.
+총 1,200개이며, 두 트랙을 같은 데이터처럼 섞지 않고 canonical `source_track_id`로
+구분한다. `source_type`은 `tts`/`human`을 나타내는 파생 필드로만 사용한다.
 
 | 트랙 | 역할 | 권장 규모 | 공개 결론의 범위 |
 |---|---|---:|---|
@@ -243,6 +262,8 @@ delayed_neutral (0) ↔ delayed_one (1) ↔ delayed_three (3)
 - `repeated_old_onset_ms`: `not {old}` 안의 반복 old value 시작
 - `repeated_old_offset_ms`: 반복 old value 종료
 - `repair_cue_offset_ms`: 전체 repair cue 종료
+- `closing_prompt_onset_ms`: 공통 closing prompt 시작
+- `closing_prompt_offset_ms`: 공통 closing prompt 종료
 - `utterance_end_ms`: 전체 사용자 발화 종료
 
 계산식은 다음으로 통일한다.
@@ -258,9 +279,10 @@ Clean에서는 initial old value, repair cue와 repeated old 필드만 `null`이
 `new_value_onset_ms`와 `new_value_offset_ms`는 반드시 저장한다. Immediate와 delayed에는
 모든 이벤트를 저장한다. onset과 offset을 혼용하지 않도록 계산 함수와 JSON Schema에
 공식을 명시한다.
-기존 E1–E9 manifest의 `repair_marker_onset_ms`는 v2의 `repair_cue_onset_ms`에 대응한다.
-기존 `repair_onset_ms`는 실제로 수정값 시작을 뜻하므로 v2에서는 사용하지 않고
-`new_value_onset_ms`로 이름을 명확히 한다.
+Legacy E1–E9 timestamp를 v2 event로 직접 이관하지 않는다. 기존 영어 neural TTS의
+`repair_onset_ms`는 도시명이 아니라 `I` 또는 `could` 같은 clause 시작일 수 있고,
+`repair_marker_onset_ms`도 새 cue 정의와 완전히 같다고 보장할 수 없다. v2 audio는 모두
+독립 정렬해 cue/new/repeated-old onset·offset을 새로 계산한다.
 repair template이 old value를 반복하지 않으면 `repeated_old_*`는 `null`이지만
 모든 repair 조건에서 `repair_cue_offset_ms`는 항상 저장한다. Clean에서는 cue 필드가
 `null`이다. 모든 응답 window는 cue 시작과 cue 완료를 구분한다.
@@ -436,6 +458,10 @@ Step 0에서 Git LFS, GitHub Release, object storage 중 배포 방식을 결정
 - 구조화된 `pre_repair_state`, `repair_rebindings`, `gold_state`
 - `blueprint_hash`, `generator_version`, `generation_seed`
 
+`blueprint_hash`는 review 기록을 포함한 승인 blueprint 전체를 key-sorted, UTF-8,
+whitespace 없는 canonical JSON으로 직렬화한 SHA-256이다. review나 의미 단위가 바뀌면
+hash도 바뀌며 scripts 전체를 재생성한다.
+
 old value 검증은 단순히 “repair 전에서만 등장”으로 구현하지 않는다. 현재 repair cue가
 `not {old}`를 포함하므로 old value는 `initial_old_root`와 `repair_cue` segment에서만
 허용하고 다른 segment에서는 금지한다. Clean은 old value가 없어야 하고 new value가
@@ -445,8 +471,8 @@ root에 있어야 한다. Repair 조건은 new value가 repair cue에 정확히 
 
 - ID: `accepted_audio_id`, `selected_candidate_id`, `candidate_id`, `rendition_target_id`, `script_id`,
   `text_bundle_id`, `matched_audio_bundle_id`, `source_track_id`, `speaker_id`
-- 설계: `direction`, `condition`, `root_slot`, old/new value, D/N unit 배열
-- 출처: `source_type`, provider/model/voice/version 또는 녹음 session
+- 설계: canonical `direction_id`, `condition`, `root_slot`, old/new value, D/N unit 배열
+- 출처: canonical `source_track_id`, 파생 `source_type`, provider/model/voice/version 또는 녹음 session
 - 오디오: raw/canonical candidate, accepted utterance, prepared stimulus 각각의 URI/path,
   SHA-256, sample rate, channels, duration, codec와 timeline 좌표계
 - 정렬: 모든 onset/offset, alignment tool/version/confidence
@@ -515,12 +541,12 @@ root에 있어야 한다. Repair 조건은 new value가 repair cue에 정확히 
 
 ```text
 text_bundle_id          = travel_001__a_to_b
-script_id               = travel_001__a_to_b__delayed_dep3
+script_id               = travel_001__a_to_b__delayed_three_dependencies
 source_track_id         = tts_controlled_r1
 matched_audio_bundle_id = travel_001__a_to_b__tts_controlled_r1__spk03
-rendition_target_id     = travel_001__a_to_b__delayed_dep3__tts_controlled_r1__spk03
-candidate_id            = travel_001__a_to_b__delayed_dep3__tts_controlled_r1__spk03__cand03
-accepted_audio_id       = travel_001__a_to_b__delayed_dep3__tts_controlled_r1__spk03__accepted
+rendition_target_id     = travel_001__a_to_b__delayed_three_dependencies__tts_controlled_r1__spk03
+candidate_id            = travel_001__a_to_b__delayed_three_dependencies__tts_controlled_r1__spk03__cand03
+accepted_audio_id       = travel_001__a_to_b__delayed_three_dependencies__tts_controlled_r1__spk03__accepted
 ```
 
 종료 조건:
@@ -844,8 +870,10 @@ audio/text, stream-relative timestamp, user timeline mapping, early/final label�
 - `pre_cue_window`: stimulus 시작부터 `repair_cue_onset_ms` 직전까지
 - `cue_in_progress_window`: repair cue 시작부터 `repair_cue_offset_ms`까지
 - `post_cue_complete_window`: cue 종료부터 `utterance_end + response_capture_ms`까지
-- Clean의 final evidence window: root의 `new_value_offset_ms`부터 capture 종료까지
-- Repair의 final evidence window: `repair_cue_offset_ms`부터 capture 종료까지
+- `post_user_window`: `closing_prompt_offset_ms`부터 capture 종료까지
+- Clean과 repair의 primary final evidence window: `post_user_window`
+- Clean의 `new_value_offset_ms` 이후와 repair의 `repair_cue_offset_ms` 이후부터 사용자 종료 전까지는
+  full-duplex early/recovery 진단 window로만 사용
 - `final_active_state`: 해당 final evidence window에서 마지막으로 확인 가능한 활성 root 상태
 - `response_capture_ms`: 현재 영어 pipeline의 40초를 후보로 하되 Step 0에서 고정
 
