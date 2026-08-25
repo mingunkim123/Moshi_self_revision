@@ -95,6 +95,24 @@ window를 실제로 생성하고, trial마다 model stream과 RNG를 초기화�
 `edge_private_smoke` 결과는 내부 calibration 전용이다. 공개 production은 현재
 `azure_speech_s0` + independent MFA alignment가 권장안이다.
 
+승인 전에 다음 preflight를 실행하면 외부 호출 없이 정확한 요청 문자 수와 blocker를
+확인한다. Authority 원본과 report는 `.gitignore` 대상인 `release_evidence/`에만 둔다.
+
+```bash
+cp experiments/self_repair/dataset_v2/config/production_authority.example.json \
+  experiments/self_repair/dataset_v2/release_evidence/production_authority.json
+# 승인자가 private authority JSON의 pending/빈 값을 직접 검토·기입한다.
+.venv/bin/python experiments/self_repair/scripts/dataset_v2/production_preflight.py \
+  --allow-blocked
+```
+
+현재 frozen matrix의 초기 3-candidate 정책은 1,800 requests와 1,820,700 Azure billable
+characters이고, target당 총 5개 hard maximum은 3,000 requests와 3,034,500 characters다.
+Azure는 outer `speak`/`voice` tag를 제외한 SSML body의 markup·공백·문장부호도 과금 문자에
+포함하므로 transcript 길이만으로 비용을 계산하지 않는다. Preflight는 승인자가 Azure
+portal에서 바로 확인한 million-character rate와 budget cap을 입력했을 때만 예산 gate를
+통과시킨다. Credential은 존재 여부만 기록하고 값은 report에 저장하지 않는다.
+
 ## 중요한 문서
 
 - `../DATASET_BUILD_PLAN.md`: 전체 단계와 Definition of Done

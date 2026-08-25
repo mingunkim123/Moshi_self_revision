@@ -225,6 +225,14 @@ def create_text_fixture(root: Path) -> dict[str, object]:
     write_json(root / CONFIG_FILES[0], config)
     write_json(root / CONFIG_FILES[1], fixture_eval_config())
     write_json(root / CONFIG_FILES[2], {"schema_version": "2.0.0", "values": {}})
+    write_json(
+        root / CONFIG_FILES[3],
+        {
+            "schema_version": "2.0.0",
+            "status": "pending_user_decision",
+            "provider": "azure_speech_s0",
+        },
+    )
     for relative in SCHEMA_FILES:
         write_json(root / relative, {"$schema": "https://json-schema.org/draft/2020-12/schema"})
 

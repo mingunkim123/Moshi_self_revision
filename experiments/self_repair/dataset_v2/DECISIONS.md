@@ -42,6 +42,19 @@
 - 실제 checkpoint에서 위 timebase/coverage 가정을 확인하는 1-trial GPU smoke는 아직
   수행하지 않았다. 이 smoke는 3,000-trial production run의 선행 gate다.
 
+## 2026-08-26 production preflight contract
+
+- Preflight는 provider 호출을 하지 않고 300 scripts/600 targets/source-track/voice join을
+  전수 검증한다. Azure credential은 존재 여부만 보고하고 값을 저장하지 않는다.
+- 현재 SSML 기준 billable characters는 target당 1후보 합계 606,900자, 초기 3후보
+  1,820,700자, 총 5후보 상한 3,034,500자다. 승인 시점의 portal rate를 private authority에
+  기록해 초기 정책 예상액이 budget cap 안에 있을 때만 통과한다.
+- `production_authority.json`은 paid tier, Moshi 평가 용도, 공개 여부와 재배포 검토,
+  human text sign-off, RunPod MFA upload, artifact store, 최소 50GiB, 승인자를 모두 묶는다.
+  이 파일과 preflight report는 private `release_evidence/`에 두며 Git에 커밋하지 않는다.
+- 2026-08-26 로컬 preflight에서 Azure SDK 1.51.2는 확인됐지만 약 24.8GiB만 비어 있어
+  50GiB storage gate를 통과하지 못했다. 외부 artifact store가 필요하다.
+
 ## Frozen engineering defaults
 
 - Purpose: pretrained Moshi controlled evaluation, not a general training corpus.

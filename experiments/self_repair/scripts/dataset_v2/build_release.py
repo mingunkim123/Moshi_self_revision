@@ -89,6 +89,7 @@ CONFIG_FILES = (
     "config/dataset.yaml",
     "config/eval.json",
     "config/value_evidence.json",
+    "config/production_authority.example.json",
 )
 SCHEMA_FILES = (
     "schemas/blueprint.schema.json",

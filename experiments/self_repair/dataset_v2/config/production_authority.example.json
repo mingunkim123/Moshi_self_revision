@@ -1,0 +1,22 @@
+{
+  "alignment_environment": "runpod_linux_mfa",
+  "approver_id": "",
+  "artifact_store_uri": "",
+  "azure_rate_per_million_characters": 0,
+  "budget_cap": 0,
+  "budget_currency": "USD",
+  "human_text_signoff": false,
+  "minimum_free_gib": 50,
+  "moshi_evaluation_terms_approved": false,
+  "paid_tier_confirmed": false,
+  "pricing_verified_at": "",
+  "provider": "azure_speech_s0",
+  "public_redistribution": false,
+  "purpose": "controlled_evaluation",
+  "redistribution_terms_approved": false,
+  "runpod_audio_upload_approved": false,
+  "schema_version": "2.0.0",
+  "status": "pending_user_decision",
+  "terms_reviewed_at": "",
+  "voice_inventory_verified_at": ""
+}

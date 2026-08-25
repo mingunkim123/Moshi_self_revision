@@ -36,7 +36,7 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def _ssml(script: dict[str, Any], voice: str) -> str:
+def render_ssml(script: dict[str, Any], voice: str) -> str:
     parts = []
     for segment in script["segments"]:
         mark = f"seg_{segment['segment_index']:02d}_{segment['role']}"
@@ -162,7 +162,7 @@ def synthesize(
         if script is None:
             raise ValueError(f"{target_id}: unknown script")
         voice = str(target["voice"])
-        ssml = _ssml(script, voice)
+        ssml = render_ssml(script, voice)
         fixed_parameters = {
             "provider": provider,
             "voice": voice,

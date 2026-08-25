@@ -10,6 +10,9 @@
 - 현재 환경에는 Azure Speech key와 region 설정이 없다.
 - 기존 Edge 샘플은 마지막 word boundary 이후 약 355–391 ms의 tail silence가 있어, `utterance_end_ms`와 WAV duration을 같은 값으로 취급하면 안 된다.
 - 동일 설정 반복 합성이 서로 다른 후보를 만든다는 보장이 없으므로 3회 반복 production 전에 waveform/hash 다양성 검사가 필요하다.
+- Frozen 600-target SSML을 Azure 문서의 과금 문자 규칙으로 계산하면 1회씩 606,900자,
+  초기 3후보 정책은 1,820,700자, 총 5후보 hard maximum은 3,034,500자다. SSML markup을
+  포함한 값이며, 실제 금액은 호출 직전 Azure portal의 region·계약별 rate로 계산한다.
 
 ## 운영 결론
 
@@ -27,6 +30,8 @@
 - Microsoft Azure Product Terms: https://www.microsoft.com/licensing/terms/en-US/productoffering/MicrosoftAzureServices/OL/
 - Microsoft TTS transparency note: https://learn.microsoft.com/en-us/azure/foundry/responsible-ai/speech-service/text-to-speech/transparency-note
 - Microsoft TTS data/privacy/security: https://learn.microsoft.com/en-us/azure/ai-foundry/responsible-ai/speech-service/text-to-speech/data-privacy-security
+- Microsoft TTS billable-character 설명: https://learn.microsoft.com/en-us/azure/ai-services/Speech-Service/text-to-speech#pricing-note
+- Azure Speech pricing: https://azure.microsoft.com/en-us/pricing/details/speech/
 - Microsoft Services Agreement: https://www.microsoft.com/en-us/servicesagreement
 - Apple macOS Tahoe SLA: https://www.apple.com/legal/sla/docs/macOSTahoe.pdf
 - Montreal Forced Aligner: https://montreal-forced-aligner.readthedocs.io/en/latest/
