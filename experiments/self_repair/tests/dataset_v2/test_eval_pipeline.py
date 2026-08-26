@@ -416,7 +416,7 @@ class EvalManifestTests(unittest.TestCase):
         self.assertIn(expected_hash, run_id)
         self.assertIn(CODE_COMMIT, run_id)
         self.assertEqual(
-            self.trials[0]["execution_contract"]["runner_version"], "2.2.0"
+            self.trials[0]["execution_contract"]["runner_version"], "2.2.1"
         )
         self.assertEqual(
             self.trials[0]["matrix_contract"]["generation_seeds"], list(SEEDS)
@@ -425,6 +425,30 @@ class EvalManifestTests(unittest.TestCase):
         self.assertTrue(
             all(row["response"] == {"status": "pending"} for row in self.trials)
         )
+
+    def test_snapshot_revision_accepts_only_same_cache_blob_symlink(self) -> None:
+        revision = "a" * 40
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            model_cache = root / "models--kyutai--moshiko-pytorch-bf16"
+            blob = model_cache / "blobs" / "weight"
+            blob.parent.mkdir(parents=True)
+            blob.write_bytes(b"weights")
+            snapshot = model_cache / "snapshots" / revision
+            snapshot.mkdir(parents=True)
+            linked_weight = snapshot / "model.safetensors"
+            linked_weight.symlink_to(blob)
+            self.assertEqual(_snapshot_revision(linked_weight), revision)
+
+            direct_weight = snapshot / "tokenizer.model"
+            direct_weight.write_bytes(b"tokenizer")
+            self.assertEqual(_snapshot_revision(direct_weight), revision)
+
+            outside = root / "outside.safetensors"
+            outside.write_bytes(b"untrusted")
+            escaped_weight = snapshot / "escaped.safetensors"
+            escaped_weight.symlink_to(outside)
+            self.assertIsNone(_snapshot_revision(escaped_weight))
 
     def test_existing_output_refuses_different_identity(self) -> None:
         accepted = self.accepted[:1]

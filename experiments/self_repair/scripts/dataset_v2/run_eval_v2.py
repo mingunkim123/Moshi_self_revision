@@ -71,7 +71,7 @@ except ImportError:  # pragma: no cover - exercised by direct CLI use.
     )
 
 
-RUNNER_VERSION = "2.2.0"
+RUNNER_VERSION = "2.2.1"
 DEFAULT_INPUT = DATASET_ROOT / "evaluation/eval_trials.jsonl"
 DEFAULT_OUTPUT = DATASET_ROOT / "evaluation/eval_trials.completed.jsonl"
 DEFAULT_RESPONSE_ROOT = DATASET_ROOT / "evaluation/response_artifacts"
@@ -116,16 +116,33 @@ class _SilentPrinter:
 
 
 def _snapshot_revision(path: Path) -> str | None:
-    parts = path.resolve().parts
+    # Hugging Face snapshot files are normally symlinks into the same model
+    # cache's ``blobs`` directory.  Inspecting ``resolve()`` first therefore
+    # discards the immutable ``snapshots/<commit>`` identity.  Preserve that
+    # lexical identity, then independently prove that the file resolves either
+    # inside the snapshot itself or inside the same model cache's blob store.
+    absolute = path.absolute()
+    parts = absolute.parts
     if "snapshots" not in parts:
         return None
     index = parts.index("snapshots")
     if index + 1 >= len(parts):
         return None
     revision = parts[index + 1]
-    if len(revision) == 40 and all(c in "0123456789abcdef" for c in revision):
-        return revision
-    return None
+    if len(revision) != 40 or any(c not in "0123456789abcdef" for c in revision):
+        return None
+    try:
+        resolved = absolute.resolve(strict=True)
+    except (OSError, RuntimeError):
+        return None
+    if not resolved.is_file():
+        return None
+    snapshot_root = Path(*parts[: index + 2])
+    model_cache_root = Path(*parts[:index])
+    allowed_roots = (snapshot_root.resolve(), (model_cache_root / "blobs").resolve())
+    if not any(resolved.is_relative_to(root) for root in allowed_roots):
+        return None
+    return revision
 
 
 def _verify_clean_git_identity(expected_commit: str) -> str:

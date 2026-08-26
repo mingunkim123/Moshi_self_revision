@@ -220,7 +220,7 @@
         "required_max_lm_delay"
       ],
       "properties": {
-        "runner_version": {"const": "2.2.0"},
+        "runner_version": {"const": "2.2.1"},
         "runner_source_sha256": {"$ref": "#/$defs/sha256"},
         "input_sample_rate": {"const": 24000},
         "mimi_frame_samples": {"const": 1920},
