@@ -1,0 +1,712 @@
+{
+  "analysis_status": "descriptive_single_seed_pilot_not_production_scoring",
+  "analyzer_version": "1.0.0",
+  "bootstrap": {
+    "method": "scenario-cluster percentile",
+    "replicates": 10000,
+    "seed": 20260826
+  },
+  "conditions": {
+    "clean_final": {
+      "assistant_beyond_standard_greeting_before_repair_proxy_rate": null,
+      "assistant_started_before_repair_proxy_rate": null,
+      "assistant_started_before_user_audio_proxy_rate": 1.0,
+      "empty_primary_text_count": 25,
+      "empty_primary_text_rate": 0.20833333333333334,
+      "no_evidence_count": 109,
+      "no_evidence_rate": 0.9083333333333333,
+      "no_speech_proxy_count": 26,
+      "no_speech_proxy_rate": 0.21666666666666667,
+      "primary_word_count_mean": 16.316666666666666,
+      "primary_word_count_median": 13.5,
+      "response_audio_duration_ms_mean": 72610.66666666667,
+      "response_audio_hours_total": 2.4203555555555556,
+      "review_queue_counts": {
+        "no_evidence": 83,
+        "no_speech_proxy": 26,
+        "target_only": 11
+      },
+      "runtime_hours_total": 0.9760467529141654,
+      "runtime_seconds_mean": 29.281402587424964,
+      "stale_evidence_proxy_count": 0,
+      "stale_evidence_proxy_inference": {
+        "percentage": 0.0,
+        "rate": 0.0,
+        "scenario_cluster_bootstrap_95_ci": [
+          0.0,
+          0.0
+        ],
+        "scenario_clusters": 30
+      },
+      "stale_evidence_proxy_rate": 0.0,
+      "target_only_proxy_count": 11,
+      "target_only_proxy_inference": {
+        "percentage": 9.166666666666666,
+        "rate": 0.09166666666666666,
+        "scenario_cluster_bootstrap_95_ci": [
+          0.05,
+          0.13333333333333333
+        ],
+        "scenario_clusters": 30
+      },
+      "target_only_proxy_rate": 0.09166666666666666,
+      "trials": 120
+    },
+    "delayed_neutral": {
+      "assistant_beyond_standard_greeting_before_repair_proxy_rate": 0.8,
+      "assistant_started_before_repair_proxy_rate": 1.0,
+      "assistant_started_before_user_audio_proxy_rate": 1.0,
+      "empty_primary_text_count": 21,
+      "empty_primary_text_rate": 0.175,
+      "no_evidence_count": 97,
+      "no_evidence_rate": 0.8083333333333333,
+      "no_speech_proxy_count": 21,
+      "no_speech_proxy_rate": 0.175,
+      "primary_word_count_mean": 18.541666666666668,
+      "primary_word_count_median": 15.0,
+      "response_audio_duration_ms_mean": 74842.0,
+      "response_audio_hours_total": 2.4947333333333335,
+      "review_queue_counts": {
+        "no_evidence": 76,
+        "no_speech_proxy": 21,
+        "stale_only": 21,
+        "target_only": 2
+      },
+      "runtime_hours_total": 1.0049830824907662,
+      "runtime_seconds_mean": 30.149492474722987,
+      "stale_evidence_proxy_count": 21,
+      "stale_evidence_proxy_inference": {
+        "percentage": 17.5,
+        "rate": 0.175,
+        "scenario_cluster_bootstrap_95_ci": [
+          0.1,
+          0.26666666666666666
+        ],
+        "scenario_clusters": 30
+      },
+      "stale_evidence_proxy_rate": 0.175,
+      "target_only_proxy_count": 2,
+      "target_only_proxy_inference": {
+        "percentage": 1.6666666666666667,
+        "rate": 0.016666666666666666,
+        "scenario_cluster_bootstrap_95_ci": [
+          0.0,
+          0.041666666666666664
+        ],
+        "scenario_clusters": 30
+      },
+      "target_only_proxy_rate": 0.016666666666666666,
+      "trials": 120
+    },
+    "delayed_one_dependency": {
+      "assistant_beyond_standard_greeting_before_repair_proxy_rate": 0.825,
+      "assistant_started_before_repair_proxy_rate": 1.0,
+      "assistant_started_before_user_audio_proxy_rate": 1.0,
+      "empty_primary_text_count": 27,
+      "empty_primary_text_rate": 0.225,
+      "no_evidence_count": 108,
+      "no_evidence_rate": 0.9,
+      "no_speech_proxy_count": 28,
+      "no_speech_proxy_rate": 0.23333333333333334,
+      "primary_word_count_mean": 14.033333333333333,
+      "primary_word_count_median": 12.0,
+      "response_audio_duration_ms_mean": 74838.66666666667,
+      "response_audio_hours_total": 2.494622222222222,
+      "review_queue_counts": {
+        "no_evidence": 80,
+        "no_speech_proxy": 28,
+        "stale_only": 12
+      },
+      "runtime_hours_total": 1.0054720587464463,
+      "runtime_seconds_mean": 30.16416176239339,
+      "stale_evidence_proxy_count": 12,
+      "stale_evidence_proxy_inference": {
+        "percentage": 10.0,
+        "rate": 0.1,
+        "scenario_cluster_bootstrap_95_ci": [
+          0.05,
+          0.15
+        ],
+        "scenario_clusters": 30
+      },
+      "stale_evidence_proxy_rate": 0.1,
+      "target_only_proxy_count": 0,
+      "target_only_proxy_inference": {
+        "percentage": 0.0,
+        "rate": 0.0,
+        "scenario_cluster_bootstrap_95_ci": [
+          0.0,
+          0.0
+        ],
+        "scenario_clusters": 30
+      },
+      "target_only_proxy_rate": 0.0,
+      "trials": 120
+    },
+    "delayed_three_dependencies": {
+      "assistant_beyond_standard_greeting_before_repair_proxy_rate": 0.8916666666666667,
+      "assistant_started_before_repair_proxy_rate": 1.0,
+      "assistant_started_before_user_audio_proxy_rate": 1.0,
+      "empty_primary_text_count": 18,
+      "empty_primary_text_rate": 0.15,
+      "no_evidence_count": 103,
+      "no_evidence_rate": 0.8583333333333333,
+      "no_speech_proxy_count": 20,
+      "no_speech_proxy_rate": 0.16666666666666666,
+      "primary_word_count_mean": 20.883333333333333,
+      "primary_word_count_median": 17.0,
+      "response_audio_duration_ms_mean": 74802.66666666667,
+      "response_audio_hours_total": 2.493422222222222,
+      "review_queue_counts": {
+        "both": 1,
+        "no_evidence": 83,
+        "no_speech_proxy": 20,
+        "stale_only": 15,
+        "target_only": 1
+      },
+      "runtime_hours_total": 1.0034613742001561,
+      "runtime_seconds_mean": 30.103841226004686,
+      "stale_evidence_proxy_count": 16,
+      "stale_evidence_proxy_inference": {
+        "percentage": 13.333333333333334,
+        "rate": 0.13333333333333333,
+        "scenario_cluster_bootstrap_95_ci": [
+          0.075,
+          0.2
+        ],
+        "scenario_clusters": 30
+      },
+      "stale_evidence_proxy_rate": 0.13333333333333333,
+      "target_only_proxy_count": 1,
+      "target_only_proxy_inference": {
+        "percentage": 0.8333333333333334,
+        "rate": 0.008333333333333333,
+        "scenario_cluster_bootstrap_95_ci": [
+          0.0,
+          0.025
+        ],
+        "scenario_clusters": 30
+      },
+      "target_only_proxy_rate": 0.008333333333333333,
+      "trials": 120
+    },
+    "immediate_repair": {
+      "assistant_beyond_standard_greeting_before_repair_proxy_rate": 0.008333333333333333,
+      "assistant_started_before_repair_proxy_rate": 1.0,
+      "assistant_started_before_user_audio_proxy_rate": 1.0,
+      "empty_primary_text_count": 26,
+      "empty_primary_text_rate": 0.21666666666666667,
+      "no_evidence_count": 110,
+      "no_evidence_rate": 0.9166666666666666,
+      "no_speech_proxy_count": 27,
+      "no_speech_proxy_rate": 0.225,
+      "primary_word_count_mean": 20.391666666666666,
+      "primary_word_count_median": 16.0,
+      "response_audio_duration_ms_mean": 74796.0,
+      "response_audio_hours_total": 2.4932,
+      "review_queue_counts": {
+        "no_evidence": 83,
+        "no_speech_proxy": 27,
+        "stale_only": 2,
+        "target_only": 8
+      },
+      "runtime_hours_total": 1.0040307600692742,
+      "runtime_seconds_mean": 30.120922802078226,
+      "stale_evidence_proxy_count": 2,
+      "stale_evidence_proxy_inference": {
+        "percentage": 1.6666666666666667,
+        "rate": 0.016666666666666666,
+        "scenario_cluster_bootstrap_95_ci": [
+          0.0,
+          0.041666666666666664
+        ],
+        "scenario_clusters": 30
+      },
+      "stale_evidence_proxy_rate": 0.016666666666666666,
+      "target_only_proxy_count": 8,
+      "target_only_proxy_inference": {
+        "percentage": 6.666666666666667,
+        "rate": 0.06666666666666667,
+        "scenario_cluster_bootstrap_95_ci": [
+          0.03333333333333333,
+          0.10833333333333334
+        ],
+        "scenario_clusters": 30
+      },
+      "target_only_proxy_rate": 0.06666666666666667,
+      "trials": 120
+    }
+  },
+  "counts": {
+    "completed_seeds": 1,
+    "completed_trials": 600,
+    "conditions": 5,
+    "directions": 2,
+    "scenario_clusters": 30,
+    "speakers": 10,
+    "technical_contract_failures": 0
+  },
+  "directions": {
+    "a_to_b": {
+      "assistant_beyond_standard_greeting_before_repair_proxy_rate": 0.6166666666666667,
+      "assistant_started_before_repair_proxy_rate": 1.0,
+      "assistant_started_before_user_audio_proxy_rate": 1.0,
+      "empty_primary_text_count": 62,
+      "empty_primary_text_rate": 0.20666666666666667,
+      "no_evidence_count": 270,
+      "no_evidence_rate": 0.9,
+      "no_speech_proxy_count": 66,
+      "no_speech_proxy_rate": 0.22,
+      "primary_word_count_mean": 16.72,
+      "primary_word_count_median": 13.0,
+      "response_audio_duration_ms_mean": 74338.66666666667,
+      "response_audio_hours_total": 6.1948888888888884,
+      "review_queue_counts": {
+        "both": 1,
+        "no_evidence": 204,
+        "no_speech_proxy": 66,
+        "stale_only": 20,
+        "target_only": 9
+      },
+      "runtime_hours_total": 2.4957214593209534,
+      "runtime_seconds_mean": 29.94865751185144,
+      "stale_evidence_proxy_count": 21,
+      "stale_evidence_proxy_rate": 0.07,
+      "target_only_proxy_count": 9,
+      "target_only_proxy_rate": 0.03,
+      "trials": 300
+    },
+    "b_to_a": {
+      "assistant_beyond_standard_greeting_before_repair_proxy_rate": 0.6458333333333334,
+      "assistant_started_before_repair_proxy_rate": 1.0,
+      "assistant_started_before_user_audio_proxy_rate": 1.0,
+      "empty_primary_text_count": 55,
+      "empty_primary_text_rate": 0.18333333333333332,
+      "no_evidence_count": 257,
+      "no_evidence_rate": 0.8566666666666667,
+      "no_speech_proxy_count": 56,
+      "no_speech_proxy_rate": 0.18666666666666668,
+      "primary_word_count_mean": 19.346666666666668,
+      "primary_word_count_median": 16.0,
+      "response_audio_duration_ms_mean": 74417.33333333333,
+      "response_audio_hours_total": 6.201444444444444,
+      "review_queue_counts": {
+        "no_evidence": 201,
+        "no_speech_proxy": 56,
+        "stale_only": 30,
+        "target_only": 13
+      },
+      "runtime_hours_total": 2.4982725690998553,
+      "runtime_seconds_mean": 29.97927082919826,
+      "stale_evidence_proxy_count": 30,
+      "stale_evidence_proxy_rate": 0.1,
+      "target_only_proxy_count": 13,
+      "target_only_proxy_rate": 0.043333333333333335,
+      "trials": 300
+    }
+  },
+  "exact_value_sensitivity": {
+    "both_count": 1,
+    "stale_evidence_count": 50,
+    "target_only_count": 21
+  },
+  "label_policy": {
+    "no_evidence": "no listed target or stale alias/entity; requires human review and is not automatically a semantic failure",
+    "no_speech_proxy": "no alphanumeric text token in the primary window",
+    "primary_window": "concatenate stream-event text pieces whose time_ms is greater than or equal to response.primary_window_start_ms",
+    "stale_evidence_proxy": "at least one answer-key stale alias/illustrative entity in primary text",
+    "target_only_proxy": "at least one answer-key target alias/illustrative entity and no stale alias/illustrative entity in the primary text"
+  },
+  "limitations": [
+    "Only generation seed 17 is complete; seed variability is unknown.",
+    "Evidence matching is conservative and cannot score D1-D3 relation binding.",
+    "No-evidence responses require the preregistered two-annotator review.",
+    "The assistant-onset proxy includes Moshi's standard opening greeting.",
+    "All trials used a prepared-input prefix; onset before that boundary means the assistant spoke before user audio began.",
+    "Audio/alignment release review remains provisional and is not repaired by this analysis."
+  ],
+  "onset_diagnostics": {
+    "first_assistant_lexical_ms_values": [
+      400.0
+    ],
+    "input_prefix_silence_ms_values": [
+      480.0
+    ],
+    "standard_greeting_start_count": 600,
+    "standard_greeting_start_rate": 1.0
+  },
+  "overall": {
+    "assistant_beyond_standard_greeting_before_repair_proxy_rate": 0.63125,
+    "assistant_started_before_repair_proxy_rate": 1.0,
+    "assistant_started_before_user_audio_proxy_rate": 1.0,
+    "empty_primary_text_count": 117,
+    "empty_primary_text_rate": 0.195,
+    "no_evidence_count": 527,
+    "no_evidence_rate": 0.8783333333333333,
+    "no_speech_proxy_count": 122,
+    "no_speech_proxy_rate": 0.20333333333333334,
+    "primary_word_count_mean": 18.033333333333335,
+    "primary_word_count_median": 14.0,
+    "response_audio_duration_ms_mean": 74378.0,
+    "response_audio_hours_total": 12.396333333333333,
+    "review_queue_counts": {
+      "both": 1,
+      "no_evidence": 405,
+      "no_speech_proxy": 122,
+      "stale_only": 50,
+      "target_only": 22
+    },
+    "runtime_hours_total": 4.993994028420809,
+    "runtime_seconds_mean": 29.96396417052485,
+    "stale_evidence_proxy_count": 51,
+    "stale_evidence_proxy_rate": 0.085,
+    "target_only_proxy_count": 22,
+    "target_only_proxy_rate": 0.03666666666666667,
+    "trials": 600
+  },
+  "paired_scenario_cluster_contrasts": {
+    "one_minus_neutral__stale_evidence_proxy": {
+      "left_condition": "delayed_one_dependency",
+      "metric": "stale_evidence_proxy",
+      "percentage_point_difference": -7.5,
+      "rate_difference": -0.075,
+      "right_condition": "delayed_neutral",
+      "scenario_cluster_bootstrap_95_ci_rate": [
+        -0.16666666666666666,
+        0.008333333333333333
+      ],
+      "scenario_clusters": 30
+    },
+    "one_minus_neutral__target_only_proxy": {
+      "left_condition": "delayed_one_dependency",
+      "metric": "conservative_target_only_proxy",
+      "percentage_point_difference": -1.6666666666666667,
+      "rate_difference": -0.016666666666666666,
+      "right_condition": "delayed_neutral",
+      "scenario_cluster_bootstrap_95_ci_rate": [
+        -0.041666666666666664,
+        0.0
+      ],
+      "scenario_clusters": 30
+    },
+    "three_minus_neutral__stale_evidence_proxy": {
+      "left_condition": "delayed_three_dependencies",
+      "metric": "stale_evidence_proxy",
+      "percentage_point_difference": -4.166666666666666,
+      "rate_difference": -0.041666666666666664,
+      "right_condition": "delayed_neutral",
+      "scenario_cluster_bootstrap_95_ci_rate": [
+        -0.15,
+        0.058333333333333334
+      ],
+      "scenario_clusters": 30
+    },
+    "three_minus_neutral__target_only_proxy": {
+      "left_condition": "delayed_three_dependencies",
+      "metric": "conservative_target_only_proxy",
+      "percentage_point_difference": -0.8333333333333334,
+      "rate_difference": -0.008333333333333333,
+      "right_condition": "delayed_neutral",
+      "scenario_cluster_bootstrap_95_ci_rate": [
+        -0.03333333333333333,
+        0.016666666666666666
+      ],
+      "scenario_clusters": 30
+    }
+  },
+  "provenance": {
+    "accepted_manifest": "experiments/self_repair/dataset_v2/manifests/provisional_accepted_audio.jsonl",
+    "accepted_manifest_sha256": "9009c145d407701062305d0f424c0f6176d596cd253eadb363005c721383b688",
+    "answer_keys": "experiments/self_repair/dataset_v2/answer_keys/answer_keys.jsonl",
+    "answer_keys_sha256": "164e05d1775392794a88a0713133c4235dbed347fce34c4d1f50ee9ff3ed1bce",
+    "completed_seed": 17,
+    "eval_results": "experiments/self_repair/dataset_v2/evaluation/seed17_b977391_raw/provisional_eval_results_seedpilot_b977391.jsonl",
+    "eval_results_sha256": "0e0816781d0e81e899a218d1b3337c4c1204c1c02e8d8d4bd10d173de3c44018",
+    "prepared_manifest": "experiments/self_repair/dataset_v2/manifests/provisional_prepared_stimuli.jsonl",
+    "prepared_manifest_sha256": "55a66b4fae34f64de4a9488d9c6358fc77ca105f7c9b237d52b5a70f67dab8c4",
+    "transcript_reconstruction_mismatches": 0
+  },
+  "speakers": {
+    "tts01": {
+      "assistant_beyond_standard_greeting_before_repair_proxy_rate": 0.7083333333333334,
+      "assistant_started_before_repair_proxy_rate": 1.0,
+      "assistant_started_before_user_audio_proxy_rate": 1.0,
+      "empty_primary_text_count": 5,
+      "empty_primary_text_rate": 0.08333333333333333,
+      "no_evidence_count": 52,
+      "no_evidence_rate": 0.8666666666666667,
+      "no_speech_proxy_count": 5,
+      "no_speech_proxy_rate": 0.08333333333333333,
+      "primary_word_count_mean": 20.65,
+      "primary_word_count_median": 16.0,
+      "response_audio_duration_ms_mean": 75540.0,
+      "response_audio_hours_total": 1.259,
+      "review_queue_counts": {
+        "both": 1,
+        "no_evidence": 47,
+        "no_speech_proxy": 5,
+        "stale_only": 4,
+        "target_only": 3
+      },
+      "runtime_hours_total": 0.5082377791456464,
+      "runtime_seconds_mean": 30.494266748738784,
+      "stale_evidence_proxy_count": 5,
+      "stale_evidence_proxy_rate": 0.08333333333333333,
+      "target_only_proxy_count": 3,
+      "target_only_proxy_rate": 0.05,
+      "trials": 60
+    },
+    "tts02": {
+      "assistant_beyond_standard_greeting_before_repair_proxy_rate": 0.75,
+      "assistant_started_before_repair_proxy_rate": 1.0,
+      "assistant_started_before_user_audio_proxy_rate": 1.0,
+      "empty_primary_text_count": 21,
+      "empty_primary_text_rate": 0.35,
+      "no_evidence_count": 58,
+      "no_evidence_rate": 0.9666666666666667,
+      "no_speech_proxy_count": 21,
+      "no_speech_proxy_rate": 0.35,
+      "primary_word_count_mean": 12.383333333333333,
+      "primary_word_count_median": 8.5,
+      "response_audio_duration_ms_mean": 75705.33333333333,
+      "response_audio_hours_total": 1.2617555555555555,
+      "review_queue_counts": {
+        "no_evidence": 37,
+        "no_speech_proxy": 21,
+        "stale_only": 1,
+        "target_only": 1
+      },
+      "runtime_hours_total": 0.5071784247245846,
+      "runtime_seconds_mean": 30.43070548347508,
+      "stale_evidence_proxy_count": 1,
+      "stale_evidence_proxy_rate": 0.016666666666666666,
+      "target_only_proxy_count": 1,
+      "target_only_proxy_rate": 0.016666666666666666,
+      "trials": 60
+    },
+    "tts03": {
+      "assistant_beyond_standard_greeting_before_repair_proxy_rate": 0.75,
+      "assistant_started_before_repair_proxy_rate": 1.0,
+      "assistant_started_before_user_audio_proxy_rate": 1.0,
+      "empty_primary_text_count": 25,
+      "empty_primary_text_rate": 0.4166666666666667,
+      "no_evidence_count": 54,
+      "no_evidence_rate": 0.9,
+      "no_speech_proxy_count": 25,
+      "no_speech_proxy_rate": 0.4166666666666667,
+      "primary_word_count_mean": 9.766666666666667,
+      "primary_word_count_median": 5.0,
+      "response_audio_duration_ms_mean": 91433.33333333333,
+      "response_audio_hours_total": 1.5238888888888888,
+      "review_queue_counts": {
+        "no_evidence": 29,
+        "no_speech_proxy": 25,
+        "stale_only": 3,
+        "target_only": 3
+      },
+      "runtime_hours_total": 0.6141880614610595,
+      "runtime_seconds_mean": 36.851283687663575,
+      "stale_evidence_proxy_count": 3,
+      "stale_evidence_proxy_rate": 0.05,
+      "target_only_proxy_count": 3,
+      "target_only_proxy_rate": 0.05,
+      "trials": 60
+    },
+    "tts04": {
+      "assistant_beyond_standard_greeting_before_repair_proxy_rate": 0.625,
+      "assistant_started_before_repair_proxy_rate": 1.0,
+      "assistant_started_before_user_audio_proxy_rate": 1.0,
+      "empty_primary_text_count": 2,
+      "empty_primary_text_rate": 0.03333333333333333,
+      "no_evidence_count": 44,
+      "no_evidence_rate": 0.7333333333333333,
+      "no_speech_proxy_count": 3,
+      "no_speech_proxy_rate": 0.05,
+      "primary_word_count_mean": 24,
+      "primary_word_count_median": 20.0,
+      "response_audio_duration_ms_mean": 72301.33333333333,
+      "response_audio_hours_total": 1.2050222222222222,
+      "review_queue_counts": {
+        "no_evidence": 41,
+        "no_speech_proxy": 3,
+        "stale_only": 10,
+        "target_only": 6
+      },
+      "runtime_hours_total": 0.4852308698774626,
+      "runtime_seconds_mean": 29.113852192647755,
+      "stale_evidence_proxy_count": 10,
+      "stale_evidence_proxy_rate": 0.16666666666666666,
+      "target_only_proxy_count": 6,
+      "target_only_proxy_rate": 0.1,
+      "trials": 60
+    },
+    "tts05": {
+      "assistant_beyond_standard_greeting_before_repair_proxy_rate": 0.625,
+      "assistant_started_before_repair_proxy_rate": 1.0,
+      "assistant_started_before_user_audio_proxy_rate": 1.0,
+      "empty_primary_text_count": 5,
+      "empty_primary_text_rate": 0.08333333333333333,
+      "no_evidence_count": 55,
+      "no_evidence_rate": 0.9166666666666666,
+      "no_speech_proxy_count": 5,
+      "no_speech_proxy_rate": 0.08333333333333333,
+      "primary_word_count_mean": 23.15,
+      "primary_word_count_median": 19.5,
+      "response_audio_duration_ms_mean": 70808.0,
+      "response_audio_hours_total": 1.1801333333333333,
+      "review_queue_counts": {
+        "no_evidence": 50,
+        "no_speech_proxy": 5,
+        "stale_only": 4,
+        "target_only": 1
+      },
+      "runtime_hours_total": 0.47496872684711383,
+      "runtime_seconds_mean": 28.49812361082683,
+      "stale_evidence_proxy_count": 4,
+      "stale_evidence_proxy_rate": 0.06666666666666667,
+      "target_only_proxy_count": 1,
+      "target_only_proxy_rate": 0.016666666666666666,
+      "trials": 60
+    },
+    "tts06": {
+      "assistant_beyond_standard_greeting_before_repair_proxy_rate": 0.3333333333333333,
+      "assistant_started_before_repair_proxy_rate": 1.0,
+      "assistant_started_before_user_audio_proxy_rate": 1.0,
+      "empty_primary_text_count": 8,
+      "empty_primary_text_rate": 0.13333333333333333,
+      "no_evidence_count": 46,
+      "no_evidence_rate": 0.7666666666666667,
+      "no_speech_proxy_count": 9,
+      "no_speech_proxy_rate": 0.15,
+      "primary_word_count_mean": 26,
+      "primary_word_count_median": 28.0,
+      "response_audio_duration_ms_mean": 69998.66666666667,
+      "response_audio_hours_total": 1.1666444444444444,
+      "review_queue_counts": {
+        "no_evidence": 37,
+        "no_speech_proxy": 9,
+        "stale_only": 11,
+        "target_only": 3
+      },
+      "runtime_hours_total": 0.4697096630837768,
+      "runtime_seconds_mean": 28.18257978502661,
+      "stale_evidence_proxy_count": 11,
+      "stale_evidence_proxy_rate": 0.18333333333333332,
+      "target_only_proxy_count": 3,
+      "target_only_proxy_rate": 0.05,
+      "trials": 60
+    },
+    "tts07": {
+      "assistant_beyond_standard_greeting_before_repair_proxy_rate": 0.75,
+      "assistant_started_before_repair_proxy_rate": 1.0,
+      "assistant_started_before_user_audio_proxy_rate": 1.0,
+      "empty_primary_text_count": 25,
+      "empty_primary_text_rate": 0.4166666666666667,
+      "no_evidence_count": 54,
+      "no_evidence_rate": 0.9,
+      "no_speech_proxy_count": 25,
+      "no_speech_proxy_rate": 0.4166666666666667,
+      "primary_word_count_mean": 11.416666666666666,
+      "primary_word_count_median": 6.5,
+      "response_audio_duration_ms_mean": 78665.33333333333,
+      "response_audio_hours_total": 1.311088888888889,
+      "review_queue_counts": {
+        "no_evidence": 29,
+        "no_speech_proxy": 25,
+        "stale_only": 5,
+        "target_only": 1
+      },
+      "runtime_hours_total": 0.5277644400360684,
+      "runtime_seconds_mean": 31.665866402164102,
+      "stale_evidence_proxy_count": 5,
+      "stale_evidence_proxy_rate": 0.08333333333333333,
+      "target_only_proxy_count": 1,
+      "target_only_proxy_rate": 0.016666666666666666,
+      "trials": 60
+    },
+    "tts08": {
+      "assistant_beyond_standard_greeting_before_repair_proxy_rate": 0.5208333333333334,
+      "assistant_started_before_repair_proxy_rate": 1.0,
+      "assistant_started_before_user_audio_proxy_rate": 1.0,
+      "empty_primary_text_count": 8,
+      "empty_primary_text_rate": 0.13333333333333333,
+      "no_evidence_count": 53,
+      "no_evidence_rate": 0.8833333333333333,
+      "no_speech_proxy_count": 10,
+      "no_speech_proxy_rate": 0.16666666666666666,
+      "primary_word_count_mean": 18.683333333333334,
+      "primary_word_count_median": 14.0,
+      "response_audio_duration_ms_mean": 69708.0,
+      "response_audio_hours_total": 1.1618,
+      "review_queue_counts": {
+        "no_evidence": 43,
+        "no_speech_proxy": 10,
+        "stale_only": 6,
+        "target_only": 1
+      },
+      "runtime_hours_total": 0.4689202033009173,
+      "runtime_seconds_mean": 28.13521219805504,
+      "stale_evidence_proxy_count": 6,
+      "stale_evidence_proxy_rate": 0.1,
+      "target_only_proxy_count": 1,
+      "target_only_proxy_rate": 0.016666666666666666,
+      "trials": 60
+    },
+    "tts09": {
+      "assistant_beyond_standard_greeting_before_repair_proxy_rate": 0.6666666666666666,
+      "assistant_started_before_repair_proxy_rate": 1.0,
+      "assistant_started_before_user_audio_proxy_rate": 1.0,
+      "empty_primary_text_count": 14,
+      "empty_primary_text_rate": 0.23333333333333334,
+      "no_evidence_count": 56,
+      "no_evidence_rate": 0.9333333333333333,
+      "no_speech_proxy_count": 14,
+      "no_speech_proxy_rate": 0.23333333333333334,
+      "primary_word_count_mean": 13.383333333333333,
+      "primary_word_count_median": 13.0,
+      "response_audio_duration_ms_mean": 68997.33333333333,
+      "response_audio_hours_total": 1.1499555555555556,
+      "review_queue_counts": {
+        "no_evidence": 42,
+        "no_speech_proxy": 14,
+        "stale_only": 3,
+        "target_only": 1
+      },
+      "runtime_hours_total": 0.46289008437397167,
+      "runtime_seconds_mean": 27.7734050624383,
+      "stale_evidence_proxy_count": 3,
+      "stale_evidence_proxy_rate": 0.05,
+      "target_only_proxy_count": 1,
+      "target_only_proxy_rate": 0.016666666666666666,
+      "trials": 60
+    },
+    "tts10": {
+      "assistant_beyond_standard_greeting_before_repair_proxy_rate": 0.5833333333333334,
+      "assistant_started_before_repair_proxy_rate": 1.0,
+      "assistant_started_before_user_audio_proxy_rate": 1.0,
+      "empty_primary_text_count": 4,
+      "empty_primary_text_rate": 0.06666666666666667,
+      "no_evidence_count": 55,
+      "no_evidence_rate": 0.9166666666666666,
+      "no_speech_proxy_count": 5,
+      "no_speech_proxy_rate": 0.08333333333333333,
+      "primary_word_count_mean": 20.9,
+      "primary_word_count_median": 16.0,
+      "response_audio_duration_ms_mean": 70622.66666666667,
+      "response_audio_hours_total": 1.1770444444444443,
+      "review_queue_counts": {
+        "no_evidence": 50,
+        "no_speech_proxy": 5,
+        "stale_only": 3,
+        "target_only": 2
+      },
+      "runtime_hours_total": 0.4749057755702072,
+      "runtime_seconds_mean": 28.49434653421243,
+      "stale_evidence_proxy_count": 3,
+      "stale_evidence_proxy_rate": 0.05,
+      "target_only_proxy_count": 2,
+      "target_only_proxy_rate": 0.03333333333333333,
+      "trials": 60
+    }
+  }
+}
