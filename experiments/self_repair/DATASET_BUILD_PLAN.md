@@ -19,8 +19,9 @@ release를 dataset/schema v2.0.0으로 통일한다. 새 경로, `VERSION`, sche
 | 대본·답안 키 | 완료 | 300 scripts, 60 answer keys, byte-level 재생성 일치 |
 | 화자 배정 | 완료 | 120 matched bundles, 600 rendition targets, 10 voices 균형 |
 | 비공개 TTS calibration | 완료 | 180/180 합성·provider boundary mapping, 158 QC pass, 22 clipping 제외 |
-| production preflight | 완료 | 600-target join·Azure billable characters·authority·credential·50GiB·MFA gate 자동화 |
-| production TTS/독립 정렬 | 사용자 결정 필요 | provider·권리·credential·artifact store 미승인 |
+| production preflight | 완료 | 600-target join·Azure billable characters·authority·credential·local 12GiB/remote 40GiB·MFA gate 자동화 |
+| storage architecture | 완료 | local TTS/QC + RunPod MFA/Moshi, 대용량 response remote 유지 |
+| production TTS/독립 정렬 | 사용자 결정 필요 | provider·권리·credential·RunPod access 미승인 |
 | accepted 600·Moshi 3,000·annotation | 대기 | production audio 이후 실행 |
 | human/pause extension | 대기 | core 결과와 별도 consent/예산 결정 이후 실행 |
 

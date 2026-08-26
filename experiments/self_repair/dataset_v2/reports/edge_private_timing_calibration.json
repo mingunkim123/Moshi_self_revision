@@ -1598,8 +1598,8 @@
   "provenance": {
     "candidate_manifest_content_sha256": "7efb37c4ac199e9c74560282f9a12e9a2a7091d4c4a4b513ba6635cbd00966b3",
     "config_illustrative_target_latency_ms_ignored": 4000,
-    "configuration_content_sha256": "a7b44b6b29fdcfd0bcb0ed5da9f77650d70aeaf49768e84477f332363c843fa3",
-    "script_manifest_content_sha256": "9126694a3c10e7843e0fe20c432f4e562561edd633e643eb77d559f507d4fad7",
+    "configuration_content_sha256": "9f7af5fa465d5243496a160237d492730310dbfd46ce7c80f9ba3495a646be67",
+    "script_manifest_content_sha256": "42fdac162472e51aad0ca10717f35c8c5015d1ce2afe3c4300197a30b4ea94db",
     "uses_config_illustrative_target_latency": false,
     "uses_observed_candidate_timing_only": true
   },

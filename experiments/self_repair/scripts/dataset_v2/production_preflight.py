@@ -59,9 +59,11 @@ AUTHORITY_FIELDS = {
     "terms_reviewed_at",
     "voice_inventory_verified_at",
     "alignment_environment",
+    "storage_execution_mode",
     "runpod_audio_upload_approved",
     "artifact_store_uri",
-    "minimum_free_gib",
+    "local_minimum_free_gib",
+    "remote_minimum_free_gib",
     "approver_id",
 }
 _UNSET = object()
@@ -212,6 +214,7 @@ def validate_authority(
         "human_text_signoff": True,
         "budget_currency": "USD",
         "alignment_environment": "runpod_linux_mfa",
+        "storage_execution_mode": "local_audio_then_runpod_evaluation",
         "runpod_audio_upload_approved": True,
     }
     for field, expected in exact.items():
@@ -233,14 +236,19 @@ def validate_authority(
             or number <= 0
         ):
             errors.append(f"{field} must be finite and positive")
-    minimum = value.get("minimum_free_gib")
-    if (
-        isinstance(minimum, bool)
-        or not isinstance(minimum, (int, float))
-        or not math.isfinite(float(minimum))
-        or minimum < 50
-    ):
-        errors.append("minimum_free_gib must be at least 50")
+    storage_minimums = {
+        "local_minimum_free_gib": 12,
+        "remote_minimum_free_gib": 40,
+    }
+    for field, lower_bound in storage_minimums.items():
+        minimum = value.get(field)
+        if (
+            isinstance(minimum, bool)
+            or not isinstance(minimum, (int, float))
+            or not math.isfinite(float(minimum))
+            or minimum < lower_bound
+        ):
+            errors.append(f"{field} must be at least {lower_bound}")
     for field in (
         "pricing_verified_at",
         "terms_reviewed_at",
@@ -410,9 +418,27 @@ def build_report(
         "Install MFA locally or approve the frozen RunPod/Linux MFA environment and upload.",
     )
 
+    runpod_presence = bool(env.get("RUNPOD_API_KEY"))
+    check(
+        "runpod_access_present",
+        runpod_presence,
+        {"RUNPOD_API_KEY": runpod_presence},
+        "Set RunPod access locally; never paste or commit the API key.",
+    )
+
     artifact_root.mkdir(parents=True, exist_ok=True)
     available = free_bytes if free_bytes is not None else shutil.disk_usage(artifact_root).free
-    required_gib = float(authority["minimum_free_gib"]) if authority else 50.0
+    configured_local_gib = float(
+        config.get("release", {})
+        .get("storage_plan", {})
+        .get("local_audio_production", {})
+        .get("minimum_free_gib", 12)
+    )
+    required_gib = (
+        float(authority["local_minimum_free_gib"])
+        if authority
+        else configured_local_gib
+    )
     check(
         "artifact_storage_capacity",
         available >= required_gib * GIB,

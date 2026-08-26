@@ -6,7 +6,7 @@
   "budget_cap": 0,
   "budget_currency": "USD",
   "human_text_signoff": false,
-  "minimum_free_gib": 50,
+  "local_minimum_free_gib": 12,
   "moshi_evaluation_terms_approved": false,
   "paid_tier_confirmed": false,
   "pricing_verified_at": "",
@@ -17,6 +17,8 @@
   "runpod_audio_upload_approved": false,
   "schema_version": "2.0.0",
   "status": "pending_user_decision",
+  "storage_execution_mode": "local_audio_then_runpod_evaluation",
   "terms_reviewed_at": "",
+  "remote_minimum_free_gib": 40,
   "voice_inventory_verified_at": ""
 }

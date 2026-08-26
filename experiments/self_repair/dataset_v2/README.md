@@ -4,8 +4,8 @@
 set을 재현 가능하게 만드는 계약·데이터·검증 보고서를 담는다. 일반 학습 corpus가 아니다.
 
 현재 상태는 **text/pipeline development**다. 공개 release용 TTS provider 권리와 Azure
-credential, 독립 forced alignment 환경, 외부 artifact storage가 승인되기 전에는 audio
-production 또는 release-ready로 표시하지 않는다.
+credential, 독립 forced alignment 환경이 승인되기 전에는 audio production 또는
+release-ready로 표시하지 않는다. 저장공간은 local TTS/QC와 remote evaluation으로 분리했다.
 
 2026-08-26 현재 30개 blueprint, 300개 script, 60개 answer key와 600개 TTS rendition
 target은 생성·검증되었다. 비공개 Edge calibration 180개도 완료했지만 22개가 clipping
@@ -112,6 +112,19 @@ Azure는 outer `speak`/`voice` tag를 제외한 SSML body의 markup·공백·문
 포함하므로 transcript 길이만으로 비용을 계산하지 않는다. Preflight는 승인자가 Azure
 portal에서 바로 확인한 million-character rate와 budget cap을 입력했을 때만 예산 gate를
 통과시킨다. Credential은 존재 여부만 기록하고 값은 report에 저장하지 않는다.
+
+## 저장공간 실행 구성
+
+사용자 승인에 따라 production audio는 로컬에서 만들고, MFA 정렬과 Moshi 평가는
+RunPod에서 실행한다.
+
+- 로컬: raw/canonical candidates, accepted, prepared — 초기 약 8GiB, hard maximum 약 12GiB
+- RunPod: Moshiko BF16 model, MFA, 3,000 response audio — 최소 40GiB workspace
+- 로컬로 회수: manifest, report, annotation package, scored result
+- RunPod에 유지: 대용량 response WAV와 model cache
+
+현재 로컬 약 25GiB 여유 공간은 12GiB audio-production gate를 통과한다. 따라서 50GiB
+로컬 공간이나 별도 로컬 외장 디스크는 core audio 제작에 필수가 아니다.
 
 ## 중요한 문서
 

@@ -23,7 +23,8 @@
 - 독립 품질 검토 후 blueprint 30개와 generated script 300개가 모두 구조·스키마 gate를
   통과했다. 현재 canonical file SHA-256은 blueprint
   `e7d3b18077f6f1a0f348b5217c5d32710465c9167ff220bef197b17800827057`, script
-  `9a602686c6f6f9ac4521c175db5edcae882633f88b5c060ef2909ed0bf8912f1`이다.
+  `ab5f42e423c1ae89fc28607d6993ca74b7d721039984398227e19007889a34f8`이다. 후자는
+  storage execution plan을 config에 동결한 뒤 재생성한 hash이며 transcript는 변하지 않았다.
 
 ## 2026-08-26 evaluation/release execution contract
 
@@ -50,10 +51,13 @@
   1,820,700자, 총 5후보 상한 3,034,500자다. 승인 시점의 portal rate를 private authority에
   기록해 초기 정책 예상액이 budget cap 안에 있을 때만 통과한다.
 - `production_authority.json`은 paid tier, Moshi 평가 용도, 공개 여부와 재배포 검토,
-  human text sign-off, RunPod MFA upload, artifact store, 최소 50GiB, 승인자를 모두 묶는다.
+  human text sign-off, RunPod MFA upload, artifact store, 로컬 12GiB·원격 40GiB 최소 공간,
+  승인자를 모두 묶는다.
   이 파일과 preflight report는 private `release_evidence/`에 두며 Git에 커밋하지 않는다.
-- 2026-08-26 로컬 preflight에서 Azure SDK 1.51.2는 확인됐지만 약 24.8GiB만 비어 있어
-  50GiB storage gate를 통과하지 못했다. 외부 artifact store가 필요하다.
+- 사용자는 2026-08-26 `local audio production + RunPod MFA/Moshi evaluation` 구성을
+  승인했다. 로컬 초기 audio 작업량은 약 8GiB, 후보 총 5개 상한은 약 12GiB이며 현재
+  약 25GiB 여유 공간으로 local gate를 통과한다. BF16 model cache와 약 10GiB response
+  audio는 최소 40GiB RunPod workspace에 유지하고 결과 metadata만 로컬로 회수한다.
 
 ## Frozen engineering defaults
 
@@ -78,7 +82,7 @@ called release-ready:
 2. Natural timing overlap, target latency, and within-speaker tolerance.
 3. Independent alignment method and confidence threshold.
 4. Candidate-selection weights and tie-break rule.
-5. External audio artifact storage and release license.
+5. RunPod workspace/response retention path and release license.
 6. Human-speaker consent, compensation, recruitment, and retention policy.
 7. Production-pilot ICC 또는 baseline이 현재 power simulation 가정과 크게 다를 때의
    MDE 재계산. 현재 conditional proxy와 primary formula는 `ANALYSIS_PROTOCOL.md`에 동결했다.

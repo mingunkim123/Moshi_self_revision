@@ -107,7 +107,26 @@
   "release": {
     "inferential_role": "confirmatory_evaluation",
     "analysis_folds": 5,
-    "audio_storage": "external_artifact_store_pending_selection",
+    "audio_storage": "local_audio_staging_then_runpod_evaluation",
+    "storage_plan": {
+      "local_audio_production": {
+        "artifact_root": "dataset_v2/artifacts",
+        "minimum_free_gib": 12,
+        "expected_initial_gib": 8,
+        "hard_maximum_gib": 12
+      },
+      "remote_evaluation": {
+        "environment": "runpod_linux_mfa_moshi",
+        "minimum_workspace_gib": 40,
+        "keep_response_audio_remote": true,
+        "retrieve_to_local": [
+          "manifests",
+          "reports",
+          "annotation_packages",
+          "scored_results"
+        ]
+      }
+    },
     "core_model_outputs_must_remain_unseen_until_protocol_freeze": true
   },
   "evaluation": {

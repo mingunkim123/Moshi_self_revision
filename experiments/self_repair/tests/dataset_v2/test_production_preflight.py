@@ -48,9 +48,11 @@ def authority(*, cap: float = 30.0, rate: float = 15.0) -> dict[str, object]:
         "terms_reviewed_at": verified_at,
         "voice_inventory_verified_at": verified_at,
         "alignment_environment": "runpod_linux_mfa",
+        "storage_execution_mode": "local_audio_then_runpod_evaluation",
         "runpod_audio_upload_approved": True,
         "artifact_store_uri": "file:///approved/external-artifacts",
-        "minimum_free_gib": 50,
+        "local_minimum_free_gib": 12,
+        "remote_minimum_free_gib": 40,
         "approver_id": "fixture-approver",
     }
 
@@ -113,6 +115,7 @@ class ProductionPreflightTests(unittest.TestCase):
                 environment={
                     "AZURE_SPEECH_KEY": "must-never-appear-in-report",
                     "AZURE_SPEECH_REGION": "fixture-region",
+                    "RUNPOD_API_KEY": "must-also-never-appear-in-report",
                 },
                 free_bytes=60 * GIB,
                 azure_sdk_version="1.51.2",
@@ -123,6 +126,7 @@ class ProductionPreflightTests(unittest.TestCase):
             self.assertEqual(report["failed_checks"], [])
             serialized = json.dumps(report, sort_keys=True)
             self.assertNotIn("must-never-appear-in-report", serialized)
+            self.assertNotIn("must-also-never-appear-in-report", serialized)
             budget_check = next(
                 row for row in report["checks"] if row["name"] == "initial_candidate_budget"
             )
@@ -142,6 +146,7 @@ class ProductionPreflightTests(unittest.TestCase):
                 environment={
                     "AZURE_SPEECH_KEY": "fixture",
                     "AZURE_SPEECH_REGION": "fixture",
+                    "RUNPOD_API_KEY": "fixture",
                 },
                 free_bytes=60 * GIB,
                 azure_sdk_version="1.51.2",
@@ -176,6 +181,7 @@ class ProductionPreflightTests(unittest.TestCase):
                 "azure_credentials_present",
                 "azure_sdk_installed",
                 "independent_alignment_environment",
+                "runpod_access_present",
                 "artifact_storage_capacity",
                 "tracked_git_tree_clean",
             },
@@ -192,8 +198,10 @@ class ProductionPreflightTests(unittest.TestCase):
             validate_authority(changed),
         )
         changed = authority()
-        changed["minimum_free_gib"] = 49
-        self.assertIn("minimum_free_gib must be at least 50", validate_authority(changed))
+        changed["local_minimum_free_gib"] = 11
+        self.assertIn(
+            "local_minimum_free_gib must be at least 12", validate_authority(changed)
+        )
 
 
 if __name__ == "__main__":
