@@ -1,0 +1,37 @@
+venues	V EH1 N Y UW0 Z
+allergen	AE1 L ER0 JH AH0 N
+allergen	AE1 L ER0 JH EH0 N
+allergen	AE1 L ER0 JH EH1 N
+allergen	AH0 L ER1 G AH0 N
+allergen	AH0 L ER1 JH AH0 N
+epinephrine	IH0 P IH1 N AH0 F R AY1 N
+epinephrine	IH0 P IH1 N AH0 F R IY2 N
+epinephrine	IH0 P IH2 N AH0 F R AY1 N
+epinephrine	IH0 P IH2 N AH0 F R IY2 N
+allergies	AE1 L ER0 JH IY0 Z
+accessibly	AE0 K S EH1 S AH0 B L IY0
+themed	TH IY1 M D
+reuse	R UW1 S
+reuse	R UW1 Z
+toiletries	T OY1 L AH0 T R IY0 Z
+refillable	R IY0 F IH1 L AH0 B AH0 L
+layover	L AH0 V ER0
+layover	L EY1 AH0 V ER0
+layover	L EY1 V ER0
+layover	L V ER0
+backpack	B AE1 K P AE1 K
+backpack	B AE1 K P AE2 K
+restrooms	R IY0 S T R UW2 M Z
+lactose	L AA0 K T OW0 S
+lactose	L AA0 K T OW1 S
+lactose	L AA0 K T OW2 S
+lactose	L AE1 K T OW0 S
+lactose	L AE1 K T OW2 S
+wellness	W EH1 L N AH0 S
+indie	IH1 N D IY0
+deco	D IY1 K OW0
+multigenerational	M AH1 L T IH0 JH EH2 N ER0 EY1 SH AH0 N AH0 L
+multigenerational	M AH2 L T IH0 JH EH2 N ER0 EY1 SH AH0 N AH0 L
+coworking	K OW1 W ER1 K IH0 NG
+celebratory	S EH1 L AH0 B R AH0 T AO2 R IY0
+workspace	W ER1 K S P EY2 S

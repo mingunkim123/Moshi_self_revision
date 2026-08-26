@@ -12,8 +12,9 @@ if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
 from common import read_config, read_jsonl  # noqa: E402
+from merge_candidate_manifests import merge_rows  # noqa: E402
 from select_kokoro_voice_calibration import select_targets  # noqa: E402
-from synthesize_candidates import synthesize  # noqa: E402
+from synthesize_candidates import synthesize, validate_kokoro_target_track  # noqa: E402
 
 
 DATASET_ROOT = Path(__file__).resolve().parents[2] / "dataset_v2"
@@ -113,6 +114,33 @@ class KokoroTtsTests(unittest.TestCase):
                     Path(temporary),
                     kokoro_engine=FakeKokoroEngine(),
                 )
+
+    def test_production_targets_bind_to_pinned_kokoro_runtime(self) -> None:
+        config = read_config(DATASET_ROOT / "config/dataset.yaml")
+        targets = read_jsonl(DATASET_ROOT / "assignments/rendition_targets.jsonl")
+        runtime = validate_kokoro_target_track(targets, config)
+        self.assertEqual(runtime["provider"], "kokoro_local_v1_0")
+        self.assertEqual(len(targets), 600)
+
+    def test_kokoro_rejects_target_voice_outside_source_track(self) -> None:
+        config = read_config(DATASET_ROOT / "config/dataset.yaml")
+        target = dict(
+            read_jsonl(DATASET_ROOT / "assignments/rendition_targets.jsonl")[0]
+        )
+        target["voice"] = "af_not_frozen"
+        with self.assertRaisesRegex(ValueError, "outside the frozen source track"):
+            validate_kokoro_target_track([target], config)
+
+    def test_candidate_merge_rejects_incomplete_shards(self) -> None:
+        target = {
+            "rendition_target_id": "fixture__kokoro__speaker",
+            "script_id": "fixture",
+            "source_track_id": "kokoro",
+            "speaker_id": "speaker",
+            "voice": "af_fixture",
+        }
+        with self.assertRaisesRegex(ValueError, "do not exactly cover"):
+            merge_rows([], [target])
 
 
 if __name__ == "__main__":

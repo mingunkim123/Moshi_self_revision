@@ -1,0 +1,60 @@
+{
+  "alignment_run_id": "mfa224_macos_arm64_kokoro600_10spk_20260826_d20e13a9",
+  "analysis_csv_sha256": "5170a7d858a67e387238df8da88864af5f92426aaf8eda69a1cdaf9539ca3bb3",
+  "automatic_confidence_pass_count": 0,
+  "candidate_count": 600,
+  "candidates_by_speaker": {
+    "tts01": 60,
+    "tts02": 60,
+    "tts03": 60,
+    "tts04": 60,
+    "tts05": 60,
+    "tts06": 60,
+    "tts07": 60,
+    "tts08": 60,
+    "tts09": 60,
+    "tts10": 60
+  },
+  "confidence_calibrated": false,
+  "diagnostic_summary": {
+    "overall_log_likelihood": {
+      "max": -3.5674748010610076,
+      "mean": -3.777817810987718,
+      "median": -3.776227506426735,
+      "min": -4.062509330406147,
+      "p10": -3.9347372703422665,
+      "p90": -3.6576189631664655
+    },
+    "phone_duration_deviation": {
+      "max": 1.1800570545901063,
+      "mean": 0.7540874713633948,
+      "median": 0.7175615996337916,
+      "min": 0.5972501929743615,
+      "p10": 0.660003048646335,
+      "p90": 0.9140393441809548
+    },
+    "speech_log_likelihood": {
+      "max": -44.028934953551925,
+      "mean": -47.39249253658897,
+      "median": -46.52626643025688,
+      "min": -55.383366380000005,
+      "p10": -49.87523379331223,
+      "p90": -45.38445963509517
+    }
+  },
+  "diagnostics_are_not_probability_confidence": true,
+  "external_alignment_set_sha256": "5245700c619c2cede1e36f011f2f6360c5cebc35f1154322dd3c0864b585558d",
+  "manual_review_required_count": 600,
+  "model_id": "english_us_arpa_acoustic_d35ce271ded357d833d2f4b8d1041dc3748b9538567ba13f2c697f4e4126711b_dictionary_d20e13a9714650a9189ea1ec716840540826dbd4602b69eade99f2ba13837ab0_g2p_0ef6a3b288dc0a91a267f98bf556a45bbfeae198e578398e92ac603a61ad46e5",
+  "next_gate": "Import with a positive frozen confidence threshold, rerun automatic QC, and complete hash-bound human alignment/audio review before selection.",
+  "oov_word_type_count": 0,
+  "release_eligible": false,
+  "resegmented_candidate_count": 540,
+  "schema_version": "2.0.0",
+  "speaker_count": 10,
+  "status": "independent_alignment_completed_manual_review_required",
+  "textgrid_count": 600,
+  "textgrid_set_sha256": "303001ba214e58a3a720c8786f5379715c5ffb04c65d346249b1e44d49dcf232",
+  "tool": "montreal_forced_aligner",
+  "tool_version": "2.2.4"
+}

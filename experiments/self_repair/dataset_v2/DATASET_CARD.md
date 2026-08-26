@@ -49,6 +49,9 @@ license는 사용자/기관 승인을 기다리고 있다. TTS audio는 provider
 model/config/voice SHA-256을 고정했고 10개 voice technical QC는 통과했다. 다만 model card가
 밝힌 CC-BY 및 closed-provider synthetic training data provenance를 attribution/기관 검토에
 포함하고, 두 명의 독립 voice 청취가 끝나기 전에는 release source로 승인하지 않는다.
+2026-08-26 private provisional run에서 raw/canonical 600개와 10-speaker MFA 독립 정렬,
+재정렬 후 자동 QC 600/600을 완료했다. MFA diagnostics는 calibrated confidence가 아니므로
+hash-bound 사람 정렬 검수와 이중 청취 전까지 accepted audio는 0개다.
 
 ## 권장 보고
 

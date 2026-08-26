@@ -38,6 +38,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--audio-root", type=Path, default=DEFAULT_AUDIO_ROOT)
     parser.add_argument("--attempts", type=int, default=3)
+    parser.add_argument(
+        "--start-index",
+        type=int,
+        default=0,
+        help="Start at this index in the sorted target manifest (for disjoint local shards).",
+    )
     parser.add_argument("--limit", type=int)
     parser.add_argument("--target-id", action="append", dest="target_ids")
     parser.add_argument(
@@ -287,6 +293,59 @@ class KokoroLocalEngine:
         }
 
 
+def validate_kokoro_target_track(
+    targets: list[dict[str, Any]], config: Mapping[str, Any]
+) -> Mapping[str, Any]:
+    """Bind calibration or production targets to the pinned Kokoro runtime."""
+
+    runtime = config.get("open_source_calibration")
+    if not isinstance(runtime, Mapping):
+        raise ValueError("dataset config is missing open_source_calibration")
+    if runtime.get("provider") != "kokoro_local_v1_0":
+        raise ValueError("open-source calibration runtime is not Kokoro")
+    track_ids = {str(row.get("source_track_id")) for row in targets}
+    if len(track_ids) > 1:
+        raise ValueError("Kokoro synthesis cannot mix source tracks in one run")
+    if not track_ids:
+        return runtime
+    track_id = next(iter(track_ids))
+    calibration_track_id = str(runtime.get("source_track_id"))
+    if track_id == calibration_track_id:
+        speakers = runtime.get("speakers")
+    else:
+        source_tracks = config.get("source_tracks")
+        track = source_tracks.get(track_id) if isinstance(source_tracks, Mapping) else None
+        if not isinstance(track, Mapping) or track.get("provider") != "kokoro_local_v1_0":
+            raise ValueError("Kokoro targets do not match a frozen Kokoro source track")
+        for field in ("model_repo", "model_revision", "model_sha256", "model_license"):
+            if track.get(field) != runtime.get(field):
+                raise ValueError(f"Kokoro source track/runtime {field} mismatch")
+        if track.get("initial_candidates_per_target") != 1 or track.get(
+            "maximum_candidates_per_target"
+        ) != 1:
+            raise ValueError("Kokoro source track must freeze exactly one candidate per target")
+        speakers = track.get("speakers")
+    if not isinstance(speakers, list):
+        raise ValueError("Kokoro source track has no frozen speaker inventory")
+    by_speaker = {str(row.get("speaker_id")): row for row in speakers}
+    if len(by_speaker) != len(speakers):
+        raise ValueError("Kokoro source track has duplicate speaker IDs")
+    runtime_voice_hashes = {
+        str(row.get("voice")): str(row.get("voice_sha256"))
+        for row in runtime.get("speakers", [])
+    }
+    for target in targets:
+        speaker_id = str(target.get("speaker_id"))
+        speaker = by_speaker.get(speaker_id)
+        if speaker is None or target.get("voice") != speaker.get("voice"):
+            raise ValueError(f"{speaker_id}: target voice is outside the frozen source track")
+        voice = str(speaker.get("voice"))
+        voice_hash = str(speaker.get("voice_sha256"))
+        if runtime_voice_hashes.get(voice) != voice_hash:
+            raise ValueError(f"{speaker_id}: source-track voice hash/runtime mismatch")
+    return runtime
+
+
 def synthesize(
     targets: list[dict[str, Any]],
     scripts: list[dict[str, Any]],
@@ -429,36 +488,84 @@ def main() -> None:
         missing = sorted(requested - {row["rendition_target_id"] for row in targets})
         if missing:
             raise ValueError(f"unknown target IDs: {missing}")
+    if args.start_index < 0:
+        raise ValueError("--start-index must be nonnegative")
+    if args.limit is not None and args.limit < 1:
+        raise ValueError("--limit must be positive")
+    targets = targets[args.start_index :]
     if args.limit is not None:
         targets = targets[: args.limit]
+    selected_targets = list(targets)
+    target_map = {
+        str(row["rendition_target_id"]): row for row in selected_targets
+    }
+    if len(target_map) != len(selected_targets):
+        raise ValueError("requested targets contain duplicate rendition_target_id")
+    config = read_config()
+    runtime = None
+    if args.provider == "kokoro_local_v1_0":
+        runtime = validate_kokoro_target_track(selected_targets, config)
     completed = read_jsonl(args.output) if args.resume and args.output.is_file() else []
     completed_ids = [str(row.get("candidate_id")) for row in completed]
     if len(set(completed_ids)) != len(completed_ids):
         raise ValueError("resume manifest contains duplicate candidate IDs")
     expected_target_ids = {str(row["rendition_target_id"]) for row in targets}
     for row in completed:
-        if row.get("rendition_target_id") not in expected_target_ids:
+        target_id = str(row.get("rendition_target_id"))
+        target = target_map.get(target_id)
+        if target_id not in expected_target_ids or target is None:
             raise ValueError("resume manifest contains a candidate outside the requested target set")
+        if row.get("candidate_id") != candidate_id(target_id, 1):
+            raise ValueError("resume manifest contains a noncanonical candidate ID")
+        for field in ("script_id", "source_track_id", "speaker_id", "voice"):
+            if row.get(field) != target.get(field):
+                raise ValueError(f"resume manifest candidate/target {field} mismatch")
         raw = row.get("raw_candidate")
         if not isinstance(raw, dict):
             raise ValueError("resume manifest candidate is missing raw_candidate")
         raw_path = Path(str(raw.get("uri", "")))
         if not raw_path.is_file() or raw.get("sha256") != sha256_file(raw_path):
             raise ValueError("resume manifest raw candidate is missing or has a hash mismatch")
+        alignment = row.get("alignment")
+        if not isinstance(alignment, dict):
+            raise ValueError("resume manifest provider event evidence is missing")
+        boundary_path = Path(str(alignment.get("provider_event_uri", "")))
+        if (
+            not boundary_path.is_file()
+            or alignment.get("provider_event_sha256") != sha256_file(boundary_path)
+        ):
+            raise ValueError("resume manifest provider event sidecar is missing or mismatched")
+        synthesis = row.get("synthesis")
+        if not isinstance(synthesis, dict) or synthesis.get("provider") != args.provider:
+            raise ValueError("resume manifest synthesis provider mismatch")
+        if synthesis.get("candidate_index") != 1:
+            raise ValueError("resume manifest candidate index is not 1")
+        if args.provider == "kokoro_local_v1_0":
+            assert runtime is not None
+            provider_artifact = synthesis.get("provider_artifact")
+            if not isinstance(provider_artifact, dict):
+                raise ValueError("resume manifest Kokoro provider artifact is missing")
+            voice_hashes = {
+                str(item["voice"]): str(item["voice_sha256"])
+                for item in runtime["speakers"]
+            }
+            if (
+                synthesis.get("model_revision") != runtime["model_revision"]
+                or provider_artifact.get("model_revision") != runtime["model_revision"]
+                or provider_artifact.get("model_sha256") != runtime["model_sha256"]
+                or provider_artifact.get("config_sha256") != runtime["config_sha256"]
+                or provider_artifact.get("voice_sha256")
+                != voice_hashes.get(str(row.get("voice")))
+            ):
+                raise ValueError("resume manifest Kokoro model/config/voice provenance mismatch")
     completed_target_ids = {str(row["rendition_target_id"]) for row in completed}
     targets = [
         row for row in targets if str(row["rendition_target_id"]) not in completed_target_ids
     ]
-    config = read_config()
     engine = None
-    if args.provider == "kokoro_local_v1_0":
-        calibration = config.get("open_source_calibration")
-        if not isinstance(calibration, dict):
-            raise ValueError("dataset config is missing open_source_calibration")
-        expected_track = str(calibration["source_track_id"])
-        if any(str(row.get("source_track_id")) != expected_track for row in targets):
-            raise ValueError("Kokoro targets do not match the frozen calibration source track")
-        engine = KokoroLocalEngine(calibration, args.model_cache)
+    if args.provider == "kokoro_local_v1_0" and targets:
+        assert runtime is not None
+        engine = KokoroLocalEngine(runtime, args.model_cache)
     checkpoint_rows = list(completed)
 
     def checkpoint(row: dict[str, Any]) -> None:
@@ -468,15 +575,19 @@ def main() -> None:
             sorted(checkpoint_rows, key=lambda item: str(item["candidate_id"])),
         )
 
-    rows = synthesize(
-        targets,
-        read_jsonl(args.scripts),
-        args.provider,
-        args.attempts,
-        args.audio_root,
-        config=config,
-        kokoro_engine=engine,
-        checkpoint=checkpoint,
+    rows = (
+        synthesize(
+            targets,
+            read_jsonl(args.scripts),
+            args.provider,
+            args.attempts,
+            args.audio_root,
+            config=config,
+            kokoro_engine=engine,
+            checkpoint=checkpoint,
+        )
+        if targets
+        else []
     )
     if not rows and not args.output.is_file():
         write_jsonl(args.output, checkpoint_rows)

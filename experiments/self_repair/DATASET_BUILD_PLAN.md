@@ -1,6 +1,6 @@
 # 자기수정 matched-bundle 데이터셋 구축 계획
 
-- 문서 상태: 실행 중 — Kokoro technical calibration 완료, human voice/RunPod gate 대기
+- 문서 상태: 실행 중 — Kokoro raw 600·10-speaker MFA·자동 QC 완료, human review gate 대기
 - 작성일: 2026-08-26
 - 적용 위치: `experiments/self_repair/`
 - 핵심 산출물: 의미 설계도 30개, 생성 대본 300개, accepted audio 600개
@@ -21,8 +21,9 @@ release를 dataset/schema v2.0.0으로 통일한다. 새 경로, `VERSION`, sche
 | 비공개 Edge calibration | 완료 | 180/180 합성·provider boundary mapping, 158 QC pass, 22 clipping 제외 |
 | Kokoro voice calibration | 기술 완료 | 10/10 실제 로컬 합성·24k PCM16·token mapping·무클리핑 QC 통과, human double-listen 대기 |
 | production preflight | 완료 | 600-target join·Kokoro model/config/voice hash·authority·local 12GiB/remote 40GiB·MFA gate 자동화 |
-| storage architecture | 완료 | local TTS/QC + RunPod MFA/Moshi, 대용량 response remote 유지 |
-| production TTS/독립 정렬 | 승인 대기 | Kokoro human double-listen·license attribution·RunPod access 미승인 |
+| storage architecture | 완료 | local TTS/QC/MFA + RunPod Moshi, 대용량 response remote 유지 |
+| production TTS | raw/QC 완료 | 600/600 local Kokoro 합성·canonical 변환·자동 QC 통과, 5.756시간·raw+canonical 1.853GiB |
+| 독립 정렬·선정 | 정렬 완료·사람 승인 대기 | local MFA 2.2.4 10-speaker TextGrid/import 600/600, OOV 0, 재자동 QC 600/600; calibrated confidence가 없어 human review 전 accepted 0/600 유지 |
 | accepted 600·Moshi 3,000·annotation | 대기 | production audio 이후 실행 |
 | human/pause extension | 대기 | core 결과와 별도 consent/예산 결정 이후 실행 |
 

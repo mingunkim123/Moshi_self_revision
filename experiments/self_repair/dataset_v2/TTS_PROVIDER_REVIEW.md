@@ -33,12 +33,20 @@ preflight가 전수 검증한다.
 뒤에만 600-target 합성을 허용한다. 상세 수치는 `reports/kokoro_voice_calibration.json`에
 있다.
 
+사용자 진행 지시 후 600-target을 provisional private 범위에서 실제 합성했다. raw와
+canonical 각각 600개, 자동 QC 600/600, 총 5.756시간, 두 lifecycle 합계 1.853GiB다.
+이후 macOS arm64 MFA 2.2.4에서 10개 voice를 별도 speaker로 구성해 OOV 0,
+TextGrid 600/600 생성·hash-bound import·재자동 QC 600/600을 완료했다. MFA diagnostics는
+calibrated probability가 아니므로 human alignment review와 double-listen 전에는 accepted
+또는 release source로 승격하지 않는다. 전수 hash·균형 보고서는
+`reports/kokoro_production_audio.json`에 기록한다.
+
 Kokoro 경로의 production 계약은 다음과 같다.
 
 1. 82M model/config/voice 파일과 Python package version을 모두 고정한다.
 2. 결정적 설정에서는 target당 후보를 반복 생성하지 않고 1개만 만든다.
 3. retry가 필요하면 condition 하나의 속도만 바꾸지 않고 matched bundle 전체를 새 policy로 재생성한다.
-4. model predicted token duration은 extraction seed일 뿐이며 RunPod/Linux MFA 독립 정렬로 교체한다.
+4. model predicted token duration은 extraction seed일 뿐이며 독립 MFA 정렬로 교체한다.
 5. Apache notice, 모델 카드의 CC-BY attribution, synthetic training provenance 검토를 release evidence에 묶는다.
 
 Azure S0는 fallback으로 유지한다. Azure를 다시 선택할 경우에만 다음 절차를 적용한다.

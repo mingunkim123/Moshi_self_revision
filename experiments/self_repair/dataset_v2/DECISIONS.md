@@ -41,6 +41,47 @@
   boundary 10쌍을 hash 검증해 private manifest를 recovery했고 이후 candidate별 checkpoint와
   `--resume`을 구현했다.
 
+## 2026-08-26 Kokoro production raw run
+
+- 사용자 진행 지시에 따라 provisional private 범위에서 600 rendition target을 로컬 CPU로
+  모두 합성했다. Azure/API credential/provider 과금은 사용하지 않았다.
+- 8GiB Mac에서 2-process 병렬은 memory compression으로 느려져 중단하고, 서로 겹치지 않는
+  300개 shard 두 개를 단일 process로 순차 실행했다. 완료 후보는 hash checkpoint로 재사용했다.
+- merge validator가 target/source/speaker/voice/candidate ID와 600개 WAV SHA-256을 전수
+  확인했다. canonical 변환과 provider timing seed mapping 뒤 자동 QC는 600/600 통과했다.
+- 총 canonical 음성은 5.756시간, raw+canonical은 1.853GiB다. 조건별 120, 화자별 60,
+  방향별 300으로 균형이며 상세 hash는 `reports/kokoro_production_audio.json`에 기록한다.
+- Kokoro predicted token duration은 독립 alignment가 아니다. MFA와 human double-listen이
+  완료될 때까지 accepted/prepared는 0으로 유지하고 release eligible로 표시하지 않는다.
+- Canonical WAV hard link와 exact frozen `.lab` transcript 600쌍을 10개 voice별 speaker
+  디렉터리로 준비했다. local hard link라 추가 오디오 block을 복제하지 않는다.
+
+## 2026-08-26 local MFA independent alignment
+
+- macOS arm64에서 conda-forge의 마지막 지원 빌드인 MFA 2.2.4를 로컬 설치했다. 실행 호환을
+  위해 `joblib=1.4.2`, `setuptools=80.9.0`을 고정했다. Micromamba 2.9.0 binary SHA-256은
+  `ec2a072f028e1a7cf20f3e2e74d5a8127cf5a5f27636375b5359811565f4e5be`다.
+- 긴 저장소 경로는 PostgreSQL Unix socket 103-byte 제한을 넘으므로 실제
+  `MFA_ROOT_DIR`은 짧은 `/tmp/mfa22root`를 사용했다. 원본 audio/model은 저장소의 ignored
+  artifact 경로에 유지했다.
+- `english_us_arpa` acoustic SHA-256은
+  `d35ce271ded357d833d2f4b8d1041dc3748b9538567ba13f2c697f4e4126711b`, base dictionary는
+  `e8c6c7b036ae2b7c78d2768b8dc6b1f9359175b842956d00b48c53c9c332e6b0`, G2P model은
+  `0ef6a3b288dc0a91a267f98bf556a45bbfeae198e578398e92ac603a61ad46e5`다.
+- 첫 flat corpus가 10개 voice를 1 speaker로 인식한 결과는 폐기했다. speaker별 하위
+  디렉터리로 재구성한 최종 실행은 10 speakers × 60 files를 인식하고 fMLLR을 10개
+  speaker별로 계산했다.
+- 기본 사전의 OOV 20개 단어형은 같은 ARPA G2P로 생성한 frozen 37-pronunciation extension
+  `config/mfa_english_us_arpa_oov.dict`로 보강했다. 합친 dictionary SHA-256은
+  `d20e13a9714650a9189ea1ec716840540826dbd4602b69eade99f2ba13837ab0`이며 최종 OOV는 0이다.
+- 최종 TextGrid 600/600을 frozen transcript lexical stream과 전수 대조하고 import했다.
+  하이픈/구두점 tokenization 차이가 있던 540개는 문자열 동일성을 확인해 frozen token
+  경계로만 재분절했다. 새 timing으로 자동 QC를 다시 실행해 600/600 통과했다.
+- MFA의 log likelihood와 phone-duration deviation은 calibrated probability가 아니므로
+  confidence를 0으로 명시하고 600개 모두 hash-bound human review pending으로 유지했다.
+  따라서 독립 정렬은 완료됐지만 accepted/prepared는 여전히 0이다. 상세 evidence는
+  `reports/mfa_local_alignment.json`과 `reports/kokoro_production_audio.json`에 있다.
+
 ## 2026-08-26 evaluation/release execution contract
 
 - Production matrix는 accepted audio 600개 × ordered generation seed 5개 = 3,000 trials로
@@ -65,13 +106,14 @@
 - 현재 matrix는 target당 deterministic 1후보, 총 600 requests이며 provider API 비용과
   credential은 없다. Azure character budget은 fallback 경로 진단으로만 유지한다.
 - `production_authority.json`은 Apache/attribution/training provenance, Moshi 평가 목적,
-  공개 여부, human text 및 voice double-listen, RunPod MFA upload, artifact store,
+  공개 여부, human text 및 voice double-listen, independent MFA environment, artifact store,
   로컬 12GiB·원격 40GiB 최소 공간과 승인자를 묶는다.
   이 파일과 preflight report는 private `release_evidence/`에 두며 Git에 커밋하지 않는다.
-- 사용자는 2026-08-26 `local audio production + RunPod MFA/Moshi evaluation` 구성을
-  승인했다. Kokoro 1-candidate 정책의 로컬 audio 작업량은 약 4GiB, 보수적 상한은
-  약 6GiB이며 현재 약 24GiB 여유 공간으로 12GiB reserve gate를 통과한다. BF16 model cache와 약 10GiB response
-  audio는 최소 40GiB RunPod workspace에 유지하고 결과 metadata만 로컬로 회수한다.
+- 사용자는 2026-08-26 처음 `local audio production + RunPod MFA/Moshi evaluation` 구성을
+  승인했다. 이후 MFA는 로컬에서 완료해 현재 구성은 `local audio/MFA + RunPod Moshi`다.
+  실제 로컬 working artifact는 4.8GiB이고 현재 약 29GiB 여유 공간으로 12GiB reserve
+  gate를 통과한다. BF16 model cache와 response audio는 최소 40GiB RunPod workspace에
+  유지하고 결과 metadata만 로컬로 회수한다.
 
 ## Frozen engineering defaults
 

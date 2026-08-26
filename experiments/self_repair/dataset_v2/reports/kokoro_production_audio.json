@@ -1,0 +1,71 @@
+{
+  "accepted_audio_selected": false,
+  "audio": {
+    "canonical_duration_ms": {
+      "max": 60050.0,
+      "mean": 34536.458333333336,
+      "median": 32175.0,
+      "min": 21950.0
+    },
+    "canonical_duration_total_hours": 5.756076388888889,
+    "canonical_duration_total_ms": 20721875.0,
+    "canonical_wav_bytes": 994676400,
+    "channels": 1,
+    "provider_event_sidecar_bytes": 11995128,
+    "raw_plus_canonical_gib": 1.852729171514511,
+    "raw_wav_bytes": 994676400,
+    "sample_rate": 24000,
+    "sample_width_bytes": 2
+  },
+  "counts": {
+    "automatic_qc_passed": 600,
+    "by_condition": {
+      "clean_final": 120,
+      "delayed_neutral": 120,
+      "delayed_one_dependency": 120,
+      "delayed_three_dependencies": 120,
+      "immediate_repair": 120
+    },
+    "by_direction": {
+      "a_to_b": 300,
+      "b_to_a": 300
+    },
+    "by_speaker": {
+      "tts01": 60,
+      "tts02": 60,
+      "tts03": 60,
+      "tts04": 60,
+      "tts05": 60,
+      "tts06": 60,
+      "tts07": 60,
+      "tts08": 60,
+      "tts09": 60,
+      "tts10": 60
+    },
+    "canonical_candidates": 600,
+    "independent_alignment_complete": 600,
+    "independent_alignment_review_pending": 600,
+    "provider_seed_only": 0,
+    "raw_candidates": 600,
+    "rendition_targets": 600
+  },
+  "manifests": {
+    "qc_candidates_sha256": "3987843f5cafce08e86d78d1307742a39b751560f8ab0498b840a3f4b5b804fa",
+    "raw_candidates_sha256": "6fdadcf837ed3b0d0d99c4733c1bdd4a45aadfd8e92e00712c28df2999165677",
+    "targets_sha256": "72d381a5c26bea0410af371aa9cad1a0c091892dd16ca9daec693b449a16a348"
+  },
+  "prepared_stimuli_created": false,
+  "release_eligible": false,
+  "report_kind": "kokoro_private_production_audio",
+  "required_next_gate": "Complete hash-bound human alignment review and double-listen before selection.",
+  "schema_version": "2.0.0",
+  "source": {
+    "candidate_policy": "one_deterministic_candidate_per_rendition_target",
+    "model_repo": "hexgrad/Kokoro-82M",
+    "model_revision": "f3ff3571791e39611d31c381e3a41a3af07b4987",
+    "model_sha256": "496dba118d1a58f5f3db2efc88dbdc216e0483fc89fe6e47ee1f2c53f18ad1e4",
+    "provider": "kokoro_local_v1_0",
+    "source_track_id": "tts_kokoro_v1_0_r1"
+  },
+  "status": "raw_600_independent_alignment_and_automatic_qc_passed_human_review_pending"
+}
