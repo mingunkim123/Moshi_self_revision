@@ -76,20 +76,28 @@
     "response_capture_ms": 40000
   },
   "source_tracks": {
-    "tts_controlled_r1": {
-      "status": "voice_availability_and_redistribution_review_pending",
+    "tts_kokoro_v1_0_r1": {
+      "status": "technical_calibration_passed_human_double_listen_pending",
+      "provider": "kokoro_local_v1_0",
+      "model_repo": "hexgrad/Kokoro-82M",
+      "model_revision": "f3ff3571791e39611d31c381e3a41a3af07b4987",
+      "model_sha256": "496dba118d1a58f5f3db2efc88dbdc216e0483fc89fe6e47ee1f2c53f18ad1e4",
+      "model_license": "Apache-2.0",
+      "initial_candidates_per_target": 1,
+      "maximum_candidates_per_target": 1,
+      "retry_policy": "regenerate_entire_matched_bundle_only_after_frozen_policy_revision",
       "speaker_count": 10,
       "speakers": [
-        {"speaker_id": "tts01", "voice": "en-US-AvaMultilingualNeural"},
-        {"speaker_id": "tts02", "voice": "en-US-AndrewMultilingualNeural"},
-        {"speaker_id": "tts03", "voice": "en-US-EmmaMultilingualNeural"},
-        {"speaker_id": "tts04", "voice": "en-US-BrianMultilingualNeural"},
-        {"speaker_id": "tts05", "voice": "en-US-JennyNeural"},
-        {"speaker_id": "tts06", "voice": "en-US-GuyNeural"},
-        {"speaker_id": "tts07", "voice": "en-US-AriaNeural"},
-        {"speaker_id": "tts08", "voice": "en-US-ChristopherNeural"},
-        {"speaker_id": "tts09", "voice": "en-US-MichelleNeural"},
-        {"speaker_id": "tts10", "voice": "en-US-RogerNeural"}
+        {"speaker_id": "tts01", "voice": "af_heart", "voice_sha256": "0ab5709b8ffab19bfd849cd11d98f75b60af7733253ad0d67b12382a102cb4ff"},
+        {"speaker_id": "tts02", "voice": "af_bella", "voice_sha256": "8cb64e02fcc8de0327a8e13817e49c76c945ecf0052ceac97d3081480e8e48d6"},
+        {"speaker_id": "tts03", "voice": "af_nicole", "voice_sha256": "c5561808bcf5250fe8c5f5de32caf2d94f27e57e95befdb098c5c85991d4c5da"},
+        {"speaker_id": "tts04", "voice": "af_aoede", "voice_sha256": "c03bd1a4c3716c2d8eaa3d50022f62d5c31cfbd6e15933a00b17fefe13841cc4"},
+        {"speaker_id": "tts05", "voice": "af_kore", "voice_sha256": "8bfbc512321c3db49dff984ac675fa5ac7eaed5a96cc31104d3a9080e179d69d"},
+        {"speaker_id": "tts06", "voice": "am_fenrir", "voice_sha256": "98e507eca1db08230ae3b6232d59c10aec9630022d19accac4f5d12fcec3c37a"},
+        {"speaker_id": "tts07", "voice": "am_michael", "voice_sha256": "9a443b79a4b22489a5b0ab7c651a0bcd1a30bef675c28333f06971abbd47bd37"},
+        {"speaker_id": "tts08", "voice": "am_puck", "voice_sha256": "dd1d8973f4ce4b7d8ae407c77a435f485dabc052081b80ea75c4f30b84f36223"},
+        {"speaker_id": "tts09", "voice": "am_eric", "voice_sha256": "ada66f0eefff34ec921b1d7474d7ac8bec00cd863c170f1c534916e9b8212aae"},
+        {"speaker_id": "tts10", "voice": "am_onyx", "voice_sha256": "e8452be16cd0f6da7b4579eaf7b1e4506e92524882053d86d72b96b9a7fed584"}
       ]
     }
   },
@@ -104,6 +112,39 @@
     "scenario_selection": "shortest_median_longest_by_mean_script_word_count",
     "candidates_per_target": 3
   },
+  "open_source_calibration": {
+    "status": "technical_calibration_passed_human_double_listen_pending",
+    "source_track_id": "kokoro_v1_0_calibration_r1",
+    "provider": "kokoro_local_v1_0",
+    "release_eligible": false,
+    "model_repo": "hexgrad/Kokoro-82M",
+    "model_revision": "f3ff3571791e39611d31c381e3a41a3af07b4987",
+    "model_file": "kokoro-v1_0.pth",
+    "model_sha256": "496dba118d1a58f5f3db2efc88dbdc216e0483fc89fe6e47ee1f2c53f18ad1e4",
+    "config_file": "config.json",
+    "config_sha256": "5abb01e2403b072bf03d04fde160443e209d7a0dad49a423be15196b9b43c17f",
+    "model_license": "Apache-2.0",
+    "sample_rate": 24000,
+    "speed": 1.0,
+    "candidate_policy": "deterministic_single_candidate_then_bundle_level_retry",
+    "voice_calibration_script": {
+      "scenario_rank": "median",
+      "direction_id": "a_to_b",
+      "condition": "delayed_three_dependencies"
+    },
+    "speakers": [
+      {"speaker_id": "kokoro_f01", "voice": "af_heart", "voice_sha256": "0ab5709b8ffab19bfd849cd11d98f75b60af7733253ad0d67b12382a102cb4ff", "published_grade": "A"},
+      {"speaker_id": "kokoro_f02", "voice": "af_bella", "voice_sha256": "8cb64e02fcc8de0327a8e13817e49c76c945ecf0052ceac97d3081480e8e48d6", "published_grade": "A-"},
+      {"speaker_id": "kokoro_f03", "voice": "af_nicole", "voice_sha256": "c5561808bcf5250fe8c5f5de32caf2d94f27e57e95befdb098c5c85991d4c5da", "published_grade": "B-"},
+      {"speaker_id": "kokoro_f04", "voice": "af_aoede", "voice_sha256": "c03bd1a4c3716c2d8eaa3d50022f62d5c31cfbd6e15933a00b17fefe13841cc4", "published_grade": "C+"},
+      {"speaker_id": "kokoro_f05", "voice": "af_kore", "voice_sha256": "8bfbc512321c3db49dff984ac675fa5ac7eaed5a96cc31104d3a9080e179d69d", "published_grade": "C+"},
+      {"speaker_id": "kokoro_m01", "voice": "am_fenrir", "voice_sha256": "98e507eca1db08230ae3b6232d59c10aec9630022d19accac4f5d12fcec3c37a", "published_grade": "C+"},
+      {"speaker_id": "kokoro_m02", "voice": "am_michael", "voice_sha256": "9a443b79a4b22489a5b0ab7c651a0bcd1a30bef675c28333f06971abbd47bd37", "published_grade": "C+"},
+      {"speaker_id": "kokoro_m03", "voice": "am_puck", "voice_sha256": "dd1d8973f4ce4b7d8ae407c77a435f485dabc052081b80ea75c4f30b84f36223", "published_grade": "C+"},
+      {"speaker_id": "kokoro_m04", "voice": "am_eric", "voice_sha256": "ada66f0eefff34ec921b1d7474d7ac8bec00cd863c170f1c534916e9b8212aae", "published_grade": "D"},
+      {"speaker_id": "kokoro_m05", "voice": "am_onyx", "voice_sha256": "e8452be16cd0f6da7b4579eaf7b1e4506e92524882053d86d72b96b9a7fed584", "published_grade": "D"}
+    ]
+  },
   "release": {
     "inferential_role": "confirmatory_evaluation",
     "analysis_folds": 5,
@@ -112,8 +153,8 @@
       "local_audio_production": {
         "artifact_root": "dataset_v2/artifacts",
         "minimum_free_gib": 12,
-        "expected_initial_gib": 8,
-        "hard_maximum_gib": 12
+        "expected_initial_gib": 4,
+        "hard_maximum_gib": 6
       },
       "remote_evaluation": {
         "environment": "runpod_linux_mfa_moshi",

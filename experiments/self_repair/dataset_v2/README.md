@@ -3,14 +3,16 @@
 이 디렉터리는 pretrained Moshi의 목적지 자기수정 능력을 평가하기 위한 controlled evaluation
 set을 재현 가능하게 만드는 계약·데이터·검증 보고서를 담는다. 일반 학습 corpus가 아니다.
 
-현재 상태는 **text/pipeline development**다. 공개 release용 TTS provider 권리와 Azure
-credential, 독립 forced alignment 환경이 승인되기 전에는 audio production 또는
-release-ready로 표시하지 않는다. 저장공간은 local TTS/QC와 remote evaluation으로 분리했다.
+현재 상태는 **Kokoro production 준비 및 voice review**다. 로컬 Kokoro technical smoke는
+통과했지만 두 명의 독립 청취자 승인과 MFA 환경이 준비되기 전에는 full audio production
+또는 release-ready로 표시하지 않는다. 저장공간은 local TTS/QC와 remote evaluation으로 분리했다.
 
 2026-08-26 현재 30개 blueprint, 300개 script, 60개 answer key와 600개 TTS rendition
 target은 생성·검증되었다. 비공개 Edge calibration 180개도 완료했지만 22개가 clipping
 QC에서 제외되었고 fast/slow voice의 자연 지연 구간이 겹치지 않았다. 따라서 4초 예시는
 폐기하고 production provider에서 화자별 timing을 다시 동결해야 한다.
+Kokoro v1.0 voice audition 10개는 10/10 기술 QC를 통과했고 29.70–53.35초 범위를 보였다.
+현재 production source assignment는 Kokoro로 재생성됐지만 사람 이중 청취 전 provisional이다.
 Blueprint의 두 review 기록은 자동화된 독립 agent 검토이며 human sign-off를 대체하지 않는다.
 공개 release 전 의미·안전 문구의 사람 검토를 별도 gate로 유지한다.
 
@@ -31,6 +33,7 @@ Blueprint의 두 review 기록은 자동화된 독립 agent 검토이며 human s
 ```bash
 python3 -m venv .venv
 .venv/bin/python -m pip install -r experiments/self_repair/requirements-v2.txt
+.venv/bin/python -m pip install -r experiments/self_repair/requirements-kokoro-tts.txt
 ```
 
 텍스트와 assignment는 다음 순서로 재생성·검증한다.
@@ -91,9 +94,26 @@ window를 실제로 생성하고, trial마다 model stream과 RNG를 초기화�
   <TEXT_SNAPSHOT_DIRECTORY>
 ```
 
-실제 audio 명령은 provider decision과 secret을 소스 코드에 남기지 않은 뒤 실행한다.
-`edge_private_smoke` 결과는 내부 calibration 전용이다. 공개 production은 현재
-`azure_speech_s0` + independent MFA alignment가 권장안이다.
+`edge_private_smoke` 결과는 내부 calibration 전용이다. 현재 production 후보는 pinned
+`kokoro_local_v1_0` + independent MFA alignment다. Kokoro는 결정적 설정에서 같은 요청을
+반복하지 않으므로 source track은 600 targets × 1 candidate로 고정한다. 합성기는 후보마다
+manifest를 checkpoint하며 `--resume` 재개를 지원한다.
+
+Voice audition 재현 순서:
+
+```bash
+.venv/bin/python experiments/self_repair/scripts/dataset_v2/select_kokoro_voice_calibration.py
+.venv/bin/python experiments/self_repair/scripts/dataset_v2/synthesize_candidates.py \
+  --provider kokoro_local_v1_0 \
+  --targets experiments/self_repair/dataset_v2/calibration/kokoro_voice_targets.jsonl \
+  --output experiments/self_repair/dataset_v2/release_evidence/kokoro_voice_raw_candidates.jsonl \
+  --audio-root experiments/self_repair/dataset_v2/artifacts/kokoro_voice_raw \
+  --attempts 1 --resume
+```
+
+8GiB 로컬 host의 첫 일괄 smoke는 audio 10개를 모두 기록한 뒤 aggregate manifest flush 전에
+종료됐다. immutable WAV/boundary와 frozen request hash로 private manifest를 명시적으로
+recovery했고, 이후 합성기는 후보별 원자 checkpoint 방식으로 보완했다.
 
 승인 전에 다음 preflight를 실행하면 외부 호출 없이 정확한 요청 문자 수와 blocker를
 확인한다. Authority 원본과 report는 `.gitignore` 대상인 `release_evidence/`에만 둔다.
@@ -106,24 +126,22 @@ cp experiments/self_repair/dataset_v2/config/production_authority.example.json \
   --allow-blocked
 ```
 
-현재 frozen matrix의 초기 3-candidate 정책은 1,800 requests와 1,820,700 Azure billable
-characters이고, target당 총 5개 hard maximum은 3,000 requests와 3,034,500 characters다.
-Azure는 outer `speak`/`voice` tag를 제외한 SSML body의 markup·공백·문장부호도 과금 문자에
-포함하므로 transcript 길이만으로 비용을 계산하지 않는다. Preflight는 승인자가 Azure
-portal에서 바로 확인한 million-character rate와 budget cap을 입력했을 때만 예산 gate를
-통과시킨다. Credential은 존재 여부만 기록하고 값은 report에 저장하지 않는다.
+현재 frozen Kokoro matrix는 600 requests × 1 deterministic candidate이며 provider API
+비용과 credential이 없다. Preflight는 `kokoro==0.9.4`, model/config/10 voice SHA-256,
+사람 text·voice 승인, 로컬 공간, RunPod/MFA 접근을 확인한다. Azure billable-character
+계산기는 fallback provider 검증용으로만 남아 있다.
 
 ## 저장공간 실행 구성
 
 사용자 승인에 따라 production audio는 로컬에서 만들고, MFA 정렬과 Moshi 평가는
 RunPod에서 실행한다.
 
-- 로컬: raw/canonical candidates, accepted, prepared — 초기 약 8GiB, hard maximum 약 12GiB
+- 로컬: Kokoro model과 raw/canonical/accepted/prepared — 약 4GiB, 보수적 상한 약 6GiB
 - RunPod: Moshiko BF16 model, MFA, 3,000 response audio — 최소 40GiB workspace
 - 로컬로 회수: manifest, report, annotation package, scored result
 - RunPod에 유지: 대용량 response WAV와 model cache
 
-현재 로컬 약 25GiB 여유 공간은 12GiB audio-production gate를 통과한다. 따라서 50GiB
+현재 로컬 약 24GiB 여유 공간은 12GiB reserve gate를 통과한다. 따라서 50GiB
 로컬 공간이나 별도 로컬 외장 디스크는 core audio 제작에 필수가 아니다.
 
 ## 중요한 문서

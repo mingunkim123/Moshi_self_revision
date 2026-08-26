@@ -1,0 +1,39 @@
+{
+  "candidate_count": 10,
+  "candidate_policy": "deterministic_single_candidate_then_bundle_level_retry",
+  "model_repo": "hexgrad/Kokoro-82M",
+  "model_revision": "f3ff3571791e39611d31c381e3a41a3af07b4987",
+  "model_sha256": "496dba118d1a58f5f3db2efc88dbdc216e0483fc89fe6e47ee1f2c53f18ad1e4",
+  "provider": "kokoro_local_v1_0",
+  "release_eligible": false,
+  "scenario_mean_words": 91.8,
+  "schema_version": "2.0.0",
+  "selected_script_id": "travel_011__a_to_b__delayed_three_dependencies",
+  "selected_script_word_count": 93,
+  "source_track_id": "kokoro_v1_0_calibration_r1",
+  "speaker_ids": [
+    "kokoro_f01",
+    "kokoro_f02",
+    "kokoro_f03",
+    "kokoro_f04",
+    "kokoro_f05",
+    "kokoro_m01",
+    "kokoro_m02",
+    "kokoro_m03",
+    "kokoro_m04",
+    "kokoro_m05"
+  ],
+  "target_count": 10,
+  "voices": [
+    "af_heart",
+    "af_bella",
+    "af_nicole",
+    "af_aoede",
+    "af_kore",
+    "am_fenrir",
+    "am_michael",
+    "am_puck",
+    "am_eric",
+    "am_onyx"
+  ]
+}

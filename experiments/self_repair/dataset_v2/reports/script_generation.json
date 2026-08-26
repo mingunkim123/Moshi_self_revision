@@ -1,10 +1,10 @@
 {
   "blueprint_count": 30,
-  "config_hash": "9f7af5fa465d5243496a160237d492730310dbfd46ce7c80f9ba3495a646be67",
+  "config_hash": "f1ca39419376b9598ed1ebbca81c2fd1ea1670f7d8719ff3e188b63063904913",
   "generation_seed": 20260826,
   "generator_version": "2.0.0",
   "output": "experiments/self_repair/dataset_v2/generated/scripts.jsonl",
-  "output_hash": "d3390a00dd9cfaa01ec1a13c616cbeda5d378f436c907ecb2593b9cb20d0ba11",
+  "output_hash": "74db985365e741be2a541ef0c0c9198ed2566dc39b8c195ce44074b5e20d288e",
   "schema_version": "2.0.0",
   "script_count": 300,
   "text_bundle_count": 60

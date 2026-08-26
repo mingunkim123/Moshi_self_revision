@@ -29,23 +29,25 @@ SCRIPTS = DATASET_ROOT / "generated/scripts.jsonl"
 TARGETS = DATASET_ROOT / "assignments/rendition_targets.jsonl"
 
 
-def authority(*, cap: float = 30.0, rate: float = 15.0) -> dict[str, object]:
+def authority() -> dict[str, object]:
     verified_at = datetime.now(timezone.utc).isoformat()
     return {
         "schema_version": "2.0.0",
         "status": "approved",
-        "provider": "azure_speech_s0",
+        "provider": "kokoro_local_v1_0",
         "purpose": "controlled_evaluation",
-        "paid_tier_confirmed": True,
-        "moshi_evaluation_terms_approved": True,
+        "model_license_reviewed": True,
+        "model_attribution_approved": True,
+        "training_provenance_reviewed": True,
+        "model_repo": "hexgrad/Kokoro-82M",
+        "model_revision": "f3ff3571791e39611d31c381e3a41a3af07b4987",
+        "model_sha256": "496dba118d1a58f5f3db2efc88dbdc216e0483fc89fe6e47ee1f2c53f18ad1e4",
         "public_redistribution": False,
         "redistribution_terms_approved": False,
         "human_text_signoff": True,
-        "budget_cap": cap,
-        "budget_currency": "USD",
-        "azure_rate_per_million_characters": rate,
-        "pricing_verified_at": verified_at,
-        "terms_reviewed_at": verified_at,
+        "human_voice_double_listen": True,
+        "local_generation_approved": True,
+        "license_reviewed_at": verified_at,
         "voice_inventory_verified_at": verified_at,
         "alignment_environment": "runpod_linux_mfa",
         "storage_execution_mode": "local_audio_then_runpod_evaluation",
@@ -71,16 +73,12 @@ class ProductionPreflightTests(unittest.TestCase):
         self.assertEqual(budget["speaker_count"], 10)
         self.assertEqual(
             budget["one_candidate_per_target"]["azure_billable_characters"],
-            606900,
+            0,
         )
-        self.assertEqual(budget["initial_policy"]["request_count"], 1800)
-        self.assertEqual(
-            budget["initial_policy"]["azure_billable_characters"], 1820700
-        )
-        self.assertEqual(budget["hard_maximum"]["request_count"], 3000)
-        self.assertEqual(
-            budget["hard_maximum"]["azure_billable_characters"], 3034500
-        )
+        self.assertEqual(budget["initial_policy"]["request_count"], 600)
+        self.assertEqual(budget["initial_policy"]["attempts_per_target"], 1)
+        self.assertEqual(budget["hard_maximum"]["request_count"], 600)
+        self.assertEqual(budget["provider"], "kokoro_local_v1_0")
 
     def test_azure_character_rule_excludes_only_outer_speak_and_voice_tags(self) -> None:
         ssml = (
@@ -101,7 +99,8 @@ class ProductionPreflightTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             config = deepcopy(self.config)
-            config["source_tracks"]["tts_controlled_r1"]["status"] = "release_approved"
+            track_id = next(iter(config["source_tracks"]))
+            config["source_tracks"][track_id]["status"] = "release_approved"
             config_path = root / "dataset.json"
             authority_path = root / "authority.json"
             write_json(config_path, config)
@@ -113,29 +112,25 @@ class ProductionPreflightTests(unittest.TestCase):
                 authority_path=authority_path,
                 artifact_root=root / "artifacts",
                 environment={
-                    "AZURE_SPEECH_KEY": "must-never-appear-in-report",
-                    "AZURE_SPEECH_REGION": "fixture-region",
                     "RUNPOD_API_KEY": "must-also-never-appear-in-report",
                 },
                 free_bytes=60 * GIB,
-                azure_sdk_version="1.51.2",
+                kokoro_version="0.9.4",
+                kokoro_artifacts_verified=True,
                 mfa_executable=None,
                 tracked_tree_clean=True,
             )
             self.assertEqual(report["status"], "ready")
             self.assertEqual(report["failed_checks"], [])
             serialized = json.dumps(report, sort_keys=True)
-            self.assertNotIn("must-never-appear-in-report", serialized)
             self.assertNotIn("must-also-never-appear-in-report", serialized)
-            budget_check = next(
-                row for row in report["checks"] if row["name"] == "initial_candidate_budget"
+            generation_check = next(
+                row for row in report["checks"] if row["name"] == "local_generation_authorized"
             )
-            self.assertAlmostEqual(
-                budget_check["evidence"]["initial_estimated_cost_before_tax"],
-                27.3105,
-            )
+            self.assertEqual(generation_check["evidence"]["provider_api_charge"], 0)
 
-            too_low = authority(cap=20.0)
+            too_low = authority()
+            too_low["local_minimum_free_gib"] = 11
             write_json(authority_path, too_low)
             blocked = build_report(
                 config_path=config_path,
@@ -144,17 +139,16 @@ class ProductionPreflightTests(unittest.TestCase):
                 authority_path=authority_path,
                 artifact_root=root / "artifacts",
                 environment={
-                    "AZURE_SPEECH_KEY": "fixture",
-                    "AZURE_SPEECH_REGION": "fixture",
                     "RUNPOD_API_KEY": "fixture",
                 },
                 free_bytes=60 * GIB,
-                azure_sdk_version="1.51.2",
+                kokoro_version="0.9.4",
+                kokoro_artifacts_verified=True,
                 mfa_executable=None,
                 tracked_tree_clean=True,
             )
             self.assertEqual(blocked["status"], "blocked")
-            self.assertIn("initial_candidate_budget", blocked["failed_checks"])
+            self.assertIn("production_authority", blocked["failed_checks"])
 
     def test_current_unapproved_state_reports_every_external_blocker(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -167,7 +161,8 @@ class ProductionPreflightTests(unittest.TestCase):
                 artifact_root=root / "artifacts",
                 environment={},
                 free_bytes=10 * GIB,
-                azure_sdk_version=None,
+                kokoro_version=None,
+                kokoro_artifacts_verified=False,
                 mfa_executable=None,
                 tracked_tree_clean=False,
             )
@@ -177,9 +172,9 @@ class ProductionPreflightTests(unittest.TestCase):
             {
                 "source_track_release_status",
                 "production_authority",
-                "initial_candidate_budget",
-                "azure_credentials_present",
-                "azure_sdk_installed",
+                "local_generation_authorized",
+                "kokoro_runtime_installed",
+                "kokoro_model_and_voice_hashes",
                 "independent_alignment_environment",
                 "runpod_access_present",
                 "artifact_storage_capacity",

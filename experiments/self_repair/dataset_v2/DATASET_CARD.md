@@ -45,6 +45,11 @@ license는 사용자/기관 승인을 기다리고 있다. TTS audio는 provider
 서면으로 확인된 source track만 배포한다. Human track은 별도 informed consent, 철회·삭제,
 보상·보존 정책을 통과해야 한다.
 
+현재 provisional TTS source는 Apache-2.0 `Kokoro-82M v1.0`이다. 모델 revision과
+model/config/voice SHA-256을 고정했고 10개 voice technical QC는 통과했다. 다만 model card가
+밝힌 CC-BY 및 closed-provider synthetic training data provenance를 attribution/기관 검토에
+포함하고, 두 명의 독립 voice 청취가 끝나기 전에는 release source로 승인하지 않는다.
+
 ## 권장 보고
 
 Condition별 target accuracy, stale-state error, relation coverage, early response, recovery,

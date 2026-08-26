@@ -21,7 +21,7 @@ from assign_speakers import (  # noqa: E402
 from common import CONDITIONS, DEFAULT_CONFIG, read_config, read_jsonl, sha256_value  # noqa: E402
 
 
-SOURCE_TRACK_ID = "tts_controlled_r1"
+SOURCE_TRACK_ID = "tts_kokoro_v1_0_r1"
 
 
 def synthetic_scripts() -> list[dict[str, object]]:
@@ -194,7 +194,12 @@ class SpeakerAssignmentTests(unittest.TestCase):
 
     def test_validator_rejects_recording_metadata_permutation(self) -> None:
         tampered = copy.deepcopy(self.manifests)
-        first, second = tampered["recording_order"][:2]
+        first = tampered["recording_order"][0]
+        second = next(
+            row
+            for row in tampered["recording_order"][1:]
+            if row["condition"] != first["condition"]
+        )
         first["condition"], second["condition"] = second["condition"], first["condition"]
         errors = validate_manifests(tampered, self.config, SOURCE_TRACK_ID)
         self.assertTrue(any("recording row" in error and "condition mismatch" in error for error in errors))

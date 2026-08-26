@@ -66,23 +66,23 @@
       "tts01": {
         "1": 2,
         "2": 2,
-        "3": 3,
+        "3": 2,
         "4": 3,
-        "5": 2
+        "5": 3
       },
       "tts02": {
         "1": 3,
-        "2": 3,
+        "2": 2,
         "3": 2,
         "4": 2,
-        "5": 2
+        "5": 3
       },
       "tts03": {
         "1": 2,
         "2": 2,
-        "3": 3,
+        "3": 2,
         "4": 3,
-        "5": 2
+        "5": 3
       },
       "tts04": {
         "1": 2,
@@ -92,46 +92,46 @@
         "5": 2
       },
       "tts05": {
-        "1": 3,
-        "2": 3,
-        "3": 2,
-        "4": 2,
-        "5": 2
-      },
-      "tts06": {
-        "1": 3,
-        "2": 2,
-        "3": 2,
-        "4": 2,
-        "5": 3
-      },
-      "tts07": {
-        "1": 3,
-        "2": 2,
-        "3": 2,
-        "4": 2,
-        "5": 3
-      },
-      "tts08": {
-        "1": 2,
-        "2": 2,
-        "3": 2,
-        "4": 3,
-        "5": 3
-      },
-      "tts09": {
         "1": 2,
         "2": 3,
         "3": 3,
         "4": 2,
         "5": 2
       },
+      "tts06": {
+        "1": 3,
+        "2": 3,
+        "3": 2,
+        "4": 2,
+        "5": 2
+      },
+      "tts07": {
+        "1": 3,
+        "2": 3,
+        "3": 2,
+        "4": 2,
+        "5": 2
+      },
+      "tts08": {
+        "1": 3,
+        "2": 2,
+        "3": 2,
+        "4": 2,
+        "5": 3
+      },
+      "tts09": {
+        "1": 2,
+        "2": 2,
+        "3": 3,
+        "4": 3,
+        "5": 2
+      },
       "tts10": {
         "1": 2,
         "2": 2,
-        "3": 2,
+        "3": 3,
         "4": 3,
-        "5": 3
+        "5": 2
       }
     },
     "rendition_targets_by_speaker": {
@@ -157,9 +157,9 @@
   "generation_seed": 20260826,
   "manifest_hashes": {
     "analysis_folds": "f376fb50b4ac843701f3c41cd7d541a0ae908add4d06e60be575a8ddf86e477f",
-    "recording_order": "6a787b79f48f32101af652a1014cf39029ad81de6dcd419e7b7a17ad466ffd54",
-    "rendition_targets": "11149ee2a05d53480f870192c5ff4ef724b2a53b5f5b657303fbf0f219ec5b1f",
-    "speaker_bundles": "04d46a5b744e2a0dbe982919af831c84f6846535d688c5ab224bde5d59cce4f0"
+    "recording_order": "a03f88cd18aab762f098095d1df106b92afe4648f2d7838ae9002374854672ea",
+    "rendition_targets": "b954fa28d012c5fe745f0d07c58f037a13838f578c857436035ab433bc908f3d",
+    "speaker_bundles": "5ff05046a720e8457beb02753b994e800c002cbebb0dd153c51ced3a0743c15e"
   },
   "outputs": {
     "analysis_folds": "experiments/self_repair/dataset_v2/assignments/analysis_folds.jsonl",
@@ -168,7 +168,7 @@
     "speaker_bundles": "experiments/self_repair/dataset_v2/assignments/speaker_bundles.jsonl"
   },
   "schema_version": "2.0.0",
-  "source_track_id": "tts_controlled_r1",
+  "source_track_id": "tts_kokoro_v1_0_r1",
   "validation": {
     "errors": [],
     "status": "passed"

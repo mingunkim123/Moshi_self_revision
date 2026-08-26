@@ -1,6 +1,6 @@
 # 자기수정 matched-bundle 데이터셋 구축 계획
 
-- 문서 상태: 실행 중 — text/pipeline 및 private calibration 완료, production authority gate 대기
+- 문서 상태: 실행 중 — Kokoro technical calibration 완료, human voice/RunPod gate 대기
 - 작성일: 2026-08-26
 - 적용 위치: `experiments/self_repair/`
 - 핵심 산출물: 의미 설계도 30개, 생성 대본 300개, accepted audio 600개
@@ -18,10 +18,11 @@ release를 dataset/schema v2.0.0으로 통일한다. 새 경로, `VERSION`, sche
 | 의미 설계도 | 완료 | 30/30 독립 agent review 승인, 구조·schema error 0 |
 | 대본·답안 키 | 완료 | 300 scripts, 60 answer keys, byte-level 재생성 일치 |
 | 화자 배정 | 완료 | 120 matched bundles, 600 rendition targets, 10 voices 균형 |
-| 비공개 TTS calibration | 완료 | 180/180 합성·provider boundary mapping, 158 QC pass, 22 clipping 제외 |
-| production preflight | 완료 | 600-target join·Azure billable characters·authority·credential·local 12GiB/remote 40GiB·MFA gate 자동화 |
+| 비공개 Edge calibration | 완료 | 180/180 합성·provider boundary mapping, 158 QC pass, 22 clipping 제외 |
+| Kokoro voice calibration | 기술 완료 | 10/10 실제 로컬 합성·24k PCM16·token mapping·무클리핑 QC 통과, human double-listen 대기 |
+| production preflight | 완료 | 600-target join·Kokoro model/config/voice hash·authority·local 12GiB/remote 40GiB·MFA gate 자동화 |
 | storage architecture | 완료 | local TTS/QC + RunPod MFA/Moshi, 대용량 response remote 유지 |
-| production TTS/독립 정렬 | 사용자 결정 필요 | provider·권리·credential·RunPod access 미승인 |
+| production TTS/독립 정렬 | 승인 대기 | Kokoro human double-listen·license attribution·RunPod access 미승인 |
 | accepted 600·Moshi 3,000·annotation | 대기 | production audio 이후 실행 |
 | human/pause extension | 대기 | core 결과와 별도 consent/예산 결정 이후 실행 |
 
@@ -72,8 +73,10 @@ release를 dataset/schema v2.0.0으로 통일한다. 새 경로, `VERSION`, sche
 | matched audio bundle | `matched_audio_bundle_id` | `text_bundle × source_track × speaker`의 5조건 묶음 | 트랙당 120 |
 | rendition target | `rendition_target_id` | `script × source_track × speaker` | 트랙당 600 |
 
-초기 후보를 3개씩 합성하면 rendition target 수는 그대로 600개이고 candidate audio는
-1,800개 생긴다. 실패 target을 총 5개까지 재시도할 때의 hard maximum은 3,000개다.
+Azure처럼 비결정적 provider를 사용할 때의 원 설계는 후보 3개, 실패 시 최대 5개였다.
+현재 Kokoro source track은 고정 설정에서 결정적이므로 rendition target당 후보 1개,
+candidate audio 총 600개로 override한다. 같은 요청을 반복해 동일 waveform을 독립 후보처럼
+세지 않는다.
 `candidate_id`는 rendition target과 attempt 번호로 만들고, 최종
 `accepted_audio_id`는 각 rendition target에서 선택된 파일 하나만 가리킨다. TTS와
 human track은 같은 `script_id`를 공유해도 `source_track_id`가 달라 ID가 충돌하지 않는다.
@@ -544,11 +547,11 @@ root에 있어야 한다. Repair 조건은 new value가 repair cue에 정확히 
 ```text
 text_bundle_id          = travel_001__a_to_b
 script_id               = travel_001__a_to_b__delayed_three_dependencies
-source_track_id         = tts_controlled_r1
-matched_audio_bundle_id = travel_001__a_to_b__tts_controlled_r1__spk03
-rendition_target_id     = travel_001__a_to_b__delayed_three_dependencies__tts_controlled_r1__spk03
-candidate_id            = travel_001__a_to_b__delayed_three_dependencies__tts_controlled_r1__spk03__cand03
-accepted_audio_id       = travel_001__a_to_b__delayed_three_dependencies__tts_controlled_r1__spk03__accepted
+source_track_id         = tts_kokoro_v1_0_r1
+matched_audio_bundle_id = travel_001__a_to_b__tts_kokoro_v1_0_r1__spk03
+rendition_target_id     = travel_001__a_to_b__delayed_three_dependencies__tts_kokoro_v1_0_r1__spk03
+candidate_id            = travel_001__a_to_b__delayed_three_dependencies__tts_kokoro_v1_0_r1__spk03__cand01
+accepted_audio_id       = travel_001__a_to_b__delayed_three_dependencies__tts_kokoro_v1_0_r1__spk03__accepted
 ```
 
 종료 조건:
@@ -670,12 +673,12 @@ script = 60 × 5 = 300
 
 ```text
 3 scenarios × 2 directions × 5 conditions × 2 speakers = 60 rendition targets
-60 rendition targets × 3 initial candidates = 180 candidate audio
+60 rendition targets × 1 deterministic candidate = 60 candidate audio
 ```
 
 할 일:
 
-1. rendition target 하나당 통문장 후보를 기본 3개 생성한다.
+1. rendition target 하나당 통문장 후보 1개를 생성한다.
 2. voice, rate, style, seed와 가능한 경우 provider request ID를 기록한다.
 3. 같은 matched audio bundle에서 provider/model/version, voice, rate, style, SSML prosody
    control, sentence-boundary와 pause policy를 동일하게 유지한다.
@@ -687,7 +690,8 @@ script = 60 × 5 = 300
 
 실패 시 순서:
 
-1. 같은 설정으로 후보 총수가 최대 5개가 될 때까지 최대 2개를 추가 생성한다.
+1. 동일 설정 반복 생성은 금지한다. 재시도가 필요하면 policy revision을 먼저 동결하고
+   해당 matched audio bundle 다섯 조건 전체를 재생성한다.
 2. 의미 unit 문장 길이를 blueprint에서 조정하고 해당 scenario의 전체 text/audio
    bundle을 재생성한다.
 3. 문장 경계 pause를 미세 조정할 때는 condition 하나만 바꾸지 않는다. 같은 boundary
@@ -709,9 +713,9 @@ smoke를 재실행한다. 특정 condition이나 voice에만 rate/style/threshol
 TTS track:
 
 1. 300개 대본과 assignment manifest를 입력으로 후보를 생성한다.
-2. rendition target마다 기본 3개 후보에서 시작하고 QC 실패 target만 후보 총수 최대
-   5개까지 재시도한다.
-3. API 오류는 지수 backoff하고, 같은 요청을 중복 accepted 처리하지 않는다.
+2. rendition target마다 고정 후보 1개를 만들고 candidate별 checkpoint를 즉시 기록한다.
+3. 로컬 오류는 `--resume`으로 완료 candidate를 hash 검증해 건너뛰며 같은 요청을 중복
+   accepted 처리하지 않는다.
 4. 원본 후보는 immutable 경로에 저장하고 hash를 즉시 계산한다.
 
 Human controlled-reading track:
@@ -1074,7 +1078,7 @@ bin마다 neutral unit 수나 filler 단어 수를 늘리는 방식은 semantic/
 | 상태 | 의미 | 처리 |
 |---|---|---|
 | `accepted` | 모든 자동·필수 수동 QC 통과 | release 후보 |
-| `retry_synthesis` | timing/prosody/오디오 문제 | 같은 대본으로 후보 추가 생성 |
+| `retry_synthesis` | timing/prosody/오디오 문제 | frozen policy revision 후 matched bundle 전체 재생성 |
 | `revise_blueprint` | D/N 의미 또는 길이 문제 | 설계도 수정 후 관련 text bundle과 matched audio bundles 전체 재생성 |
 | `manual_alignment` | 음성은 정상이나 정렬 저신뢰 | condition-blind 수동 경계 확인 |
 | `quarantined` | 손상 또는 해결 가능한 라이선스 검토 | release 제외, 원인 기록 |

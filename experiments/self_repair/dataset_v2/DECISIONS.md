@@ -3,8 +3,9 @@
 ## 2026-08-26 provider audit
 
 - `edge-tts==7.2.8`은 voice inventory와 비공개 timing calibration에만 사용한다.
-- 공개 core audio는 paid Azure Speech S0 + 공식 SDK + MFA 독립 정렬을 우선안으로 둔다.
-- provider 비용·자격증명, 공개 재배포와 Moshi 평가 용도에 대한 기관 승인 전에는 production release를 시작하지 않는다.
+- Edge 검토 당시 paid Azure Speech S0를 우선안으로 두었으나, 이후 사용자 지시에 따라
+  Kokoro local TTS + MFA를 현재 우선안으로 전환했다. Azure는 fallback이다.
+- 공개 재배포와 Moshi 평가 용도에 대한 기관 승인 전에는 production release를 시작하지 않는다.
 - 세부 근거와 대안은 `TTS_PROVIDER_REVIEW.md`에 기록한다.
 
 ## 2026-08-26 private Edge calibration
@@ -23,8 +24,22 @@
 - 독립 품질 검토 후 blueprint 30개와 generated script 300개가 모두 구조·스키마 gate를
   통과했다. 현재 canonical file SHA-256은 blueprint
   `e7d3b18077f6f1a0f348b5217c5d32710465c9167ff220bef197b17800827057`, script
-  `ab5f42e423c1ae89fc28607d6993ca74b7d721039984398227e19007889a34f8`이다. 후자는
+  `9a6775f1477210b57d4d01ff35f88fa23cff9387e5798aa92797e9b33785de7d`이다. 후자는
   storage execution plan을 config에 동결한 뒤 재생성한 hash이며 transcript는 변하지 않았다.
+
+## 2026-08-26 Kokoro local calibration
+
+- `kokoro==0.9.4`, model revision `f3ff3571791e39611d31c381e3a41a3af07b4987`, weight
+  SHA-256 `496dba118d1a58f5f3db2efc88dbdc216e0483fc89fe6e47ee1f2c53f18ad1e4`를 고정했다.
+- 미국 영어 5F/5M voice 10개를 같은 93단어 script로 실제 합성했고 10/10이 24 kHz PCM16,
+  token seed mapping, clipping/tail QC를 통과했다. 발화 길이는 29.70–53.35초다.
+- `af_nicole`은 가장 빠른 voice보다 약 1.80배 느려 자동 제외하지 않고 blind human review에
+  넘겼다. `reports/kokoro_voice_calibration.json`은 technical pass이지만 human review pending이다.
+- 결정적 합성 반복은 독립 후보가 아니므로 production source는 target당 1개만 생성한다.
+  실패 시 조건 하나를 보정하지 않고 frozen retry policy로 matched bundle 전체를 재생성한다.
+- 최초 10-voice 단일 프로세스는 aggregate manifest flush 전에 종료됐다. immutable audio와
+  boundary 10쌍을 hash 검증해 private manifest를 recovery했고 이후 candidate별 checkpoint와
+  `--resume`을 구현했다.
 
 ## 2026-08-26 evaluation/release execution contract
 
@@ -45,18 +60,17 @@
 
 ## 2026-08-26 production preflight contract
 
-- Preflight는 provider 호출을 하지 않고 300 scripts/600 targets/source-track/voice join을
-  전수 검증한다. Azure credential은 존재 여부만 보고하고 값을 저장하지 않는다.
-- 현재 SSML 기준 billable characters는 target당 1후보 합계 606,900자, 초기 3후보
-  1,820,700자, 총 5후보 상한 3,034,500자다. 승인 시점의 portal rate를 private authority에
-  기록해 초기 정책 예상액이 budget cap 안에 있을 때만 통과한다.
-- `production_authority.json`은 paid tier, Moshi 평가 용도, 공개 여부와 재배포 검토,
-  human text sign-off, RunPod MFA upload, artifact store, 로컬 12GiB·원격 40GiB 최소 공간,
-  승인자를 모두 묶는다.
+- Preflight는 provider 호출을 하지 않고 300 scripts/600 targets/source-track/voice join과
+  Kokoro runtime/model/config/voice hash를 전수 검증한다.
+- 현재 matrix는 target당 deterministic 1후보, 총 600 requests이며 provider API 비용과
+  credential은 없다. Azure character budget은 fallback 경로 진단으로만 유지한다.
+- `production_authority.json`은 Apache/attribution/training provenance, Moshi 평가 목적,
+  공개 여부, human text 및 voice double-listen, RunPod MFA upload, artifact store,
+  로컬 12GiB·원격 40GiB 최소 공간과 승인자를 묶는다.
   이 파일과 preflight report는 private `release_evidence/`에 두며 Git에 커밋하지 않는다.
 - 사용자는 2026-08-26 `local audio production + RunPod MFA/Moshi evaluation` 구성을
-  승인했다. 로컬 초기 audio 작업량은 약 8GiB, 후보 총 5개 상한은 약 12GiB이며 현재
-  약 25GiB 여유 공간으로 local gate를 통과한다. BF16 model cache와 약 10GiB response
+  승인했다. Kokoro 1-candidate 정책의 로컬 audio 작업량은 약 4GiB, 보수적 상한은
+  약 6GiB이며 현재 약 24GiB 여유 공간으로 12GiB reserve gate를 통과한다. BF16 model cache와 약 10GiB response
   audio는 최소 40GiB RunPod workspace에 유지하고 결과 metadata만 로컬로 회수한다.
 
 ## Frozen engineering defaults
