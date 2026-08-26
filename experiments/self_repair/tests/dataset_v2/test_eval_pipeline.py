@@ -416,7 +416,7 @@ class EvalManifestTests(unittest.TestCase):
         self.assertIn(expected_hash, run_id)
         self.assertIn(CODE_COMMIT, run_id)
         self.assertEqual(
-            self.trials[0]["execution_contract"]["runner_version"], "2.2.1"
+            self.trials[0]["execution_contract"]["runner_version"], "2.2.2"
         )
         self.assertEqual(
             self.trials[0]["matrix_contract"]["generation_seeds"], list(SEEDS)
@@ -671,6 +671,59 @@ class EvalRunnerTests(unittest.TestCase):
             self.assertEqual(report["unique_prepared_files_verified"], 1)
             self.assertFalse(output.exists())
             self.assertFalse((root / "responses").exists())
+
+    def test_cli_only_seed_executes_and_resumes_one_frozen_seed(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            manifest, config, output, _, _, _ = runnable_eval_fixture(root)
+            response_root = root / "responses"
+            backends: list[FakeEvalBackend] = []
+
+            def factory(
+                identity: dict[str, str], generation: dict[str, object]
+            ) -> FakeEvalBackend:
+                backend = FakeEvalBackend(identity, generation)
+                backends.append(backend)
+                return backend
+
+            args = [
+                "--input",
+                str(manifest),
+                "--output",
+                str(output),
+                "--generation-config",
+                str(config),
+                "--artifact-root",
+                str(root),
+                "--response-root",
+                str(response_root),
+                "--only-seed",
+                "29",
+            ]
+            first = run_eval_main(args, backend_factory=factory)
+            self.assertEqual(first["status"], "selection_completed")
+            self.assertEqual(first["executed_count"], 1)
+            self.assertEqual(first["remaining_count"], 1)
+            self.assertEqual(first["selection_remaining_count"], 0)
+            self.assertEqual(first["only_generation_seeds"], [29])
+            self.assertEqual(backends[0].reset_seeds, [29])
+            rows = read_jsonl(output)
+            self.assertEqual(
+                [row["response"]["status"] for row in rows],
+                ["pending", "completed"],
+            )
+
+            created_before = len(backends)
+            resumed = run_eval_main(args, backend_factory=factory)
+            self.assertEqual(resumed["status"], "selection_completed")
+            self.assertEqual(resumed["executed_count"], 0)
+            self.assertEqual(len(backends), created_before)
+
+            with self.assertRaisesRegex(ValueError, "not in the frozen matrix"):
+                run_eval_main(
+                    [*args[:-2], "--only-seed", "999"],
+                    backend_factory=factory,
+                )
 
     def test_cli_executes_atomic_records_and_resumes_without_rerun(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

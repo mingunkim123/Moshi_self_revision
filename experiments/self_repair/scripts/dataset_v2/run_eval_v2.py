@@ -71,7 +71,7 @@ except ImportError:  # pragma: no cover - exercised by direct CLI use.
     )
 
 
-RUNNER_VERSION = "2.2.1"
+RUNNER_VERSION = "2.2.2"
 DEFAULT_INPUT = DATASET_ROOT / "evaluation/eval_trials.jsonl"
 DEFAULT_OUTPUT = DATASET_ROOT / "evaluation/eval_trials.completed.jsonl"
 DEFAULT_RESPONSE_ROOT = DATASET_ROOT / "evaluation/response_artifacts"
@@ -660,6 +660,7 @@ def run_evaluation(
     backend: EvalBackend | None,
     backend_factory: BackendFactory | None = None,
     limit: int | None = None,
+    only_seeds: Sequence[int] | None = None,
     checkpoint_every: int = 25,
     dry_run: bool = False,
     failure_injector: Callable[[str, str], None] | None = None,
@@ -669,6 +670,26 @@ def run_evaluation(
     if checkpoint_every <= 0:
         raise ValueError("checkpoint_every must be positive")
     validate_eval_trials(pending_rows)
+    frozen_seeds = tuple(
+        int(seed) for seed in pending_rows[0]["matrix_contract"]["generation_seeds"]
+    )
+    selected_seed_set: frozenset[int] | None = None
+    if only_seeds is not None:
+        requested: list[int] = []
+        for seed in only_seeds:
+            if isinstance(seed, bool) or not isinstance(seed, int) or seed < 0:
+                raise ValueError("--only-seed values must be non-negative integers")
+            requested.append(seed)
+        if not requested:
+            raise ValueError("only_seeds must not be empty")
+        if len(requested) != len(set(requested)):
+            raise ValueError("--only-seed values must not contain duplicates")
+        unknown = sorted(set(requested) - set(frozen_seeds))
+        if unknown:
+            raise ValueError(
+                f"requested generation seeds are not in the frozen matrix: {unknown}"
+            )
+        selected_seed_set = frozenset(requested)
     identity = _verify_generation_config(pending_rows, generation_config)
     execution_contract = pending_rows[0]["execution_contract"]
     if sha256_file(Path(__file__)) != execution_contract["runner_source_sha256"]:
@@ -711,7 +732,14 @@ def run_evaluation(
             )
 
     pending = [row for row in rows if row["response"]["status"] == "pending"]
-    selected = pending[:limit] if limit is not None else pending
+    eligible_pending = [
+        row
+        for row in pending
+        if selected_seed_set is None
+        or int(row["generation_seed"]) in selected_seed_set
+    ]
+    selected = eligible_pending[:limit] if limit is not None else eligible_pending
+    seed_selection = sorted(selected_seed_set) if selected_seed_set is not None else None
     if dry_run:
         return {
             "status": "dry_run_validated",
@@ -719,21 +747,26 @@ def run_evaluation(
             "trial_count": len(rows),
             "completed_count": len(rows) - len(pending),
             "pending_count": len(pending),
+            "eligible_pending_count": len(eligible_pending),
             "selected_count": len(selected),
+            "only_generation_seeds": seed_selection,
             "unique_prepared_files_verified": len(hash_cache),
             "records_ingested": ingested,
         }
     if not selected:
         write_jsonl(output_path, rows)
+        status = "completed" if not pending else "selection_completed"
         return {
-            "status": "completed",
+            "status": status,
             "runner_version": RUNNER_VERSION,
             "eval_run_id": identity["eval_run_id"],
             "trial_count": len(rows),
             "executed_count": 0,
             "skipped_completed_count": len(rows),
             "records_ingested": ingested,
-            "remaining_count": 0,
+            "remaining_count": len(pending),
+            "selection_remaining_count": len(eligible_pending),
+            "only_generation_seeds": seed_selection,
             "unique_prepared_files_verified": len(hash_cache),
             "output_manifest_sha256": sha256_file(output_path),
         }
@@ -777,8 +810,22 @@ def run_evaluation(
             write_jsonl(output_path, rows)
     write_jsonl(output_path, rows)
     remaining = sum(row["response"]["status"] == "pending" for row in rows)
+    selection_remaining = sum(
+        row["response"]["status"] == "pending"
+        and (
+            selected_seed_set is None
+            or int(row["generation_seed"]) in selected_seed_set
+        )
+        for row in rows
+    )
+    if remaining == 0:
+        status = "completed"
+    elif selection_remaining == 0:
+        status = "selection_completed"
+    else:
+        status = "partially_completed"
     return {
-        "status": "completed" if remaining == 0 else "partially_completed",
+        "status": status,
         "runner_version": RUNNER_VERSION,
         "eval_run_id": identity["eval_run_id"],
         "trial_count": len(rows),
@@ -786,6 +833,8 @@ def run_evaluation(
         "skipped_completed_count": len(rows) - len(pending),
         "records_ingested": ingested,
         "remaining_count": remaining,
+        "selection_remaining_count": selection_remaining,
+        "only_generation_seeds": seed_selection,
         "unique_prepared_files_verified": len(hash_cache),
         "output_manifest_sha256": sha256_file(output_path),
     }
@@ -805,6 +854,15 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--response-root", type=Path, default=DEFAULT_RESPONSE_ROOT)
     parser.add_argument("--backend", choices=("moshi-pytorch",), default="moshi-pytorch")
     parser.add_argument("--limit", type=int)
+    parser.add_argument(
+        "--only-seed",
+        action="append",
+        type=int,
+        help=(
+            "Execute only the requested frozen generation seed. Repeat to select "
+            "multiple seeds; the full 3,000-row matrix is still validated."
+        ),
+    )
     parser.add_argument("--checkpoint-every", type=int, default=25)
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--report", type=Path)
@@ -829,6 +887,7 @@ def main(
         backend=None,
         backend_factory=backend_factory or MoshiTorchBackend,
         limit=args.limit,
+        only_seeds=args.only_seed,
         checkpoint_every=args.checkpoint_every,
         dry_run=args.dry_run,
     )
