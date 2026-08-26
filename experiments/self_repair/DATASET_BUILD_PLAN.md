@@ -1,6 +1,6 @@
 # 자기수정 matched-bundle 데이터셋 구축 계획
 
-- 문서 상태: 실행 중 — Kokoro raw 600·10-speaker MFA·자동 QC 완료, human review gate 대기
+- 문서 상태: 실행 중 — provisional accepted/prepared 600 생성, human review 기록 gate 미충족
 - 작성일: 2026-08-26
 - 적용 위치: `experiments/self_repair/`
 - 핵심 산출물: 의미 설계도 30개, 생성 대본 300개, accepted audio 600개
@@ -23,8 +23,9 @@ release를 dataset/schema v2.0.0으로 통일한다. 새 경로, `VERSION`, sche
 | production preflight | 완료 | 600-target join·Kokoro model/config/voice hash·authority·local 12GiB/remote 40GiB·MFA gate 자동화 |
 | storage architecture | 완료 | local TTS/QC/MFA + RunPod Moshi, 대용량 response remote 유지 |
 | production TTS | raw/QC 완료 | 600/600 local Kokoro 합성·canonical 변환·자동 QC 통과, 5.756시간·raw+canonical 1.853GiB |
-| 독립 정렬·선정 | 정렬 완료·사람 승인 대기 | local MFA 2.2.4 10-speaker TextGrid/import 600/600, OOV 0, 재자동 QC 600/600; calibrated confidence가 없어 human review 전 accepted 0/600 유지 |
-| accepted 600·Moshi 3,000·annotation | 대기 | production audio 이후 실행 |
+| 독립 정렬·선정 | 정렬 완료·구조화 검수 기록 누락 | local MFA 2.2.4 10-speaker TextGrid/import 600/600, OOV 0, 재자동 QC 600/600; 사용자는 전체 검수를 수행했다고 밝혔으나 pass/fail·실패 ID·reviewer 기록이 없어 정식 accepted 0/600 유지 |
+| provisional accepted/prepared | 기술 실행용 완료 | 사용자 지시에 따라 각 600개 생성, 480ms prefix·1,920 sample frame 정렬; `release_eligible=false`, 통과 주장 없음 |
+| Moshi 3,000·annotation | manifest/runner 준비 단계 | provisional audio로 기술 dry-run 가능, GPU contract smoke와 정식 review gate 이후 confirmatory run |
 | human/pause extension | 대기 | core 결과와 별도 consent/예산 결정 이후 실행 |
 
 비공개 calibration에서는 fast/slow voice 사이의 global timing overlap이 없었다. 따라서

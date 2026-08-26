@@ -4,10 +4,11 @@
 set을 재현 가능하게 만드는 계약·데이터·검증 보고서를 담는다. 일반 학습 corpus가 아니다.
 
 현재 상태는 **Kokoro raw production 및 10-speaker independent MFA alignment 완료,
-human review 대기**다. 로컬에서 600/600 raw 합성·canonical 변환·독립 정렬·자동 QC까지
-통과했다. 다만 hash-bound 사람 정렬 검수와 독립 청취자 승인이 끝나기 전에는 accepted
-audio 또는 release-ready로 표시하지 않는다. 저장공간은 local TTS/QC/alignment와 remote
-Moshi evaluation으로 분리했다.
+사람 검수 결과의 구조화 기록 누락**이다. 로컬에서 600/600 raw 합성·canonical 변환·독립
+정렬·자동 QC까지 통과했다. 사용자는 전체를 검수했다고 밝혔지만 pass/fail 결과, 실패 ID,
+reviewer ID를 파일에 기록하지 않았으므로 release gate는 충족되지 않았다. 다음 기술 단계를
+막지 않기 위해 release 불가로 표시한 provisional accepted/prepared audio 각 600개를 별도
+생성했다. 저장공간은 local TTS/QC/alignment와 remote Moshi evaluation으로 분리했다.
 
 2026-08-26 현재 30개 blueprint, 300개 script, 60개 answer key와 600개 TTS rendition
 target은 생성·검증되었다. 비공개 Edge calibration 180개도 완료했지만 22개가 clipping
@@ -85,6 +86,17 @@ GPU contract smoke가 통과하기 전에는 3,000 trial 전체 실행을 시작
 window를 실제로 생성하고, trial마다 model stream과 RNG를 초기화하며 원자적 checkpoint로
 재개한다.
 
+사람 검수 결과를 기록하지 않은 상태에서 runner plumbing만 다음 단계로 넘길 때는 아래의
+명시적 escape hatch를 사용한다. 출력은 `provisional_*` 경로에만 생성되고 모든 row와 report에
+`release_eligible=false`, `all_items_passed_claimed=false`가 들어간다. 이 파일은 기술 smoke에는
+쓸 수 있지만 release, publication, confirmatory inference에는 쓸 수 없다.
+
+```bash
+.venv/bin/python \
+  experiments/self_repair/scripts/dataset_v2/materialize_provisional_eval_audio.py \
+  --acknowledge-missing-review-record
+```
+
 텍스트 개발 snapshot은 audio나 model output을 포함하지 않고도 만들고 검증할 수 있다.
 
 ```bash
@@ -143,7 +155,12 @@ raw+canonical 1.853GiB다. 조건별 120개, 화자별 60개, 방향별 300개�
 `align_from_boundaries.py` 결과는 Kokoro predicted duration을 이용한 extraction seed일 뿐
 독립 정렬이 아니다. 이후 로컬 macOS arm64 MFA 2.2.4로 10개 voice를 각각 speaker로
 분리해 600/600 TextGrid를 생성·import했고, 재실행한 자동 QC도 600/600 통과했다.
-현재 accepted/prepared 수는 0이며 사람 검수 전에는 선택하지 않는다.
+정식 accepted/prepared 수는 여전히 0이다. 구조화된 검수 기록 없이 다음 기술 단계로
+넘어가라는 사용자 지시에 따라 provisional accepted/prepared만 각각 600개 생성했다.
+manifest는 `manifests/provisional_accepted_audio.jsonl`과
+`manifests/provisional_prepared_stimuli.jsonl`, WAV는 `artifacts/provisional_accepted/`와
+`artifacts/provisional_prepared/`에 있다. 이 경로는 정식 selection policy나 human review
+gate를 충족한 것으로 간주하지 않는다.
 `prepare_mfa_corpus.py`는 canonical WAV를 복제하지 않고 speaker별 local hard link와 exact
 `.lab` transcript 600쌍을 만들며 input manifest와 hash report를 생성한다.
 
@@ -205,12 +222,13 @@ cp experiments/self_repair/dataset_v2/config/production_authority.example.json \
 사용자 승인에 따라 production audio와 MFA 정렬은 로컬에서 만들고, Moshi 평가는
 RunPod에서 실행한다.
 
-- 로컬: 현재 전체 working artifact 4.8GiB; core raw+canonical은 1.853GiB
+- 로컬: core raw+canonical 1.853GiB에 provisional accepted/prepared 약 1.84GiB 추가
 - RunPod: Moshiko BF16 model과 3,000 response audio — 최소 40GiB workspace
 - 로컬로 회수: manifest, report, annotation package, scored result
 - RunPod에 유지: 대용량 response WAV와 model cache
 
-현재 로컬 약 29GiB 여유 공간은 12GiB reserve gate를 통과한다. 따라서 50GiB
+provisional materialization 이후에도 로컬 약 26GiB 여유 공간은 12GiB reserve gate를
+통과한다. 따라서 50GiB
 로컬 공간이나 별도 로컬 외장 디스크는 core audio 제작에 필수가 아니다.
 
 ## 중요한 문서
