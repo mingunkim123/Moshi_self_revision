@@ -26,6 +26,43 @@ from .lora import LoRALinear
 from torch.utils.checkpoint import checkpoint as torch_checkpoint
 
 
+@dataclass(frozen=True)
+class MechanisticActivation:
+    """An opt-in activation exposed at a stable mechanistic intervention seam.
+
+    Hooks may return a replacement tensor. Returning ``None`` observes without
+    changing the model. The replacement must preserve shape, dtype, and device.
+    """
+
+    site: str
+    layer: int
+    tensor: torch.Tensor
+    absolute_positions: torch.Tensor | None = None
+
+
+MechanisticHook = tp.Callable[[MechanisticActivation], torch.Tensor | None]
+
+
+def _apply_mechanistic_hook(
+    hook: MechanisticHook | None,
+    *,
+    site: str,
+    layer: int,
+    tensor: torch.Tensor,
+    absolute_positions: torch.Tensor | None = None,
+) -> torch.Tensor:
+    if hook is None:
+        return tensor
+    replacement = hook(MechanisticActivation(site, layer, tensor, absolute_positions))
+    if replacement is None:
+        return tensor
+    if replacement.shape != tensor.shape:
+        raise ValueError(f"{site} hook changed shape from {tuple(tensor.shape)} to {tuple(replacement.shape)}")
+    if replacement.dtype != tensor.dtype or replacement.device != tensor.device:
+        raise ValueError(f"{site} hook must preserve dtype and device")
+    return replacement
+
+
 class LayerNormF32(nn.LayerNorm):
     def forward(self, input: torch.Tensor) -> torch.Tensor:
         x_f32 = input.float()
@@ -233,6 +270,35 @@ class RingKVCache:
             self.end_offset,
         )
 
+    def snapshot(self) -> dict[str, torch.Tensor]:
+        """Clone all mutable cache tensors for deterministic branching."""
+        return {"cache": self.cache.clone(), "end_offset": self.end_offset.clone()}
+
+    def restore(self, snapshot: tp.Mapping[str, torch.Tensor]) -> None:
+        """Restore a snapshot without replacing CUDA-graph-visible buffers."""
+        cache = snapshot.get("cache")
+        end_offset = snapshot.get("end_offset")
+        if cache is None or end_offset is None:
+            raise ValueError("RingKVCache snapshot requires cache and end_offset")
+        if cache.shape != self.cache.shape or end_offset.shape != self.end_offset.shape:
+            raise ValueError("RingKVCache snapshot shape mismatch")
+        self.cache.copy_(cache)
+        self.end_offset.copy_(end_offset)
+
+    def absolute_positions(self) -> torch.Tensor:
+        """Return the logical absolute position stored in every ring slot."""
+        slots = torch.arange(self.capacity, device=self.end_offset.device, dtype=torch.long)
+        last_offset = self.end_offset.view(-1, 1) - 1
+        end_index = last_offset % self.capacity
+        delta = slots - end_index
+        positions = torch.where(
+            delta <= 0,
+            last_offset + delta,
+            last_offset + delta - self.capacity,
+        )
+        invalid = slots >= self.end_offset.view(-1, 1)
+        return torch.where(invalid, torch.full_like(positions, -1), positions)
+
     def complete(self, k: torch.Tensor, v: torch.Tensor, exec_mask: torch.Tensor) -> KVCacheResult:
         assert k.shape[:-1] == v.shape[:-1], (k.shape, v.shape)
         B, H, T, D = k.shape
@@ -372,6 +438,8 @@ class StreamingMultiheadAttention(StreamingModule[_MHAState]):
         dtype=None,
     ):
         super().__init__()
+        self.mechanistic_hook: MechanisticHook | None = None
+        self.mechanistic_layer = -1
         factory_kwargs = {"device": device, "dtype": dtype}
 
         self.embed_dim = embed_dim
@@ -563,8 +631,20 @@ class StreamingMultiheadAttention(StreamingModule[_MHAState]):
                     projected[:, :, self.embed_dim:],
                     "b t (p kh d) -> p b kh t d", p=2, kh=self.num_heads // self.kv_repeat
                 )
+        q = _apply_mechanistic_hook(
+            self.mechanistic_hook, site="q_pre_rope", layer=self.mechanistic_layer, tensor=q)
+        k = _apply_mechanistic_hook(
+            self.mechanistic_hook, site="k_pre_rope", layer=self.mechanistic_layer, tensor=k)
+        v = _apply_mechanistic_hook(
+            self.mechanistic_hook, site="v_pre_rope", layer=self.mechanistic_layer, tensor=v)
         if self.rope:
             q, k = self.rope(q, k, offset, time_before_heads=False)
+        q = _apply_mechanistic_hook(
+            self.mechanistic_hook, site="q_post_rope", layer=self.mechanistic_layer, tensor=q)
+        k = _apply_mechanistic_hook(
+            self.mechanistic_hook, site="k_post_rope", layer=self.mechanistic_layer, tensor=k)
+        v = _apply_mechanistic_hook(
+            self.mechanistic_hook, site="v_post_rope", layer=self.mechanistic_layer, tensor=v)
 
         k, v, pos_k = self._complete_kv(k, v)
         if self.kv_repeat > 1:
@@ -583,6 +663,13 @@ class StreamingMultiheadAttention(StreamingModule[_MHAState]):
         else:
             attn_bias = None
         x = F.scaled_dot_product_attention(q, k, v, attn_bias, dropout_p=0.0)
+        x = _apply_mechanistic_hook(
+            self.mechanistic_hook,
+            site="head_z",
+            layer=self.mechanistic_layer,
+            tensor=x,
+            absolute_positions=offset[:, None] + torch.arange(T, device=x.device),
+        )
 
         x = rearrange(x, "b h t d -> b t (h d)")
         x = apply_weights_per_step(
@@ -652,6 +739,8 @@ class StreamingTransformerLayer(StreamingModule[_LayerState]):
         dtype=None,
     ):
         super().__init__()
+        self.mechanistic_hook: MechanisticHook | None = None
+        self.mechanistic_layer = -1
         factory_kwargs = {"device": device, "dtype": dtype}
         # Redefine self_attn to our streaming multi-head attention
         attn_kwargs: tp.Dict[str, tp.Any] = {
@@ -748,13 +837,11 @@ class StreamingTransformerLayer(StreamingModule[_LayerState]):
         device = next(iter(self.parameters())).device
         return _LayerState(batch_size, device, offset_cpu=0)
 
-    # feed forward block
-    def _ff_block(self, x: torch.Tensor) -> torch.Tensor:
+    def _ff_update(self, x: torch.Tensor) -> torch.Tensor:
         state = self._streaming_state
         offset = 0
         if state is not None:
             offset = state.offset_cpu
-        x_orig = x
         x = self.norm2(x)
         if self.gating is None:
             assert self.linear1 is not None
@@ -766,15 +853,25 @@ class StreamingTransformerLayer(StreamingModule[_LayerState]):
                 update = apply_weights_per_step(self.gating, self.weights_per_step_schedule, x, offset)
             else:
                 update = self.gating(x)
-        return x_orig.to(update) + self.layer_scale_2(update)
+        return self.layer_scale_2(update)
+
+    # feed forward block
+    def _ff_block(self, x: torch.Tensor) -> torch.Tensor:
+        update = self._ff_update(x)
+        return x.to(update) + update
+
+    def _sa_update(self, x: torch.Tensor) -> torch.Tensor:
+        if self.skip_self_attn:
+            return torch.zeros_like(x)
+        x = self.norm1(x)
+        update = self.self_attn(x, x, x)
+        return self.layer_scale_1(update)
 
     def _sa_block(self, x: torch.Tensor):
         if self.skip_self_attn:
             return x
-        x_orig = x
-        x = self.norm1(x)
-        update = self.self_attn(x, x, x)
-        return x_orig.to(update) + self.layer_scale_1(update)
+        update = self._sa_update(x)
+        return x.to(update) + update
 
     def _cross_attention_block(self, x: torch.Tensor,
                                cross_attention_src: torch.Tensor) -> torch.Tensor:
@@ -789,13 +886,31 @@ class StreamingTransformerLayer(StreamingModule[_LayerState]):
         with ExitStack() as stack:
             if x.device.type != 'cuda':
                 stack.enter_context(no_compile())
-            x = self._sa_block(x)
+            if self.mechanistic_hook is None:
+                x = self._sa_block(x)
+            else:
+                x = _apply_mechanistic_hook(
+                    self.mechanistic_hook, site="resid_pre", layer=self.mechanistic_layer, tensor=x)
+                attn_out = self._sa_update(x)
+                attn_out = _apply_mechanistic_hook(
+                    self.mechanistic_hook, site="attn_out", layer=self.mechanistic_layer, tensor=attn_out)
+                x = x.to(attn_out) + attn_out
+                x = _apply_mechanistic_hook(
+                    self.mechanistic_hook, site="resid_mid", layer=self.mechanistic_layer, tensor=x)
             if self.cross_attention is not None:
                 assert cross_attention_src is not None
                 x = self._cross_attention_block(x, cross_attention_src)
             else:
                 assert cross_attention_src is None
-            x = self._ff_block(x)
+            if self.mechanistic_hook is None:
+                x = self._ff_block(x)
+            else:
+                mlp_out = self._ff_update(x)
+                mlp_out = _apply_mechanistic_hook(
+                    self.mechanistic_hook, site="mlp_out", layer=self.mechanistic_layer, tensor=mlp_out)
+                x = x.to(mlp_out) + mlp_out
+                x = _apply_mechanistic_hook(
+                    self.mechanistic_hook, site="resid_post", layer=self.mechanistic_layer, tensor=x)
             state = self._streaming_state
             if state:
                 state.offset_cpu += x.shape[1]
@@ -868,9 +983,8 @@ class StreamingTransformer(StreamingModule[_TransformerState]):
         self.checkpointing = checkpointing
 
         self.layers = nn.ModuleList()
-        for _ in range(num_layers):
-            self.layers.append(
-                layer_class(
+        for layer_index in range(num_layers):
+            layer = layer_class(
                     d_model=d_model,
                     num_heads=num_heads,
                     dim_feedforward=dim_feedforward,
@@ -881,11 +995,29 @@ class StreamingTransformer(StreamingModule[_TransformerState]):
                     dtype=dtype,
                     **kwargs,
                 )
-            )
+            layer.mechanistic_layer = layer_index
+            if not layer.skip_self_attn:
+                layer.self_attn.mechanistic_layer = layer_index
+            if layer.cross_attention is not None:
+                layer.cross_attention.mechanistic_layer = layer_index
+            self.layers.append(layer)
             if quantize:
                 # Quantizing layers one by one to avoid taking too much space during init.
                 self.layers[-1].to(device=device, dtype=dtype)
                 replace_linear_with_qlinear(self.layers[-1])
+
+    def set_mechanistic_hook(self, hook: MechanisticHook | None) -> None:
+        """Install an eager-only hook on every main transformer layer.
+
+        Callers must disable torch compilation and CUDA graphs before model
+        construction. Passing ``None`` restores the production fast path.
+        """
+        for layer in self.layers:
+            layer.mechanistic_hook = hook
+            if not layer.skip_self_attn:
+                layer.self_attn.mechanistic_hook = hook
+            if layer.cross_attention is not None:
+                layer.cross_attention.mechanistic_hook = hook
 
     def _init_streaming_state(self, batch_size: int) -> _TransformerState:
         device = next(self.parameters()).device
@@ -910,7 +1042,7 @@ class StreamingTransformer(StreamingModule[_TransformerState]):
             x = x + self.positional_scale * pos_emb
 
         for layer in self.layers:
-            if self.checkpointing:
+            if self.checkpointing and layer.mechanistic_hook is None:
                 y = torch_checkpoint(
                     layer, x, *args, use_reentrant=False,
                     determinism_check='none',

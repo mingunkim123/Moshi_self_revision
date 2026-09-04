@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0.0",
+  "status": "candidate_list_locked_pending_independent_clean_recognition_screen",
+  "split_seed": 20260826,
+  "cities": [
+    {"value": "Boston", "eligible": false, "screen_status": "pending"},
+    {"value": "Seattle", "eligible": false, "screen_status": "pending"},
+    {"value": "Chicago", "eligible": false, "screen_status": "pending"},
+    {"value": "Denver", "eligible": false, "screen_status": "pending"}
+  ],
+  "design": {
+    "formal_scenario_clusters": 20,
+    "calibration_scenario_clusters": 10,
+    "scenario_sd": 0.15,
+    "target_power": 0.8,
+    "ordered_pairs_fully_crossed": true,
+    "minimum_speakers": 2,
+    "speaker_ids": ["mv_voice_1", "mv_voice_2"],
+    "conditions": ["clean_current", "repair_immediate", "repair_delayed_640"],
+    "screening_data_excluded_from_analysis": true
+  }
+}

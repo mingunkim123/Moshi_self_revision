@@ -19,7 +19,7 @@ from torch import nn
 
 from ..conditioners import ConditionFuser, ConditionProvider, ConditionTensors
 from ..modules.streaming import State, StreamingContainer, StreamingModule
-from ..modules.transformer import StreamingTransformer, create_norm_fn
+from ..modules.transformer import RingKVCache, StreamingTransformer, create_norm_fn
 from ..utils.compile import CUDAGraphed
 from ..utils.quantize import replace_linear_with_qlinear
 from ..utils.sampling import sample_token
@@ -44,6 +44,26 @@ class LMOutput:
     mask: torch.Tensor  # [B, K, T]
     text_logits: torch.Tensor  # [B, 1, T, text_card]
     text_mask: torch.Tensor  # [B, 1, T]
+
+
+@dataclass(frozen=True)
+class LMGenStepResult:
+    """Computed outputs and the independently selected feedback for one frame."""
+
+    output_tokens: torch.Tensor | None
+    transformer_out: torch.Tensor
+    text_logits: torch.Tensor
+    sampled_text: torch.Tensor
+    sampled_audio: torch.Tensor | None
+    feedback_text: torch.Tensor
+    feedback_audio: torch.Tensor | None
+
+
+@dataclass(frozen=True)
+class StreamingStateSnapshot:
+    """Tensor-deep snapshot of LMGen and LMModel streaming state."""
+
+    states: dict[str, dict[str, tp.Any]]
 
 
 class LMModel(StreamingContainer):
@@ -553,6 +573,50 @@ class _LMGenState(State):
         self.exit_stack.__exit__(exc_type, exc_value, traceback)
 
 
+def _snapshot_mutable(value: tp.Any) -> tp.Any:
+    if isinstance(value, torch.Tensor):
+        return ("tensor", value.clone())
+    if isinstance(value, RingKVCache):
+        return ("ring_kv", value.snapshot())
+    if isinstance(value, (str, int, float, bool, type(None), torch.dtype, torch.device)):
+        return ("scalar", value)
+    if isinstance(value, list):
+        return ("list", [_snapshot_mutable(item) for item in value])
+    if isinstance(value, tuple):
+        return ("tuple", tuple(_snapshot_mutable(item) for item in value))
+    if isinstance(value, dict):
+        return ("dict", {key: _snapshot_mutable(item) for key, item in value.items()})
+    return ("opaque", None)
+
+
+def _restore_mutable(current: tp.Any, snapshot: tp.Any) -> tp.Any:
+    kind, payload = snapshot
+    if kind == "tensor":
+        if not isinstance(current, torch.Tensor) or current.shape != payload.shape:
+            raise ValueError("streaming tensor snapshot shape mismatch")
+        current.copy_(payload)
+        return current
+    if kind == "ring_kv":
+        if not isinstance(current, RingKVCache):
+            raise ValueError("streaming RingKVCache snapshot type mismatch")
+        current.restore(payload)
+        return current
+    if kind == "scalar":
+        return payload
+    if kind in {"list", "tuple"}:
+        if not isinstance(current, (list, tuple)) or len(current) != len(payload):
+            raise ValueError("streaming sequence snapshot mismatch")
+        restored = [_restore_mutable(old, item) for old, item in zip(current, payload)]
+        return restored if kind == "list" else tuple(restored)
+    if kind == "dict":
+        if not isinstance(current, dict) or set(current) != set(payload):
+            raise ValueError("streaming mapping snapshot mismatch")
+        return {key: _restore_mutable(current[key], item) for key, item in payload.items()}
+    if kind == "opaque":
+        return current
+    raise ValueError(f"unknown streaming snapshot kind: {kind}")
+
+
 class LMGen(StreamingModule[_LMGenState]):
     def __init__(
         self,
@@ -597,6 +661,7 @@ class LMGen(StreamingModule[_LMGenState]):
         self.support_out_of_sync = support_out_of_sync
         self.cfg_is_masked_until = cfg_is_masked_until
         self.cfg_is_no_text = cfg_is_no_text
+        self._last_step_result: LMGenStepResult | None = None
         if self.cfg_coef != 1.:
             if not self.cfg_is_no_text and not self.cfg_is_masked_until:
                 assert self.lm_model.fuser is not None, "Model has no fuser, cannot do CFG."
@@ -665,9 +730,61 @@ class LMGen(StreamingModule[_LMGenState]):
         state.set_exec_mask_callback = _set_exec_mask_callback
         return state
 
+    def snapshot_streaming_state(self) -> StreamingStateSnapshot:
+        """Deep-clone every mutable tensor used by streaming generation."""
+        if self._streaming_state is None:
+            raise RuntimeError("snapshot_streaming_state requires an active streaming context")
+        states: dict[str, dict[str, tp.Any]] = {}
+        for owner, module in (("gen", self), ("lm", self.lm_model)):
+            for name, state in module.get_streaming_state().items():
+                if state is None:
+                    raise RuntimeError(f"missing streaming state for {owner}:{name}")
+                states[f"{owner}:{name}"] = {
+                    key: _snapshot_mutable(value) for key, value in vars(state).items()
+                }
+        return StreamingStateSnapshot(states)
+
+    def restore_streaming_state(self, snapshot: StreamingStateSnapshot) -> None:
+        """Restore a snapshot in-place so graph-visible buffers keep identity."""
+        if self._streaming_state is None:
+            raise RuntimeError("restore_streaming_state requires an active streaming context")
+        expected: set[str] = set()
+        for owner, module in (("gen", self), ("lm", self.lm_model)):
+            for name, state in module.get_streaming_state().items():
+                key = f"{owner}:{name}"
+                expected.add(key)
+                if key not in snapshot.states or state is None:
+                    raise ValueError(f"streaming snapshot is missing {key}")
+                fields = snapshot.states[key]
+                if set(fields) != set(vars(state)):
+                    raise ValueError(f"streaming snapshot fields differ for {key}")
+                for field_name, field_snapshot in fields.items():
+                    current = getattr(state, field_name)
+                    restored = _restore_mutable(current, field_snapshot)
+                    if restored is not current:
+                        setattr(state, field_name, restored)
+        extra = set(snapshot.states) - expected
+        if extra:
+            raise ValueError(f"streaming snapshot has unknown states: {sorted(extra)}")
+
+    def set_mechanistic_hook(self, hook) -> None:
+        """Install or clear the main-transformer mechanistic hook."""
+        self.lm_model.transformer.set_mechanistic_hook(hook)
+
+    def eager_forward_text(
+        self,
+        sequence: torch.Tensor,
+        condition_sum: torch.Tensor | None = None,
+        condition_cross: torch.Tensor | None = None,
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        """Gradient-enabled eager path used for full-sequence attribution."""
+        return self.lm_model.forward_text(sequence, condition_sum, condition_cross)
+
     @torch.no_grad()
     def _step(self, input_tokens: torch.Tensor,
-              depformer_replace_tokens: torch.Tensor | None = None
+              depformer_replace_tokens: torch.Tensor | None = None,
+              feedback_text_token: torch.Tensor | None = None,
+              feedback_audio_tokens: torch.Tensor | None = None,
               ) -> tuple[torch.Tensor, torch.Tensor] | None:
         state = self._streaming_state
         if state is None:
@@ -745,6 +862,7 @@ class LMGen(StreamingModule[_LMGenState]):
         text_token = text_token[:, 0, 0]  # shape is [B]
         if self.on_text_hook is not None:
             self.on_text_hook(text_token)
+        sampled_text = text_token
         if state.graphed_depth is None:
             audio_tokens = None
         else:
@@ -755,24 +873,48 @@ class LMGen(StreamingModule[_LMGenState]):
                 audio_tokens = depformer_replace_tokens.squeeze(-1)
             if self.on_audio_hook is not None:
                 self.on_audio_hook(audio_tokens)
+        sampled_audio = audio_tokens
+
+        if feedback_text_token is None:
+            feedback_text = sampled_text
+        else:
+            feedback_text = feedback_text_token.to(device=sampled_text.device, dtype=torch.long)
+            if feedback_text.shape == (B, 1):
+                feedback_text = feedback_text[:, 0]
+            if feedback_text.shape != (B,):
+                raise ValueError(f"feedback_text_token must have shape {(B,)} or {(B, 1)}")
+        if feedback_audio_tokens is None:
+            feedback_audio = sampled_audio
+        else:
+            if sampled_audio is None:
+                raise ValueError("audio feedback was provided but this model has no Depformer")
+            feedback_audio = feedback_audio_tokens.to(device=sampled_audio.device, dtype=torch.long)
+            if feedback_audio.shape == (*sampled_audio.shape, 1):
+                feedback_audio = feedback_audio.squeeze(-1)
+            if feedback_audio.shape != sampled_audio.shape:
+                raise ValueError(
+                    f"feedback_audio_tokens must have shape {tuple(sampled_audio.shape)}")
 
         state.offsets = torch.where(state.exec_mask, state.offsets + 1, state.offsets)
         state.offset_cpu += 1
         positions = (state.offsets % CT)[:, None, None]
         scatter_with_mask_(state.cache[:, :1], -1, positions,
-                           text_token[:, None, None], state.exec_mask[:, None, None])
-        if audio_tokens is not None:
-            audio_tokens = audio_tokens[:, :, None]
+                           feedback_text[:, None, None], state.exec_mask[:, None, None])
+        if feedback_audio is not None:
+            feedback_audio_3d = feedback_audio[:, :, None]
             scatter_with_mask_(
                 state.cache[:, 1 : lm_model.dep_q + 1, :],
                 -1,
-                positions.expand_as(audio_tokens),
-                audio_tokens,
+                positions.expand_as(feedback_audio_3d),
+                feedback_audio_3d,
                 state.exec_mask[:, None, None],
             )
 
         if not self.support_out_of_sync and state.offset_cpu <= self.max_delay:
             # When using out of sync exec, should not rely on this being None.
+            self._last_step_result = LMGenStepResult(
+                None, transformer_out, text_logits, sampled_text, sampled_audio,
+                feedback_text, feedback_audio)
             return None
         B = state.cache.shape[0]
         gen_delays_cuda = self.delays_cuda[: lm_model.dep_q + 1]
@@ -780,7 +922,28 @@ class LMGen(StreamingModule[_LMGenState]):
         out = state.cache.gather(dim=2, index=index)
         mask = (state.offsets <= self.max_delay) | ~state.exec_mask
         out[mask, :, :] = lm_model.ungenerated_token_id
+        self._last_step_result = LMGenStepResult(
+            out, transformer_out, text_logits, sampled_text, sampled_audio,
+            feedback_text, feedback_audio)
         return out, transformer_out
+
+    @torch.no_grad()
+    def step_open_loop(
+        self,
+        input_tokens: torch.Tensor,
+        *,
+        feedback_text_token: torch.Tensor,
+        feedback_audio_tokens: torch.Tensor | None = None,
+    ) -> LMGenStepResult:
+        """Advance one frame while keeping computed tokens out of feedback history."""
+        self._step(
+            input_tokens,
+            feedback_text_token=feedback_text_token,
+            feedback_audio_tokens=feedback_audio_tokens,
+        )
+        if self._last_step_result is None:  # pragma: no cover - defensive invariant.
+            raise RuntimeError("open-loop step did not produce details")
+        return self._last_step_result
 
     @torch.no_grad()
     def step(self, input_tokens: torch.Tensor,

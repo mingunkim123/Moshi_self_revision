@@ -527,6 +527,8 @@ mkdir -p "$MECH_ARTIFACT_ROOT/manifests"
     experiments/self_repair/dataset_v2/evaluation/provisional_eval_trials_seedpilot_b977391.jsonl \
   --prepared-manifest /workspace/provisional_prepared_stimuli.jsonl \
   --analysis-folds experiments/self_repair/dataset_v2/assignments/analysis_folds.jsonl \
+  --audio-root "$MECH_DATA_ROOT" \
+  --seeds 17 \
   --data-status exploratory_provisional \
   --output "$MECH_ARTIFACT_ROOT/manifests/mechanistic_trials.jsonl"
 ```
@@ -598,6 +600,7 @@ WAV hash를 key로 user-side 8-codebook tensor를 한 번 만들고 safetensors 
 .venv/bin/python \
   experiments/self_repair/mechanistic/scripts/encode_user_audio.py \
   --manifest "$MECH_ARTIFACT_ROOT/manifests/mechanistic_trials.jsonl" \
+  --input-artifact-root "$MECH_DATA_ROOT" \
   --output-root "$MECH_ARTIFACT_ROOT/encoded_user" \
   --output-manifest "$MECH_ARTIFACT_ROOT/encoded_user_manifest.jsonl" \
   --model-revision 2bfc9ae6e89079a5cc7ed2a68436010d91a3d289 \
@@ -1051,6 +1054,7 @@ scenario template 및 whole ordered pair를 격리해야 한다.
   experiments/self_repair/mechanistic/scripts/build_mech_manifest.py \
   --prepared-manifest /workspace/multivalue-controls/prepared_stimuli.jsonl \
   --role-manifest /workspace/multivalue-controls/role_manifest.jsonl \
+  --audio-root /workspace/multivalue-controls \
   --data-status reviewed_multivalue \
   --output "$MECH_ARTIFACT_ROOT/manifests/multivalue_trials.jsonl"
 
@@ -1067,6 +1071,7 @@ sha256sum /workspace/multivalue-controls/role_manifest.jsonl
 .venv/bin/python \
   experiments/self_repair/mechanistic/scripts/encode_user_audio.py \
   --manifest "$MECH_ARTIFACT_ROOT/manifests/multivalue_trials.jsonl" \
+  --input-artifact-root /workspace/multivalue-controls \
   --output-root "$MECH_ARTIFACT_ROOT/formal_confirmation/encoded_user" \
   --output-manifest \
     "$MECH_ARTIFACT_ROOT/formal_confirmation/encoded_user_manifest.jsonl" \

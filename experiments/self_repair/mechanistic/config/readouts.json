@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0.0",
+  "status": "verbalizers_frozen_tokens_bound_at_model_preflight",
+  "candidate_scoring": "mean_log_probability_per_token",
+  "candidate_branching": "restore_identical_query_snapshot_before_each_candidate",
+  "schedule_aggregation": "logmeanexp_over_all_preregistered_schedules",
+  "readouts": [
+    {"id": "root", "prefix": "The current destination is", "anchor": "query_end"},
+    {"id": "D1", "prefix": "The sightseeing city is", "anchor": "D1_end"},
+    {"id": "D2", "prefix": "The dining city is", "anchor": "D2_end"},
+    {"id": "D3", "prefix": "The hotel city is", "anchor": "D3_end"}
+  ],
+  "emission_schedules": [
+    {"id": "immediate", "prefix_start_offset_frames": 0, "pad_frames_between_tokens": 0},
+    {"id": "one_frame_pad", "prefix_start_offset_frames": 1, "pad_frames_between_tokens": 1}
+  ]
+}

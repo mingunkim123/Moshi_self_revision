@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://moshi.local/mechanistic/trial.schema.json",
+  "type": "object",
+  "required": ["schema_version", "trial_id", "data_status", "audio_uri", "audio_sha256", "old_value", "new_value"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "trial_id": {"type": "string", "minLength": 1},
+    "data_status": {"enum": ["exploratory_provisional", "reviewed_multivalue", "synthetic_fixture"]},
+    "audio_uri": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
+    "audio_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "old_value": {"type": "string"},
+    "new_value": {"type": "string"}
+  },
+  "additionalProperties": true
+}

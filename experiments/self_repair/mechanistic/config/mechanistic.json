@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0.0",
+  "experiment_id": "mechanistic-stale-binding-v1",
+  "model": {
+    "repo": "kyutai/moshiko-pytorch-bf16",
+    "revision": "2bfc9ae6e89079a5cc7ed2a68436010d91a3d289",
+    "dtype": "bfloat16",
+    "layers": 32,
+    "heads": 32,
+    "hidden_size": 4096,
+    "head_dim": 128,
+    "max_lm_delay": 1
+  },
+  "audio": {
+    "sample_rate": 24000,
+    "mimi_frame_samples": 1920,
+    "frame_ms": 80
+  },
+  "open_loop_policy": {
+    "primary": "zero_text_and_audio_tokens",
+    "text_feedback": "model_zero_token",
+    "audio_feedback": "model_zero_token",
+    "sampled_tokens_enter_feedback": false,
+    "sensitivities": [
+      "text_pad_plus_encoded_digital_silence",
+      "paired_frozen_natural_assistant_trace"
+    ]
+  },
+  "anchors": {
+    "primary": ["old_end", "cue_end", "new_end", "D1_end", "D2_end", "D3_end", "query_end"],
+    "sensitivity_offsets_frames": [-1, 1]
+  },
+  "manifest": {
+    "discovery_generation_seeds": [17],
+    "expected_v2_discovery_trials": 600
+  },
+  "statistics": {
+    "seed": 20260826,
+    "bootstrap_replicates": 10000,
+    "test": "two_sided_scenario_cluster",
+    "multiplicity": "holm_within_frozen_family",
+    "sesoi_nats_per_token": 0.1
+  },
+  "gates": {
+    "clean_sign_accuracy_min": 0.8,
+    "direction_sign_accuracy_min": 0.8,
+    "formal_scorable_fraction_min": 0.9,
+    "self_patch_abs_delta_max": 1e-05
+  },
+  "readouts": {
+    "config": "readouts.json",
+    "selection_policy": "clean_only_calibration_then_freeze"
+  }
+}

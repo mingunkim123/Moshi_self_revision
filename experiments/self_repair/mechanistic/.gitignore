@@ -1,0 +1,13 @@
+results/
+**/cells/
+**/*.wav
+**/*.mp3
+**/*.flac
+**/*.pt
+**/*.pth
+**/*.npy
+**/*.npz
+**/*.safetensors
+**/*blind_map*
+**/*private*
+!reports/.gitkeep
