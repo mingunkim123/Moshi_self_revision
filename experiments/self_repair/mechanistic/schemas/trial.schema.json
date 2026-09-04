@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://moshi.local/mechanistic/trial.schema.json",
   "type": "object",
-  "required": ["schema_version", "trial_id", "data_status", "audio_uri", "audio_sha256", "old_value", "new_value"],
+  "required": ["schema_version", "trial_id", "data_status", "audio_uri", "audio_sha256", "old_value", "new_value", "sample_rate", "sample_count", "frame_count"],
   "properties": {
     "schema_version": {"const": "1.0.0"},
     "trial_id": {"type": "string", "minLength": 1},
@@ -10,7 +10,64 @@
     "audio_uri": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
     "audio_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "old_value": {"type": "string"},
-    "new_value": {"type": "string"}
+    "new_value": {"type": "string"},
+    "sample_rate": {"const": 24000},
+    "sample_count": {"type": "integer", "minimum": 1920, "multipleOf": 1920},
+    "frame_count": {"type": "integer", "minimum": 1},
+    "input_stimulus": {"type": "object"},
+    "capture_contract": {"type": "object"},
+    "execution_contract": {"type": "object"},
+    "conversation_contract": {
+      "type": "object",
+      "required": [
+        "schema_version", "source", "trial_id", "startup_mode", "startup_status",
+        "required_startup_modes", "file_replay_startup", "assistant_output_origin_frame",
+        "sample_rate", "frame_samples", "prefix_silence_ms", "user_start_frame",
+        "query_end_ms", "query_end_frame", "user_end_frame", "user_frame_count",
+        "user_sample_count", "response_capture_ms", "response_capture_frames",
+        "tail_guard_frames", "target_end_frame_count", "target_end_sample_count",
+        "appended_zero_frame_count",
+        "source_capture_contract_sha256", "source_execution_contract_sha256"
+      ],
+      "properties": {
+        "schema_version": {"const": "1.0.0"},
+        "source": {
+          "enum": [
+            "dataset_v2_frozen_capture_contract",
+            "reviewed_multivalue_frozen_capture_contract"
+          ]
+        },
+        "trial_id": {"type": "string", "minLength": 1},
+        "startup_mode": {"const": "natural_model_start"},
+        "startup_status": {"const": "diagnostic_only_known_greeting_confound"},
+        "required_startup_modes": {
+          "const": ["common_handshake_then_request", "greeting_suppressed"]
+        },
+        "file_replay_startup": {"const": "prime_once_then_consume_first_mimi_frame"},
+        "assistant_output_origin_frame": {"const": 0},
+        "sample_rate": {"const": 24000},
+        "frame_samples": {"const": 1920},
+        "prefix_silence_ms": {"type": "number", "minimum": 0, "multipleOf": 80},
+        "user_start_frame": {"type": "integer", "minimum": 0},
+        "query_end_ms": {"type": "number", "exclusiveMinimum": 0},
+        "query_end_frame": {"type": "integer", "minimum": 1},
+        "user_end_frame": {"type": "integer", "minimum": 1},
+        "user_frame_count": {"type": "integer", "minimum": 1},
+        "user_sample_count": {"type": "integer", "minimum": 1920, "multipleOf": 1920},
+        "response_capture_ms": {"const": 40000},
+        "response_capture_frames": {"const": 500},
+        "tail_guard_frames": {"const": 25},
+        "target_end_frame_count": {"type": "integer", "minimum": 1},
+        "target_end_sample_count": {"type": "integer", "minimum": 1920, "multipleOf": 1920},
+        "appended_zero_frame_count": {"type": "integer", "minimum": 0},
+        "source_capture_contract_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "source_execution_contract_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      },
+      "additionalProperties": true
+    }
+  },
+  "dependentRequired": {
+    "conversation_contract": ["input_stimulus", "capture_contract", "execution_contract"]
   },
   "additionalProperties": true
 }

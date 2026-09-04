@@ -16,6 +16,44 @@
     "mimi_frame_samples": 1920,
     "frame_ms": 80
   },
+  "conversation": {
+    "required_modes": [
+      "common_handshake_then_request",
+      "greeting_suppressed"
+    ],
+    "legacy_fixed_start_mode": "natural_model_start",
+    "legacy_fixed_start_status": "diagnostic_only_known_greeting_confound",
+    "capture_from_stream_start": true,
+    "startup": {
+      "natural_max_ms": 12000,
+      "greeting_quiet_ms": 1600,
+      "post_greeting_gap_ms": 480,
+      "require_greeting": true
+    },
+    "response": {
+      "source_capture_contract_required": true,
+      "post_user_max_ms": 40000,
+      "minimum_post_user_ms": 4000,
+      "trailing_text_quiet_ms": 2000,
+      "tail_guard_ms": 2000,
+      "audio_activity": {
+        "version": "1.0.0",
+        "detector": "frame_rms_dbfs",
+        "frame_samples": 1920,
+        "threshold_dbfs": -45.0,
+        "calibration": "forced_silence_decode_max_must_remain_below_threshold",
+        "policy_sha256": "3d6389a42d452d4efa25ea7feb87bb4e82134bb6829356bd5e041ba55a8a289f"
+      },
+      "cap_activity_status": "unevaluable_truncated",
+      "no_lexical_status": "unevaluable_no_response"
+    },
+    "review": {
+      "primary_window": "query_end_to_first_complete_assistant_turn",
+      "save_full_stream": true,
+      "save_primary_only_blind_clip": true,
+      "opaque_arm_filenames": true
+    }
+  },
   "open_loop_policy": {
     "primary": "zero_text_and_audio_tokens",
     "text_feedback": "model_zero_token",
@@ -45,7 +83,11 @@
     "clean_sign_accuracy_min": 0.8,
     "direction_sign_accuracy_min": 0.8,
     "formal_scorable_fraction_min": 0.9,
-    "self_patch_abs_delta_max": 1e-05
+    "self_patch_abs_delta_max": 1e-05,
+    "gpu_canary_required_before_full_scan": true,
+    "conversation_canary_min_trials_per_mode": 4,
+    "conversation_canary_truncated_max": 0,
+    "conversation_canary_coverage_min": 1.0
   },
   "readouts": {
     "config": "readouts.json",

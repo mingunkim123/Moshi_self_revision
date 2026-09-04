@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.0.0",
+  "analysis_kind": "empirical_preregistered",
+  "alpha": 0.05,
+  "bootstrap_replicates": 10000,
+  "bootstrap_seed": 20260826,
+  "cluster_key": "scenario_id",
+  "hypotheses": [
+    {
+      "id": "internal_clean_current_vs_self_did",
+      "family": "primary",
+      "direction": "positive",
+      "sesoi": 0.1,
+      "terms": [
+        {"selector": {"role": "internal_validation", "donor_arm": "clean_current"}, "metric": "patched_M", "weight": 1.0},
+        {"selector": {"role": "internal_validation", "donor_arm": "clean_current"}, "metric": "baseline_M", "weight": -1.0},
+        {"selector": {"role": "internal_validation", "donor_arm": "self"}, "metric": "patched_M", "weight": -1.0},
+        {"selector": {"role": "internal_validation", "donor_arm": "self"}, "metric": "baseline_M", "weight": 1.0}
+      ]
+    },
+    {
+      "id": "internal_clean_current_vs_clean_stale_did",
+      "family": "specificity",
+      "direction": "positive",
+      "sesoi": 0.1,
+      "terms": [
+        {"selector": {"role": "internal_validation", "donor_arm": "clean_current"}, "metric": "patched_M", "weight": 1.0},
+        {"selector": {"role": "internal_validation", "donor_arm": "clean_current"}, "metric": "baseline_M", "weight": -1.0},
+        {"selector": {"role": "internal_validation", "donor_arm": "clean_stale"}, "metric": "patched_M", "weight": -1.0},
+        {"selector": {"role": "internal_validation", "donor_arm": "clean_stale"}, "metric": "baseline_M", "weight": 1.0}
+      ]
+    },
+    {
+      "id": "internal_clean_current_vs_same_value_random_did",
+      "family": "specificity",
+      "direction": "positive",
+      "sesoi": 0.1,
+      "terms": [
+        {"selector": {"role": "internal_validation", "donor_arm": "clean_current"}, "metric": "patched_M", "weight": 1.0},
+        {"selector": {"role": "internal_validation", "donor_arm": "clean_current"}, "metric": "baseline_M", "weight": -1.0},
+        {"selector": {"role": "internal_validation", "donor_arm": "same_value_random"}, "metric": "patched_M", "weight": -1.0},
+        {"selector": {"role": "internal_validation", "donor_arm": "same_value_random"}, "metric": "baseline_M", "weight": 1.0}
+      ]
+    },
+    {
+      "id": "internal_clean_current_vs_shuffled_did",
+      "family": "specificity",
+      "direction": "positive",
+      "sesoi": 0.1,
+      "terms": [
+        {"selector": {"role": "internal_validation", "donor_arm": "clean_current"}, "metric": "patched_M", "weight": 1.0},
+        {"selector": {"role": "internal_validation", "donor_arm": "clean_current"}, "metric": "baseline_M", "weight": -1.0},
+        {"selector": {"role": "internal_validation", "donor_arm": "shuffled"}, "metric": "patched_M", "weight": -1.0},
+        {"selector": {"role": "internal_validation", "donor_arm": "shuffled"}, "metric": "baseline_M", "weight": 1.0}
+      ]
+    }
+  ]
+}

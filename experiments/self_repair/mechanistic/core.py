@@ -185,9 +185,41 @@ def validate_runtime_environment(*, require_cuda: bool) -> dict[str, Any]:
 
 
 def frame_for_ms(milliseconds: int | float, *, frame_ms: int = FRAME_MS) -> int:
-    if milliseconds < 0:
+    if isinstance(milliseconds, bool) or isinstance(frame_ms, bool):
+        raise ContractError("anchor time and frame width must be numeric")
+    try:
+        time_ms = float(milliseconds)
+        width_ms = float(frame_ms)
+    except (TypeError, ValueError) as error:
+        raise ContractError("anchor time and frame width must be numeric") from error
+    if not math.isfinite(time_ms) or not math.isfinite(width_ms):
+        raise ContractError("anchor time and frame width must be finite")
+    if width_ms <= 0:
+        raise ContractError("frame width must be positive")
+    if time_ms < 0:
         raise ContractError("anchor time cannot be negative")
-    return int(round(float(milliseconds) / frame_ms))
+    # An event ending exactly on a frame boundary belongs to the preceding
+    # frame: [0, 80] -> 0, (80, 160] -> 1, and so on.
+    return int(math.ceil(time_ms / width_ms) - 1)
+
+
+def _user_delay_slots(consumed_audio_frame: int | None) -> list[dict[str, Any]]:
+    """Describe the frozen Moshiko user-codebook delays at one LM step."""
+    slots: list[dict[str, Any]] = []
+    for delay_slot, user_codebooks in ((0, [0]), (1, list(range(1, 8)))):
+        source_frame = (
+            None
+            if consumed_audio_frame is None or consumed_audio_frame < delay_slot
+            else consumed_audio_frame - delay_slot
+        )
+        slots.append({
+            "delay_slot": delay_slot,
+            "stream": "user_audio",
+            "user_codebooks": user_codebooks,
+            "source_audio_frame": source_frame,
+            "uses_initial_token": source_frame is None,
+        })
+    return slots
 
 
 def anchor_rows(
@@ -202,9 +234,9 @@ def anchor_rows(
         trial_id = str(trial.get("trial_id", trial.get("eval_trial_id", "")))
         stimulus_id = str(trial.get("prepared_stimulus_id", trial.get("stimulus_id", "")))
         source = prepared_by_id.get(stimulus_id, trial)
-        timing = source.get("prepared_timing", source.get("timing", {}))
+        timing = source.get("prepared_timing")
         if not isinstance(timing, Mapping):
-            raise ContractError(f"{trial_id}: missing timing object")
+            raise ContractError(f"{trial_id}: missing prepared_timing object")
         frame_count = int(source.get("mimi_frame_count", source.get("frame_count", 0)))
         if frame_count <= 0:
             samples = int(source.get("sample_count", source.get("prepared_sample_count", 0)))
@@ -215,11 +247,13 @@ def anchor_rows(
         if frame_count <= 0:
             raise ContractError(f"{trial_id}: cannot determine frame count")
         alignment = source.get("alignment", {})
-        unit_spans = timing.get(
-            "unit_spans",
-            source.get("unit_spans", alignment.get("unit_spans", []) if isinstance(alignment, Mapping) else []),
-        )
+        if not isinstance(alignment, Mapping):
+            raise ContractError(f"{trial_id}: alignment must be an object")
+        unit_spans = alignment.get("unit_spans", [])
+        if not isinstance(unit_spans, Sequence) or isinstance(unit_spans, (str, bytes)):
+            raise ContractError(f"{trial_id}: alignment.unit_spans must be an array")
         times: dict[str, int | float] = {}
+        timebases: dict[str, str] = {}
         aliases = {
             "old_end": ("old_value_offset_ms", "old_value_end_ms", "original_value_end_ms"),
             "cue_end": ("repair_cue_offset_ms", "repair_marker_end_ms", "cue_end_ms"),
@@ -230,30 +264,89 @@ def anchor_rows(
             for key in keys:
                 if key in timing and timing[key] is not None:
                     times[anchor] = timing[key]
+                    timebases[anchor] = "prepared_stream_relative"
                     break
-        if isinstance(unit_spans, Sequence):
-            for unit in unit_spans:
-                if not isinstance(unit, Mapping):
-                    continue
-                unit_id = str(unit.get("unit_id", ""))
-                if unit_id in {"D1", "D2", "D3"}:
-                    times[f"{unit_id}_end"] = unit.get("end_ms", unit.get("offset_ms"))
+        dependency_units = [
+            unit for unit in unit_spans
+            if isinstance(unit, Mapping) and str(unit.get("unit_id", "")) in {"D1", "D2", "D3"}
+        ]
+        if dependency_units:
+            preparation = source.get("preparation")
+            if not isinstance(preparation, Mapping):
+                raise ContractError(
+                    f"{trial_id}: preparation.prefix_ms_actual is required for alignment.unit_spans")
+            prefix_raw = preparation.get("prefix_ms_actual")
+            if isinstance(prefix_raw, bool):
+                raise ContractError(f"{trial_id}: invalid preparation.prefix_ms_actual")
+            try:
+                prefix_ms = float(prefix_raw)
+            except (TypeError, ValueError) as error:
+                raise ContractError(
+                    f"{trial_id}: invalid preparation.prefix_ms_actual") from error
+            if not math.isfinite(prefix_ms) or prefix_ms < 0:
+                raise ContractError(f"{trial_id}: invalid preparation.prefix_ms_actual")
+            for unit in dependency_units:
+                unit_id = str(unit["unit_id"])
+                offset_raw = unit.get("end_ms", unit.get("offset_ms"))
+                if isinstance(offset_raw, bool):
+                    raise ContractError(f"{trial_id}:{unit_id} has an invalid end offset")
+                try:
+                    offset_ms = float(offset_raw)
+                except (TypeError, ValueError) as error:
+                    raise ContractError(
+                        f"{trial_id}:{unit_id} has an invalid end offset") from error
+                if not math.isfinite(offset_ms) or offset_ms < 0:
+                    raise ContractError(f"{trial_id}:{unit_id} has an invalid end offset")
+                anchor = f"{unit_id}_end"
+                times[anchor] = offset_ms + prefix_ms
+                timebases[anchor] = "alignment_content_relative_plus_prefix"
         if "query_end" not in times:
-            times["query_end"] = (frame_count - 1) * FRAME_MS
+            times["query_end"] = frame_count * FRAME_MS
+            timebases["query_end"] = "encoded_stream_end"
         for name, milliseconds in sorted(times.items()):
             if milliseconds is None:
                 continue
-            frame = min(frame_count - 1, frame_for_ms(milliseconds))
+            frame = frame_for_ms(milliseconds)
             if frame < 0 or frame >= frame_count:
                 raise ContractError(f"{trial_id}:{name} is outside the encoded sequence")
             anchors.append({
                 "trial_id": trial_id, "anchor": name, "frame": frame,
-                "time_ms": float(milliseconds), "roundtrip_error_ms": abs(frame * FRAME_MS - float(milliseconds)),
-                "minus_one_frame": max(0, frame - 1), "plus_one_frame": min(frame_count - 1, frame + 1),
+                "time_ms": float(milliseconds),
+                "timebase": timebases[name],
+                "roundtrip_error_ms": abs((frame + 1) * FRAME_MS - float(milliseconds)),
+                "minus_one_frame": frame - 1 if frame > 0 else None,
+                "plus_one_frame": frame + 1 if frame + 1 < frame_count else None,
             })
+        trace.append({
+            "trial_id": trial_id,
+            "trace_kind": "lm_prime",
+            "frame": None,
+            "submitted_audio_frame": 0,
+            "consumed_audio_frame": None,
+            "start_ms": None,
+            "end_ms": None,
+            "lm_input_offset": 0,
+            "lm_step": 0,
+            "hidden_absolute_position": 0,
+            "max_lm_delay": 1,
+            "delay_slots": _user_delay_slots(None),
+        })
         for frame in range(frame_count):
-            trace.append({"trial_id": trial_id, "frame": frame, "start_ms": frame * FRAME_MS,
-                          "end_ms": (frame + 1) * FRAME_MS, "lm_input_offset": frame + 1})
+            lm_step = frame + 1
+            trace.append({
+                "trial_id": trial_id,
+                "trace_kind": "audio_frame",
+                "frame": frame,
+                "submitted_audio_frame": frame,
+                "consumed_audio_frame": frame,
+                "start_ms": frame * FRAME_MS,
+                "end_ms": (frame + 1) * FRAME_MS,
+                "lm_input_offset": lm_step,
+                "lm_step": lm_step,
+                "hidden_absolute_position": lm_step,
+                "max_lm_delay": 1,
+                "delay_slots": _user_delay_slots(frame),
+            })
     if not anchors or any(row["roundtrip_error_ms"] > FRAME_MS for row in anchors):
         raise ContractError("anchor map is empty or exceeds the 80 ms roundtrip tolerance")
     return anchors, trace
@@ -280,13 +373,35 @@ class AtomicCellStore:
     def __init__(self, root: Path):
         self.root = root
         self.cells = root / "cells"
+        self.failures = root / "failures"
         self.cells.mkdir(parents=True, exist_ok=True)
+        self.failures.mkdir(parents=True, exist_ok=True)
 
-    def record(self, cell: PatchCell, payload: Mapping[str, Any]) -> bool:
-        path = self.cells / f"{cell.cell_id}.json"
-        row = json.loads(canonical_json(
+    @staticmethod
+    def _row(cell: PatchCell, payload: Mapping[str, Any]) -> dict[str, Any]:
+        status = payload.get("status")
+        if status not in {"completed", "failed"}:
+            raise ContractError("atomic patch payload status must be completed or failed")
+        return json.loads(canonical_json(
             {"schema_version": "1.0.0", "cell_id": cell.cell_id, **asdict(cell), **dict(payload)}
         ))
+
+    def record(self, cell: PatchCell, payload: Mapping[str, Any]) -> bool:
+        row = self._row(cell, payload)
+        if row["status"] == "failed":
+            if self.get(cell) is not None:
+                raise ContractError(f"cannot append a failed attempt after completion: {cell.cell_id}")
+            failure_id = sha256_value(row)
+            path = self.failures / f"{cell.cell_id}.{failure_id}.json"
+            row["failure_id"] = failure_id
+            if path.exists():
+                if read_json(path) != row:
+                    raise ContractError(f"conflicting failed patch attempt: {failure_id}")
+                return False
+            write_json(path, row)
+            return True
+
+        path = self.cells / f"{cell.cell_id}.json"
         if path.exists():
             existing = read_json(path)
             if existing != row:
@@ -295,15 +410,90 @@ class AtomicCellStore:
         write_json(path, row)
         return True
 
+    def get(self, cell: PatchCell) -> dict[str, Any] | None:
+        """Read and verify a committed cell before doing any replay work.
+
+        The filename alone is not trusted for resume: every canonical identity
+        field inside the atomically written row must still match ``cell``.
+        """
+        path = self.cells / f"{cell.cell_id}.json"
+        if not path.exists():
+            return None
+        row = read_json(path)
+        if row.get("cell_id") != cell.cell_id:
+            raise ContractError(f"stored patch cell ID mismatch: {path}")
+        for key, expected in asdict(cell).items():
+            observed = row.get(key)
+            if key in {"source_frames", "target_frames"} and isinstance(observed, list):
+                observed = tuple(observed)
+            if observed != expected:
+                raise ContractError(
+                    f"stored patch cell identity mismatch for {key}: {cell.cell_id}")
+        return row
+
+    def contains(self, cell: PatchCell) -> bool:
+        """Return true only for a successfully completed, identity-verified cell.
+
+        Failed attempts live in a separate append-only directory.  They remain
+        auditable but do not make ``--resume`` skip the cell, so the same
+        immutable identity can be retried after an OOM or transient failure.
+        """
+        return self.get(cell) is not None
+
+    @staticmethod
+    def _verify_row_identity(row: Mapping[str, Any], path: Path) -> None:
+        identity_fields = {
+            name: row.get(name) for name in PatchCell.__dataclass_fields__
+        }
+        try:
+            reconstructed = PatchCell(**identity_fields)
+        except (TypeError, ValueError) as error:
+            raise ContractError(f"malformed patch identity in {path}") from error
+        if reconstructed.cell_id != row.get("cell_id"):
+            raise ContractError(f"stored patch cell ID mismatch: {path}")
+
     def rows(self) -> list[dict[str, Any]]:
         rows = [read_json(path) for path in sorted(self.cells.glob("*.json"))]
+        for path, row in zip(sorted(self.cells.glob("*.json")), rows):
+            self._verify_row_identity(row, path)
         ids = [row["cell_id"] for row in rows]
         if len(ids) != len(set(ids)):
             raise ContractError("duplicate patch cell identity")
         return rows
 
+    def failure_rows(self) -> list[dict[str, Any]]:
+        rows: list[dict[str, Any]] = []
+        for path in sorted(self.failures.glob("*.json")):
+            row = read_json(path)
+            self._verify_row_identity(row, path)
+            expected_failure_id = sha256_value({
+                key: value for key, value in row.items() if key != "failure_id"
+            })
+            if row.get("failure_id") != expected_failure_id:
+                raise ContractError(f"stored failure ID mismatch: {path}")
+            rows.append(row)
+        return rows
+
     def merge(self, output: Path) -> list[dict[str, Any]]:
-        rows = self.rows()
+        completed = self.rows()
+        completed_ids = {row["cell_id"] for row in completed}
+        unresolved: dict[str, dict[str, Any]] = {}
+        for row in self.failure_rows():
+            if row["cell_id"] in completed_ids:
+                continue
+            existing = unresolved.get(row["cell_id"])
+            rank = (int(row.get("attempt_index", 0)), str(row.get("failure_id", "")))
+            existing_rank = (
+                int(existing.get("attempt_index", 0)), str(existing.get("failure_id", ""))
+            ) if existing is not None else (-1, "")
+            if rank > existing_rank:
+                unresolved[row["cell_id"]] = row
+        rows = sorted([*completed, *unresolved.values()], key=lambda row: row["cell_id"])
+        write_jsonl(output, rows)
+        return rows
+
+    def merge_failures(self, output: Path) -> list[dict[str, Any]]:
+        rows = self.failure_rows()
         write_jsonl(output, rows)
         return rows
 
@@ -371,19 +561,167 @@ def apply_probe(model: Mapping[str, Any], features: np.ndarray) -> list[str]:
     return classes[np.argmax(design @ weights, axis=1)].tolist()
 
 
-def freeze_selection(rows: Sequence[Mapping[str, Any]], config_hash: str) -> dict[str, Any]:
-    eligible = [row for row in rows if row.get("status") == "completed" and math.isfinite(float(row.get("delta_M", math.nan)))]
+def freeze_selection(
+    rows: Sequence[Mapping[str, Any]], config_hash: str,
+    components: Sequence[str] | None = None,
+) -> dict[str, Any]:
+    config_hash = validate_sha256(config_hash, "config hash")
+    eligible_components: list[str] | None = None
+    if components is not None:
+        if isinstance(components, (str, bytes)):
+            raise ContractError("eligible components must be a sequence")
+        eligible_components = []
+        for component in components:
+            if not isinstance(component, str) or not component or component != component.strip():
+                raise ContractError("eligible components must be non-empty, trimmed strings")
+            eligible_components.append(component)
+        if not eligible_components or len(eligible_components) != len(set(eligible_components)):
+            raise ContractError("eligible components must be non-empty and unique")
+    eligible: list[dict[str, Any]] = []
+    seen_cells: set[str] = set()
+    for source in rows:
+        if source.get("status") != "completed" or source.get("relation") != "clean_current":
+            continue
+        try:
+            effect = float(source.get("delta_M", math.nan))
+        except (TypeError, ValueError):
+            continue
+        if not math.isfinite(effect):
+            continue
+        row = dict(source)
+        cell_id = row.get("cell_id")
+        scenario_id = row.get("scenario_id")
+        component = row.get("component")
+        anchor = row.get("anchor")
+        layer = row.get("layer")
+        head = row.get("head")
+        if not isinstance(cell_id, str) or not cell_id:
+            raise ContractError("canonical discovery cell has no cell_id")
+        if cell_id in seen_cells:
+            raise ContractError(f"duplicate canonical discovery cell: {cell_id}")
+        seen_cells.add(cell_id)
+        if not isinstance(scenario_id, str) or not scenario_id:
+            raise ContractError(f"{cell_id}: canonical discovery cell has no scenario_id")
+        if not isinstance(component, str) or not component:
+            raise ContractError(f"{cell_id}: canonical discovery cell has no component")
+        if eligible_components is not None and component not in eligible_components:
+            continue
+        if not isinstance(anchor, str) or not anchor:
+            raise ContractError(f"{cell_id}: canonical discovery cell has no anchor")
+        if isinstance(layer, bool) or not isinstance(layer, int) or layer < 0:
+            raise ContractError(f"{cell_id}: canonical discovery cell has an invalid layer")
+        if head is not None and (isinstance(head, bool) or not isinstance(head, int) or head < 0):
+            raise ContractError(f"{cell_id}: canonical discovery cell has an invalid head")
+        readout_sha256 = validate_sha256(
+            str(row.get("readout_sha256", "")), f"{cell_id} discovery readout hash")
+        provenance = row.get("provenance")
+        if provenance is not None:
+            if not isinstance(provenance, Mapping):
+                raise ContractError(f"{cell_id}: discovery provenance must be an object")
+            provenance_config = provenance.get("config_sha256")
+            if provenance_config is not None and provenance_config != config_hash:
+                raise ContractError(f"{cell_id}: discovery provenance targets a different config")
+        path = row.get("path")
+        if component == "path" and not isinstance(path, Mapping):
+            raise ContractError("selected path cell has no explicit writer/mediator specification")
+        row["_selection_effect"] = effect
+        row["_selection_readout_sha256"] = readout_sha256
+        eligible.append(row)
     if not eligible:
-        raise ContractError("no completed finite discovery cells can be frozen")
-    eligible.sort(key=lambda row: (-abs(float(row["delta_M"])), str(row.get("cell_id", ""))))
-    winner = eligible[0]
+        raise ContractError(
+            "no completed finite canonical clean_current discovery cells can be frozen")
+
+    grouped: dict[str, dict[str, Any]] = {}
+    for row in eligible:
+        identity: dict[str, Any] = {
+            "component": row["component"],
+            "layer": row["layer"],
+            "head": row.get("head"),
+            "anchor": row["anchor"],
+            "relation": "clean_current",
+            "readout_sha256": row["_selection_readout_sha256"],
+        }
+        if row["component"] == "path":
+            identity["path"] = dict(row["path"])
+        key = canonical_json(identity)
+        group = grouped.setdefault(key, {"identity": identity, "rows": []})
+        group["rows"].append(row)
+
+    ranked: list[dict[str, Any]] = []
+    for group in grouped.values():
+        scenario_effects: dict[str, list[float]] = {}
+        for row in group["rows"]:
+            scenario_effects.setdefault(str(row["scenario_id"]), []).append(
+                float(row["_selection_effect"]))
+        scenario_means = [
+            {
+                "scenario_id": scenario_id,
+                "cell_count": len(effects),
+                "mean_delta_M": float(sum(effects) / len(effects)),
+            }
+            for scenario_id, effects in sorted(scenario_effects.items())
+        ]
+        aggregate = float(
+            sum(row["mean_delta_M"] for row in scenario_means) / len(scenario_means))
+        identity_sha = sha256_value(group["identity"])
+        ranked.append({
+            **group,
+            "scenario_means": scenario_means,
+            "aggregate_delta_M": aggregate,
+            "identity_sha256": identity_sha,
+        })
+    ranked.sort(key=lambda group: (
+        -abs(float(group["aggregate_delta_M"])), str(group["identity_sha256"])
+    ))
+    winner = ranked[0]
+    identity = winner["identity"]
+    source_rows = winner["rows"]
+    source_cell_ids = sorted(str(row["cell_id"]) for row in source_rows)
+    source_provenance_by_json: dict[str, dict[str, Any]] = {}
+    for row in source_rows:
+        provenance = row.get("provenance")
+        if isinstance(provenance, Mapping):
+            normalized = dict(provenance)
+            source_provenance_by_json[canonical_json(normalized)] = normalized
+    source_provenance = [
+        source_provenance_by_json[key] for key in sorted(source_provenance_by_json)
+    ]
     selection = {
         "schema_version": "1.0.0", "status": "frozen_discovery_selection",
-        "config_sha256": validate_sha256(config_hash, "config hash"),
-        "component": winner["component"], "layer": winner["layer"], "head": winner.get("head"),
-        "anchor": winner.get("anchor", "query_end"), "direction": "target_minus_stale",
-        "selection_source_cell_id": winner["cell_id"],
+        "config_sha256": config_hash,
+        "component": identity["component"], "layer": identity["layer"],
+        "head": identity["head"], "anchor": identity["anchor"],
+        "direction": "target_minus_stale",
+        "donor_arm": "clean_current", "relation": "clean_current",
+        "readout_sha256": identity["readout_sha256"],
+        # Keep the legacy singular trace as a deterministic representative,
+        # while the ranking itself is based on every cell listed below.
+        "selection_source_cell_id": source_cell_ids[0],
+        "selection_source_cell_ids": source_cell_ids,
+        "selection_source_cell_count": len(source_cell_ids),
+        "selection_source_scenario_count": len(winner["scenario_means"]),
+        "selection_scenario_means": winner["scenario_means"],
+        "selection_aggregate_delta_M": winner["aggregate_delta_M"],
+        "selection_eligibility_policy": {
+            "version": "1.0.0",
+            "required_relation": "clean_current",
+            "eligible_components": eligible_components,
+            "aggregation": "mean_within_scenario_then_mean_across_scenarios",
+            "ranking": "absolute_aggregate_delta_M",
+            "tie_break": "identity_sha256",
+        },
+        "selection_ranking_policy": (
+            "absolute_scenario_balanced_mean_delta_M_then_identity_sha256_v1"),
+        "selection_source_aggregate_sha256": sha256_value({
+            "identity": identity,
+            "cell_ids": source_cell_ids,
+            "scenario_means": winner["scenario_means"],
+        }),
+        "selection_source_provenance": source_provenance,
+        "selection_source_provenance_sha256": sha256_value(source_provenance),
     }
+    if identity["component"] == "path":
+        selection["path"] = dict(identity["path"])
     selection["selection_sha256"] = sha256_value(selection)
     return selection
 
@@ -391,30 +729,78 @@ def freeze_selection(rows: Sequence[Mapping[str, Any]], config_hash: str) -> dic
 def safe_public_member(relative: str) -> bool:
     relative = require_relative_uri(relative)
     suffix = Path(relative).suffix.lower()
-    if suffix in {".wav", ".mp3", ".flac", ".pt", ".pth", ".safetensors", ".npy", ".npz"}:
+    public_text_suffixes = {
+        ".json", ".jsonl", ".csv", ".md", ".txt", ".svg", ".yaml", ".yml",
+        ".toml", ".log", ".xml", ".html", ".sha256",
+    }
+    # The public package is intentionally an allowlist of inspectable text
+    # formats. Unknown/binary formats stay private even if their filename does
+    # not reveal that they hold tensors or model state.
+    if suffix not in public_text_suffixes:
+        return False
+    if suffix in {
+        ".wav", ".wave", ".mp3", ".flac", ".ogg", ".opus", ".m4a", ".aac",
+        ".pcm", ".aiff", ".aif", ".wma",
+        ".pt", ".pth", ".safetensors", ".npy", ".npz", ".bin", ".ckpt",
+        ".onnx", ".pkl", ".pickle", ".joblib",
+    }:
         return False
     lowered = relative.lower()
-    return not any(term in lowered for term in ("blind_map", "credential", "private", "token"))
+    parts = tuple(part.lower() for part in PurePosixPath(relative).parts)
+    forbidden_parts = {
+        "audio", "wav", "activations", "activation_tensors", "tensors",
+        "model_cache", "model-cache", "checkpoints", "private", "credentials",
+    }
+    if any(part in forbidden_parts for part in parts):
+        return False
+    # The full artifact manifest inventories private filenames and hashes.  It
+    # belongs in the private archive; the package checksum sidecar separately
+    # authenticates both result archives.
+    if relative == "artifact_sha256.json":
+        return False
+    return not any(term in lowered for term in (
+        "blind_map", "credential", "private", "token", "api_key", ".env",
+    ))
+
+
+_SENSITIVE_TEXT_PATTERNS = (
+    r"\b(?:sk|hf)_[A-Za-z0-9_-]{16,}\b",
+    r'(?i)"(?:api[_-]?key|access[_-]?token|token|secret|password)"\s*:\s*"(?!null|redacted)[^"]+"',
+    # URLs are excluded by the negative lookbehind.  A public report should
+    # not carry host-specific Unix or Windows filesystem paths.
+    r'(?<![A-Za-z0-9:/<])/(?![/<])[^\s"<>]+',
+    r'(?i)(?<![A-Za-z0-9])[A-Z]:\\(?:[^\s"<>\\]+\\)+[^\s"<>]+',
+)
+
+
+def contains_sensitive_content(content: str) -> bool:
+    return any(re.search(pattern, content) for pattern in _SENSITIVE_TEXT_PATTERNS)
 
 
 def contains_sensitive_text(path: Path) -> bool:
-    if path.suffix.lower() not in {".json", ".jsonl", ".csv", ".md", ".txt", ".svg"}:
+    if path.suffix.lower() not in {
+        ".json", ".jsonl", ".csv", ".md", ".txt", ".svg", ".yaml", ".yml",
+        ".toml", ".log", ".xml", ".html", ".sha256",
+    }:
         return False
     try:
         text = path.read_text(encoding="utf-8")
     except UnicodeDecodeError:
         return True
-    patterns = (
-        r"\b(?:sk|hf)_[A-Za-z0-9_-]{16,}\b",
-        r'(?i)"(?:api[_-]?key|access[_-]?token|secret)"\s*:\s*"(?!null|redacted)[^"]+"',
-        r'/(?:Users|home|workspace|root)/[^\s"<]+',
-    )
-    return any(re.search(pattern, text) for pattern in patterns)
+    return contains_sensitive_content(text)
 
 
 def package_tree(run_root: Path, public_output: Path, private_output: Path) -> dict[str, str]:
     if public_output.resolve() == private_output.resolve():
         raise ContractError("public and private archives must differ")
+    resolved_root = run_root.resolve()
+    for destination in (public_output, private_output):
+        try:
+            destination.resolve().relative_to(resolved_root)
+        except ValueError:
+            pass
+        else:
+            raise ContractError("result archives must be written outside run_root")
     public: list[Path] = []
     private: list[Path] = []
     for path in sorted(run_root.rglob("*")):
@@ -424,24 +810,76 @@ def package_tree(run_root: Path, public_output: Path, private_output: Path) -> d
         is_public = (safe_public_member(relative) and path.stat().st_size <= 10 * 1024 * 1024
                      and not contains_sensitive_text(path))
         (public if is_public else private).append(path)
+    # Gzip can be incompressible and tar creation briefly needs a complete second
+    # copy.  Refuse to start when the destination volume cannot hold the raw
+    # member bytes plus a fixed safety reserve.  This is intentionally checked
+    # before either archive is opened, so a nearly full RunPod volume is left
+    # untouched rather than with a misleading partial package.
+    required_by_device: dict[int, int] = {}
     for destination, members in ((public_output, public), (private_output, private)):
         destination.parent.mkdir(parents=True, exist_ok=True)
-        with tarfile.open(destination, "w:gz") as archive:
-            for member in members:
-                archive.add(member, arcname=member.relative_to(run_root).as_posix(), recursive=False)
+        device = destination.parent.stat().st_dev
+        required_by_device[device] = required_by_device.get(device, 0) + sum(
+            member.stat().st_size for member in members
+        )
+    for destination in (public_output, private_output):
+        device = destination.parent.stat().st_dev
+        if destination != public_output and public_output.parent.stat().st_dev == device:
+            continue
+        stats = os.statvfs(destination.parent)
+        available = int(stats.f_bavail) * int(stats.f_frsize)
+        required = required_by_device[device] + 64 * 1024 * 1024
+        if available < required:
+            raise ContractError(
+                f"insufficient free space for atomic result packaging: {available} < {required} bytes"
+            )
+    for destination, members in ((public_output, public), (private_output, private)):
+        descriptor, temporary_name = tempfile.mkstemp(
+            prefix=f".{destination.name}.", suffix=".tmp", dir=destination.parent
+        )
+        os.close(descriptor)
+        temporary = Path(temporary_name)
+        try:
+            with tarfile.open(temporary, "w:gz") as archive:
+                for member in members:
+                    archive.add(member, arcname=member.relative_to(run_root).as_posix(), recursive=False)
+            os.replace(temporary, destination)
+        except BaseException:
+            temporary.unlink(missing_ok=True)
+            raise
     return {"public_sha256": sha256_file(public_output), "private_sha256": sha256_file(private_output)}
 
 
 def verify_archive(path: Path, *, public: bool) -> None:
-    with tarfile.open(path, "r:gz") as archive:
-        names: set[str] = set()
-        for member in archive.getmembers():
-            name = require_relative_uri(member.name)
-            if name in names or not member.isfile():
-                raise ContractError(f"archive contains duplicate or non-file member: {name}")
-            if public and not safe_public_member(name):
-                raise ContractError(f"private artifact leaked into public archive: {name}")
-            names.add(name)
+    try:
+        with tarfile.open(path, "r:gz") as archive:
+            names: set[str] = set()
+            for member in archive.getmembers():
+                name = require_relative_uri(member.name)
+                if name in names or not member.isfile():
+                    raise ContractError(f"archive contains duplicate or non-file member: {name}")
+                if public and not safe_public_member(name):
+                    raise ContractError(f"private artifact leaked into public archive: {name}")
+                if public and member.size > 10 * 1024 * 1024:
+                    raise ContractError(f"oversized artifact leaked into public archive: {name}")
+                if public and Path(name).suffix.lower() in {
+                    ".json", ".jsonl", ".csv", ".md", ".txt", ".svg", ".yaml",
+                    ".yml", ".toml", ".log", ".xml", ".html", ".sha256",
+                }:
+                    handle = archive.extractfile(member)
+                    if handle is None:
+                        raise ContractError(f"cannot inspect public archive member: {name}")
+                    try:
+                        content = handle.read().decode("utf-8")
+                    except UnicodeDecodeError as error:
+                        raise ContractError(f"public text artifact is not UTF-8: {name}") from error
+                    if contains_sensitive_content(content):
+                        raise ContractError(f"sensitive content leaked into public archive: {name}")
+                names.add(name)
+    except ContractError:
+        raise
+    except (OSError, tarfile.TarError) as error:
+        raise ContractError(f"cannot verify result archive {path}: {error}") from error
 
 
 def deterministic_derangement(values: Sequence[str], seed: int) -> dict[str, str]:

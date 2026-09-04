@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://moshi.local/mechanistic/paid-scan-authorization.schema.json",
+  "type": "object",
+  "required": [
+    "schema_version", "artifact_type", "decision", "target_binding",
+    "target_binding_sha256", "evidence", "evidence_sha256", "assessment",
+    "assessment_sha256", "authorization_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "artifact_type": {"const": "mechanistic_paid_scan_authorization"},
+    "decision": {"enum": ["GO", "NO_GO"]},
+    "target_binding": {
+      "type": "object",
+      "required": [
+        "code_commit", "code_sha256", "model_repo", "model_revision", "model_sha256",
+        "manifest_sha256", "data_sha256", "encoded_manifest_sha256", "config_sha256",
+        "scan_spec_sha256"
+      ],
+      "properties": {
+        "code_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "code_sha256": {"$ref": "#/$defs/sha256"},
+        "model_repo": {"type": "string", "minLength": 1},
+        "model_revision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "model_sha256": {"$ref": "#/$defs/sha256"},
+        "manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "data_sha256": {"$ref": "#/$defs/sha256"},
+        "encoded_manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "config_sha256": {"$ref": "#/$defs/sha256"},
+        "scan_spec_sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "additionalProperties": false
+    },
+    "target_binding_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "evidence": {"type": "object"},
+    "evidence_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "assessment": {"type": "object"},
+    "assessment_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "authorization_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

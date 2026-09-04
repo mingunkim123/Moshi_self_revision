@@ -1,0 +1,8 @@
+{
+  "max_cells": 10000,
+  "max_cells_per_recipient": 2048,
+  "max_generated_audio_hours": 100.0,
+  "max_generation_runs": 5000,
+  "max_model_frames": 50000000,
+  "max_storage_bytes": 107374182400
+}

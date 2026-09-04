@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "paid-scan-spec.schema.json",
+  "title": "Frozen paid mechanistic scan specification",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "artifact_type",
+    "trial_selector",
+    "recipient_selector",
+    "scans",
+    "execution",
+    "storage",
+    "frozen_dimensions",
+    "provenance",
+    "declared_workload",
+    "declared_workload_sha256",
+    "scan_spec_identity_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "artifact_type": {"const": "frozen_paid_scan_spec"},
+    "trial_selector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["roles"],
+      "properties": {"roles": {"$ref": "#/$defs/nonEmptyUniqueStrings"}}
+    },
+    "recipient_selector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["exclude_clean"],
+      "properties": {"exclude_clean": {"const": true}}
+    },
+    "scans": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name", "layers", "anchors", "donor_arms", "components",
+          "full_replays_per_cell", "readout_steps_per_cell", "expected_cell_count"
+        ],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "layers": {"$ref": "#/$defs/nonEmptyUniqueIntegers"},
+          "anchors": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
+          "donor_arms": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
+          "components": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "oneOf": [
+                {"type": "string", "minLength": 1},
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["name", "heads"],
+                  "properties": {
+                    "name": {"enum": ["head_z", "k_only", "v_only", "kv"]},
+                    "heads": {"$ref": "#/$defs/nonEmptyUniqueIntegers"}
+                  }
+                }
+              ]
+            }
+          },
+          "full_replays_per_cell": {"type": "integer", "minimum": 0},
+          "readout_steps_per_cell": {"type": "integer", "minimum": 0},
+          "expected_cell_count": {"type": "integer", "minimum": 1}
+        }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind", "role", "layers", "anchors", "donors", "controls",
+        "components", "limit_scenarios", "selection_sha256"
+      ],
+      "properties": {
+        "kind": {"enum": ["residual", "component", "kv", "path"]},
+        "role": {"type": "string", "minLength": 1},
+        "layers": {"$ref": "#/$defs/nonEmptyUniqueIntegers"},
+        "anchors": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
+        "donors": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
+        "controls": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
+        "components": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
+        "limit_scenarios": {"type": ["integer", "null"], "minimum": 1},
+        "selection_sha256": {
+          "anyOf": [
+            {"$ref": "#/$defs/sha256"},
+            {"type": "null"}
+          ]
+        }
+      }
+    },
+    "generation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "trial_selector", "seeds", "branches", "startup_modes",
+        "response_capture_ms", "expected_generation_count"
+      ],
+      "properties": {
+        "trial_selector": {"type": "object"},
+        "seeds": {"$ref": "#/$defs/nonEmptyUniqueIntegers"},
+        "branches": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
+        "startup_modes": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
+        "response_capture_ms": {"type": "number", "minimum": 0},
+        "expected_generation_count": {"type": "integer", "minimum": 0}
+      }
+    },
+    "storage": {"type": "object"},
+    "frozen_dimensions": {"type": "object"},
+    "provenance": {"type": "object"},
+    "declared_workload": {"type": "object"},
+    "declared_workload_sha256": {"$ref": "#/$defs/sha256"},
+    "scan_spec_identity_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "nonEmptyUniqueStrings": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "nonEmptyUniqueIntegers": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "integer", "minimum": 0}
+    }
+  }
+}

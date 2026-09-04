@@ -1,14 +1,108 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://moshi.local/mechanistic/patch-result.schema.json",
+  "title": "Atomic mechanistic causal patch result",
   "type": "object",
-  "required": ["schema_version", "cell_id", "run_identity_sha256", "donor_trial_id", "recipient_trial_id", "component", "layer", "status"],
+  "required": [
+    "schema_version", "cell_id", "run_identity_sha256", "donor_trial_id",
+    "recipient_trial_id", "component", "layer", "head", "source_frames",
+    "target_frames", "readout_sha256", "status", "donor_arm", "relation",
+    "anchor", "source_frame", "target_frame", "query_end_frame_exclusive", "attempt_index",
+    "role", "scenario_id", "synthetic", "donor_assignment", "provenance"
+  ],
   "properties": {
     "schema_version": {"const": "1.0.0"},
-    "cell_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-    "run_identity_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "cell_id": {"$ref": "#/$defs/sha256"},
+    "run_identity_sha256": {"$ref": "#/$defs/sha256"},
+    "donor_trial_id": {"type": "string", "minLength": 1},
+    "recipient_trial_id": {"type": "string", "minLength": 1},
+    "component": {"enum": ["resid_post", "attn_out", "mlp_out", "head_z", "k_only", "v_only", "kv", "path"]},
+    "layer": {"type": "integer", "minimum": 0},
+    "head": {"type": ["integer", "null"], "minimum": 0},
+    "source_frames": {"type": "array", "minItems": 1, "items": {"type": "integer", "minimum": 0}},
+    "target_frames": {"type": "array", "minItems": 1, "items": {"type": "integer", "minimum": 0}},
+    "readout_sha256": {"$ref": "#/$defs/sha256"},
     "status": {"enum": ["completed", "failed"]},
-    "delta_M": {"type": "number"}
+    "donor_arm": {"enum": ["self", "clean_current", "current", "clean_stale", "wrong", "same_value_random", "shuffled"]},
+    "relation": {"enum": ["self", "clean_current", "clean_stale", "same_value_random", "shuffled"]},
+    "anchor": {"type": "string", "minLength": 1},
+    "source_frame": {"type": "integer", "minimum": 0},
+    "target_frame": {"type": "integer", "minimum": 0},
+    "query_end_frame_exclusive": {"type": "integer", "minimum": 1},
+    "attempt_index": {"type": "integer", "minimum": 1},
+    "role": {"type": "string", "minLength": 1},
+    "scenario_id": {"type": "string", "minLength": 1},
+    "synthetic": {"type": "boolean"},
+    "baseline_M": {"type": "number"},
+    "patched_M": {"type": "number"},
+    "delta_M": {"type": "number"},
+    "feedback_sha256": {"$ref": "#/$defs/sha256"},
+    "failure_type": {"type": "string", "minLength": 1},
+    "failure_message": {"type": "string"},
+    "path_evidence": {"type": ["object", "null"]},
+    "donor_assignment": {
+      "type": "object",
+      "required": ["requested_arm", "relation", "donor_trial_id", "recipient_trial_id", "selection_tier", "scenario_matched", "direction_matched", "speaker_matched", "current_value_matched", "stale_value_matched"],
+      "properties": {
+        "requested_arm": {"type": "string", "minLength": 1},
+        "relation": {"type": "string", "minLength": 1},
+        "donor_trial_id": {"type": "string", "minLength": 1},
+        "recipient_trial_id": {"type": "string", "minLength": 1},
+        "selection_tier": {"type": "string", "minLength": 1},
+        "scenario_matched": {"type": "boolean"},
+        "direction_matched": {"type": "boolean"},
+        "speaker_matched": {"type": "boolean"},
+        "current_value_matched": {"type": "boolean"},
+        "stale_value_matched": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["code_commit", "harness_version", "model_repo", "model_revision", "config_sha256", "manifest_sha256", "encoded_manifest_sha256", "anchor_map_sha256", "readout_sha256", "scan_spec_sha256", "data_sha256", "run_identity_sha256"],
+      "properties": {
+        "code_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "harness_version": {"type": "string", "minLength": 1},
+        "model_repo": {"type": "string", "minLength": 1},
+        "model_revision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "config_sha256": {"$ref": "#/$defs/sha256"},
+        "manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "encoded_manifest_sha256": {"$ref": "#/$defs/nullableSha256"},
+        "anchor_map_sha256": {"$ref": "#/$defs/sha256"},
+        "readout_sha256": {"$ref": "#/$defs/sha256"},
+        "scan_spec_sha256": {"$ref": "#/$defs/nullableSha256"},
+        "data_sha256": {"$ref": "#/$defs/nullableSha256"},
+        "run_identity_sha256": {"$ref": "#/$defs/sha256"},
+        "selection_file_sha256": {"$ref": "#/$defs/nullableSha256"},
+        "role_manifest_sha256": {"$ref": "#/$defs/nullableSha256"},
+        "baseline_readout_sha256": {"$ref": "#/$defs/nullableSha256"}
+      },
+      "additionalProperties": true
+    }
   },
-  "additionalProperties": true
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "completed"}}},
+      "then": {
+        "required": ["baseline_M", "patched_M", "delta_M", "feedback_sha256"],
+        "not": {"anyOf": [{"required": ["failure_type"]}, {"required": ["failure_message"]}]}
+      }
+    },
+    {
+      "if": {"properties": {"status": {"const": "failed"}}},
+      "then": {
+        "required": ["failure_type", "failure_message"],
+        "not": {"anyOf": [{"required": ["baseline_M"]}, {"required": ["patched_M"]}, {"required": ["delta_M"]}]}
+      }
+    },
+    {
+      "if": {"properties": {"component": {"const": "path"}}},
+      "then": {"required": ["path_evidence"]}
+    }
+  ],
+  "additionalProperties": true,
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "nullableSha256": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]}
+  }
 }

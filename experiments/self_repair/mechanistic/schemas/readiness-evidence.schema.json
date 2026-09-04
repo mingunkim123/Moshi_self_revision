@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://moshi.local/mechanistic/readiness-evidence.schema.json",
+  "type": "object",
+  "required": [
+    "schema_version", "target_binding_sha256", "model_contract", "open_loop",
+    "conversation_canary", "gpu_canary", "source_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "target_binding_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "model_contract": {"$ref": "#/$defs/checkBlock"},
+    "open_loop": {"$ref": "#/$defs/checkBlock"},
+    "conversation_canary": {
+      "allOf": [
+        {"$ref": "#/$defs/checkBlock"},
+        {
+          "type": "object",
+          "required": ["per_mode", "measurements", "tail_detection"],
+          "properties": {
+            "per_mode": {
+              "type": "object",
+              "minProperties": 2,
+              "additionalProperties": {"$ref": "#/$defs/conversationMode"}
+            },
+            "measurements": {"type": "object"},
+            "tail_detection": {
+              "type": "object",
+              "required": [
+                "text_quiet_frames", "tail_guard_frames", "audio_activity_policy_version",
+                "audio_activity_detector",
+                "audio_activity_frame_samples", "audio_activity_threshold_dbfs",
+                "audio_activity_calibration", "audio_activity_policy_sha256",
+                "forced_silence_decode_max_dbfs"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "gpu_canary": {
+      "allOf": [
+        {"$ref": "#/$defs/checkBlock"},
+        {
+          "type": "object",
+          "required": ["measurements"],
+          "properties": {
+            "measurements": {
+              "type": "object",
+              "required": [
+                "completed_cells", "failed_cells", "duplicate_cells", "model_frame_count",
+                "elapsed_seconds", "mean_cell_seconds", "seconds_per_model_frame",
+                "peak_vram_bytes", "device_total_vram_bytes", "activation_bytes"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "source_sha256": {"type": "object", "minProperties": 6}
+  },
+  "$defs": {
+    "checkBlock": {
+      "type": "object",
+      "required": ["passed", "checks"],
+      "properties": {
+        "passed": {"type": "boolean"},
+        "checks": {"type": "object", "additionalProperties": {"type": "boolean"}}
+      }
+    },
+    "conversationMode": {
+      "type": "object",
+      "required": [
+        "trial_count", "truncated_count", "cap_active_count",
+        "exact_output_coverage_count", "response_complete_count",
+        "text_tail_checked_count", "audio_tail_checked_count",
+        "human_flow_review_pass_count"
+      ],
+      "properties": {
+        "trial_count": {"type": "integer", "minimum": 1},
+        "truncated_count": {"type": "integer", "minimum": 0},
+        "cap_active_count": {"type": "integer", "minimum": 0},
+        "exact_output_coverage_count": {"type": "integer", "minimum": 0},
+        "response_complete_count": {"type": "integer", "minimum": 0},
+        "text_tail_checked_count": {"type": "integer", "minimum": 0},
+        "audio_tail_checked_count": {"type": "integer", "minimum": 0},
+        "human_flow_review_pass_count": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}

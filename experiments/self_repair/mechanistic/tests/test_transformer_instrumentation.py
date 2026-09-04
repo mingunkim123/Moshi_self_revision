@@ -32,6 +32,64 @@ def test_identity_hook_matches_fast_path_and_exposes_sites() -> None:
     assert all(event[3] == torch.float32 and event[4] == "cpu" for event in events)
 
 
+def test_hook_order_and_attention_tensor_shapes_are_stable() -> None:
+    model = _transformer()
+    x = torch.randn(1, 3, 16)
+    events = []
+
+    def hook(event):
+        events.append((event.layer, event.site, tuple(event.tensor.shape)))
+        return None
+
+    model.set_mechanistic_hook(hook)
+    model(x)
+    expected_sites = [
+        "resid_pre",
+        "q_pre_rope", "k_pre_rope", "v_pre_rope",
+        "q_post_rope", "k_post_rope", "v_post_rope",
+        "head_z", "attn_out", "resid_mid", "mlp_out", "resid_post",
+    ]
+    assert [(layer, site) for layer, site, _ in events] == [
+        (layer, site) for layer in range(2) for site in expected_sites
+    ]
+    by_site = {site: shape for layer, site, shape in events if layer == 0}
+    for site in (
+        "q_pre_rope", "k_pre_rope", "v_pre_rope",
+        "q_post_rope", "k_post_rope", "v_post_rope", "head_z",
+    ):
+        assert by_site[site] == (1, 4, 3, 4)
+    for site in ("resid_pre", "attn_out", "resid_mid", "mlp_out", "resid_post"):
+        assert by_site[site] == (1, 3, 16)
+
+
+def test_attention_hooks_expose_absolute_query_and_kv_positions() -> None:
+    model = _transformer()
+    observed: dict[tuple[int, str], torch.Tensor | None] = {}
+
+    def hook(event):
+        if event.site in {
+            "q_pre_rope", "k_pre_rope", "v_pre_rope",
+            "q_post_rope", "k_post_rope", "v_post_rope", "head_z",
+        }:
+            observed[(event.layer, event.site)] = (
+                None if event.absolute_positions is None else event.absolute_positions.detach().clone()
+            )
+        return None
+
+    model.set_mechanistic_hook(hook)
+    with model.streaming(1):
+        model(torch.randn(1, 1, 16))
+        model(torch.randn(1, 1, 16))
+
+    expected = torch.tensor([[1]])
+    for layer in range(2):
+        for site in {
+            "q_pre_rope", "k_pre_rope", "v_pre_rope",
+            "q_post_rope", "k_post_rope", "v_post_rope", "head_z",
+        }:
+            torch.testing.assert_close(observed[(layer, site)], expected)
+
+
 def test_one_head_patch_changes_only_selected_head_at_seam() -> None:
     model = _transformer()
     x = torch.randn(1, 3, 16)

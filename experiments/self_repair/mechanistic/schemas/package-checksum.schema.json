@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://moshi.local/mechanistic/package-checksum.schema.json",
+  "title": "Mechanistic public/private archive checksum manifest",
+  "type": "object",
+  "required": ["schema_version", "archives"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "archives": {
+      "type": "object",
+      "required": ["public", "private"],
+      "properties": {
+        "public": {"$ref": "#/$defs/archive"},
+        "private": {"$ref": "#/$defs/archive"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "archive": {
+      "type": "object",
+      "required": ["filename", "sha256", "bytes"],
+      "properties": {
+        "filename": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "bytes": {"type": "integer", "minimum": 1}
+      },
+      "additionalProperties": false
+    }
+  }
+}

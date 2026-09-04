@@ -631,20 +631,28 @@ class StreamingMultiheadAttention(StreamingModule[_MHAState]):
                     projected[:, :, self.embed_dim:],
                     "b t (p kh d) -> p b kh t d", p=2, kh=self.num_heads // self.kv_repeat
                 )
+        query_positions = offset[:, None] + torch.arange(T, device=query.device)
+        kv_positions = None if self.cross_attention else query_positions
         q = _apply_mechanistic_hook(
-            self.mechanistic_hook, site="q_pre_rope", layer=self.mechanistic_layer, tensor=q)
+            self.mechanistic_hook, site="q_pre_rope", layer=self.mechanistic_layer, tensor=q,
+            absolute_positions=query_positions)
         k = _apply_mechanistic_hook(
-            self.mechanistic_hook, site="k_pre_rope", layer=self.mechanistic_layer, tensor=k)
+            self.mechanistic_hook, site="k_pre_rope", layer=self.mechanistic_layer, tensor=k,
+            absolute_positions=kv_positions)
         v = _apply_mechanistic_hook(
-            self.mechanistic_hook, site="v_pre_rope", layer=self.mechanistic_layer, tensor=v)
+            self.mechanistic_hook, site="v_pre_rope", layer=self.mechanistic_layer, tensor=v,
+            absolute_positions=kv_positions)
         if self.rope:
             q, k = self.rope(q, k, offset, time_before_heads=False)
         q = _apply_mechanistic_hook(
-            self.mechanistic_hook, site="q_post_rope", layer=self.mechanistic_layer, tensor=q)
+            self.mechanistic_hook, site="q_post_rope", layer=self.mechanistic_layer, tensor=q,
+            absolute_positions=query_positions)
         k = _apply_mechanistic_hook(
-            self.mechanistic_hook, site="k_post_rope", layer=self.mechanistic_layer, tensor=k)
+            self.mechanistic_hook, site="k_post_rope", layer=self.mechanistic_layer, tensor=k,
+            absolute_positions=kv_positions)
         v = _apply_mechanistic_hook(
-            self.mechanistic_hook, site="v_post_rope", layer=self.mechanistic_layer, tensor=v)
+            self.mechanistic_hook, site="v_post_rope", layer=self.mechanistic_layer, tensor=v,
+            absolute_positions=kv_positions)
 
         k, v, pos_k = self._complete_kv(k, v)
         if self.kv_repeat > 1:
@@ -668,7 +676,7 @@ class StreamingMultiheadAttention(StreamingModule[_MHAState]):
             site="head_z",
             layer=self.mechanistic_layer,
             tensor=x,
-            absolute_positions=offset[:, None] + torch.arange(T, device=x.device),
+            absolute_positions=query_positions,
         )
 
         x = rearrange(x, "b h t d -> b t (h d)")
